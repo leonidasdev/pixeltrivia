@@ -1,0 +1,481 @@
+# CLAUDE.md - AI Context for PixelTrivia
+
+> **Purpose:** This file provides essential context for AI assistants (Claude, GitHub Copilot, etc.) to understand and work with the PixelTrivia codebase. Read this first in any new session.
+
+---
+
+## Project Overview
+
+**PixelTrivia** is a retro-styled trivia game application built with modern web technologies. It features single-player and multiplayer modes with AI-powered question generation.
+
+### Quick Facts
+
+| Aspect | Details |
+|--------|---------|
+| **Type** | Next.js Web Application |
+| **Style** | Retro pixel-art aesthetic |
+| **Framework** | Next.js 14 (App Router) |
+| **Language** | TypeScript (strict mode) |
+| **Styling** | Tailwind CSS |
+| **Database** | Supabase (PostgreSQL) |
+| **AI** | OpenRouter API (DeepSeek model) |
+| **Testing** | Jest + React Testing Library (236 tests) |
+
+---
+
+## Architecture Summary
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    CLIENT (Browser)                        │
+│  Next.js App Router + React 18 + Tailwind CSS              │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────────────────────┐
+│                 MIDDLEWARE LAYER                            │
+│  Rate Limiting │ CORS │ Security Headers │ Input Validation │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────────────────────┐
+│                   API ROUTES                                │
+│  /api/quiz/* │ /api/room/* │ /api/game/* │ /api/ai/*       │
+└──────┬──────────────────┬───────────────────────────────────┘
+       │                  │
+       ▼                  ▼
+┌──────────────┐   ┌──────────────┐
+│   Supabase   │   │  OpenRouter  │
+│  PostgreSQL  │   │  (DeepSeek)  │
+└──────────────┘   └──────────────┘
+```
+
+---
+
+## Directory Structure
+
+```
+pixeltrivia/
+├── app/                      # Next.js App Router
+│   ├── api/                  # API routes (serverless functions)
+│   │   ├── ai/generate-questions/   # AI question generation
+│   │   ├── game/questions/          # Game question retrieval
+│   │   ├── quiz/quick/              # Quick play quiz API
+│   │   ├── quiz/custom/             # Custom quiz (AI-powered)
+│   │   ├── quiz/advanced/           # Advanced quiz (file-based)
+│   │   └── room/create/             # Room creation
+│   ├── components/           # React components
+│   │   ├── AdvancedGameConfigurator.tsx
+│   │   ├── BackButton.tsx
+│   │   ├── CustomGameConfigurator.tsx
+│   │   ├── ErrorBoundary.tsx
+│   │   ├── MainMenuLogo.tsx
+│   │   ├── QuickGameSelector.tsx
+│   │   ├── SettingsPanel.tsx
+│   │   └── Help/             # Help system components
+│   ├── game/                 # Game pages
+│   │   ├── quick/            # Quick play mode
+│   │   ├── custom/           # Custom game mode
+│   │   ├── advanced/         # Advanced game mode
+│   │   ├── create/           # Room creation
+│   │   ├── join/             # Room joining
+│   │   ├── mode/             # Mode selection
+│   │   └── select/           # Game selection
+│   ├── globals.css           # Global styles + Tailwind
+│   ├── layout.tsx            # Root layout
+│   ├── page.tsx              # Home page
+│   ├── error.tsx             # Error boundary
+│   ├── global-error.tsx      # Global error handler
+│   └── not-found.tsx         # 404 page
+│
+├── lib/                      # Shared utilities
+│   ├── errors.ts             # Custom error classes (AppError, ValidationError, etc.)
+│   ├── validation.ts         # Zod validation schemas
+│   ├── rateLimit.ts          # Rate limiting middleware
+│   ├── security.ts           # Security middleware (Next.js dependent)
+│   ├── security.core.ts      # Pure security functions (testable)
+│   ├── apiResponse.ts        # Standardized API responses
+│   ├── supabase.ts           # Supabase client initialization
+│   ├── roomCode.ts           # Room code generation/validation
+│   ├── roomApi.ts            # Room API client
+│   ├── gameApi.ts            # Game API client
+│   ├── quickQuizApi.ts       # Quick quiz API client
+│   └── customQuizApi.ts      # Custom quiz API client
+│
+├── database/
+│   └── schema.sql            # PostgreSQL schema for Supabase
+│
+├── docs/                     # Documentation
+│   ├── ARCHITECTURE.md       # System architecture
+│   ├── DEVELOPMENT.md        # Development guide
+│   ├── DEPLOYMENT.md         # Deployment guide
+│   ├── API.md                # API reference
+│   ├── DATABASE.md           # Database schema
+│   ├── TESTING.md            # Testing guide
+│   ├── API_TESTING_GUIDE.md  # API testing examples
+│   ├── CLAUDE.md             # AI assistant context (this file)
+│   └── TODO.md               # Project roadmap
+│
+├── CONTRIBUTING.md           # Contribution guidelines
+│
+├── __tests__/                # Test files
+│   ├── components/           # Component tests
+│   └── unit/lib/             # Unit tests
+│
+├── .github/workflows/
+│   └── ci.yml                # GitHub Actions CI pipeline
+│
+├── middleware.ts             # Next.js edge middleware
+├── jest.config.js            # Jest configuration
+├── jest.setup.js             # Jest setup
+├── tailwind.config.js        # Tailwind configuration
+├── next.config.js            # Next.js configuration
+├── tsconfig.json             # TypeScript configuration
+└── package.json              # Dependencies
+```
+
+---
+
+## Key Technologies & Versions
+
+```json
+{
+  "next": "14.2.30",
+  "react": "^18.0.0",
+  "typescript": "^5.8.3",
+  "tailwindcss": "^3.3.0",
+  "@supabase/supabase-js": "^2.49.4",
+  "zod": "^3.25.76",
+  "jest": "^30.2.0",
+  "@testing-library/react": "^16.4.1"
+}
+```
+
+---
+
+## Game Modes
+
+### 1. Quick Play
+- Pre-defined categories from database
+- 10 random questions per game
+- No AI generation required
+- API: `POST /api/quiz/quick`
+
+### 2. Custom Game
+- AI-generated questions via OpenRouter/DeepSeek
+- User specifies topic and difficulty
+- 1-50 questions configurable
+- API: `POST /api/quiz/custom`
+
+### 3. Advanced Mode
+- Questions from uploaded file summaries
+- Content-based AI question generation
+- Input sanitization for security
+- API: `POST /api/quiz/advanced`
+
+### 4. Multiplayer (In Progress)
+- Room-based gameplay
+- Real-time with Supabase subscriptions
+- 2-16 players per room
+- API: `POST /api/room/create`
+
+---
+
+## Security Implementation
+
+### Defense Layers
+
+1. **Edge Middleware** (`middleware.ts`)
+   - CORS validation
+   - Suspicious pattern detection
+   - Request logging
+
+2. **Rate Limiting** (`lib/rateLimit.ts`)
+   - Standard: 100 req/min
+   - AI endpoints: 5 req/min
+   - Room creation: 10 req/5min
+
+3. **Input Validation** (`lib/validation.ts`)
+   - Zod schemas for all inputs
+   - Type coercion and sanitization
+   - Field-level error messages
+
+4. **Security Headers** (`next.config.js`)
+   - CSP, X-Frame-Options, X-Content-Type-Options
+   - Referrer-Policy, Permissions-Policy
+
+5. **XSS Prevention** (`lib/security.core.ts`)
+   - HTML tag removal
+   - Script injection blocking
+   - Input length limits
+
+---
+
+## Error Handling System
+
+### Error Classes (`lib/errors.ts`)
+
+```typescript
+// Base error
+AppError(message, code, statusCode, isOperational, context)
+
+// Specific errors
+ValidationError(message, field?, validationErrors?)  // 400
+NotFoundError(resource, identifier?)                 // 404
+DatabaseError(message, operation?, originalError?)   // 500
+AuthenticationError(message?)                        // 401
+AuthorizationError(message?, requiredRole?)          // 403
+RateLimitError(retryAfter?, limit?, window?)         // 429
+ExternalServiceError(service, message, originalError?) // 502
+AIGenerationError(message, model?, prompt?)          // 500
+```
+
+### API Response Format
+
+```typescript
+// Success
+{ success: true, data: {...}, message: "..." }
+
+// Error
+{ success: false, error: "ERROR_CODE", message: "..." }
+```
+
+---
+
+## Testing Overview
+
+### Test Statistics
+- **236 tests** across 11 test suites
+- **100% passing** on CI
+- **>20% coverage** threshold
+
+### Test Commands
+```bash
+npm test              # Run all tests
+npm run test:watch    # Watch mode
+npm run test:coverage # Coverage report
+```
+
+### Test Location
+- `__tests__/unit/lib/` - Library function tests
+- `__tests__/components/` - React component tests
+
+---
+
+## Development Commands
+
+```bash
+npm run dev          # Start development server
+npm run build        # Production build
+npm run start        # Start production server
+npm run lint         # ESLint check
+npm run lint:fix     # Auto-fix lint issues
+npm run format       # Prettier format
+npm run typecheck    # TypeScript check
+npm test             # Run tests
+```
+
+---
+
+## Environment Variables
+
+Required in `.env.local`:
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+
+# OpenRouter (AI)
+OPENROUTER_API_KEY=sk-or-v1-...
+```
+
+---
+
+## Database Schema Summary
+
+### Tables
+
+| Table | Purpose | Key Columns |
+|-------|---------|-------------|
+| `rooms` | Multiplayer rooms | code, status, max_players |
+| `players` | Room participants | room_code, name, score |
+| `questions` | Trivia questions | question_text, options, correct_answer |
+| `game_sessions` | Active games | room_code, current_question_id |
+
+### Key Features
+- RLS (Row Level Security) enabled
+- Cascade delete on room → players
+- Indexes on frequently queried columns
+
+---
+
+## Common Tasks
+
+### Adding a New API Endpoint
+
+1. Create route file: `app/api/[path]/route.ts`
+2. Add Zod validation schema to `lib/validation.ts`
+3. Use `apiResponse` helpers from `lib/apiResponse.ts`
+4. Add rate limiting if needed
+5. Write tests in `__tests__/unit/lib/`
+
+### Adding a New Component
+
+1. Create in `app/components/[Name].tsx`
+2. Use TypeScript interfaces for props
+3. Follow Tailwind + retro pixel styling
+4. Write tests in `__tests__/components/`
+
+### Adding Database Tables
+
+1. Add SQL to `database/schema.sql`
+2. Run in Supabase SQL Editor
+3. Enable RLS and create policies
+4. Update `docs/DATABASE.md`
+
+---
+
+## Code Patterns
+
+### API Route Pattern
+
+```typescript
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+import { ValidationError } from '@/lib/errors'
+
+const requestSchema = z.object({
+  // ... schema
+})
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const validated = requestSchema.parse(body)
+    
+    // ... logic
+    
+    return NextResponse.json({
+      success: true,
+      data: result,
+      message: 'Success'
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({
+        success: false,
+        error: 'VALIDATION_ERROR',
+        message: error.errors[0].message
+      }, { status: 400 })
+    }
+    // ... handle other errors
+  }
+}
+```
+
+### Component Pattern
+
+```tsx
+'use client'
+
+import { useState } from 'react'
+
+interface Props {
+  // ... props
+}
+
+export function ComponentName({ prop1, prop2 }: Props) {
+  const [state, setState] = useState(initialValue)
+  
+  return (
+    <div className="bg-gray-900 border-4 border-black shadow-[4px_4px_0_0_#000]">
+      {/* Retro pixel styling */}
+    </div>
+  )
+}
+```
+
+---
+
+## Current Project Status
+
+### Completed
+- Core game modes (Quick, Custom, Advanced)
+- Testing infrastructure (236 tests)
+- CI/CD pipeline (GitHub Actions + Husky)
+- Security hardening (validation, rate limiting, middleware)
+- Comprehensive documentation
+
+### In Progress
+- Multiplayer real-time sync
+- Score persistence
+- Leaderboards
+
+### Planned
+- WebSocket integration
+- User authentication
+- Analytics dashboard
+- Mobile responsiveness improvements
+
+---
+
+## Known Issues & Gotchas
+
+1. **Next.js Server Imports in Tests**
+   - Split server code into `.core.ts` (pure functions) for testability
+   - Example: `security.ts` → `security.core.ts`
+
+2. **Supabase RLS**
+   - Service role key needed for admin operations
+   - Anon key for client-side reads
+
+3. **OpenRouter Rate Limits**
+   - DeepSeek has separate limits from OpenRouter
+   - Implement client-side rate limiting too
+
+4. **Tailwind Pixel Styling**
+   - Use `shadow-[4px_4px_0_0_#000]` for pixel shadow effect
+   - Border-4 for chunky borders
+
+---
+
+## Useful Links
+
+- [Next.js App Router Docs](https://nextjs.org/docs/app)
+- [Supabase Docs](https://supabase.com/docs)
+- [Zod Documentation](https://zod.dev)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [Jest Documentation](https://jestjs.io/docs/getting-started)
+- [OpenRouter API](https://openrouter.ai/docs)
+
+---
+
+## For AI Assistants
+
+When working on this codebase:
+
+1. **Always use TypeScript** with strict types
+2. **Follow existing patterns** - check similar files for conventions
+3. **Write tests** for new functionality
+4. **Use Zod** for input validation
+5. **Follow the retro pixel aesthetic** in UI components
+6. **Update documentation** when making significant changes
+7. **Run `npm test`** before committing
+8. **Use conventional commits** (feat:, fix:, docs:, etc.)
+
+### Quick Reference
+
+| Need | File/Location |
+|------|---------------|
+| API validation | `lib/validation.ts` |
+| Error handling | `lib/errors.ts` |
+| API responses | `lib/apiResponse.ts` |
+| Rate limiting | `lib/rateLimit.ts` |
+| Security | `lib/security.ts`, `lib/security.core.ts` |
+| Database | `lib/supabase.ts`, `database/schema.sql` |
+| Tests | `__tests__/` |
+| Docs | `docs/` |
+
+---
+
+*Last updated: January 31, 2026*

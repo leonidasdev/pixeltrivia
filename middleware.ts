@@ -1,0 +1,164 @@
+/**
+ * Next.js Middleware
+ * Applies security checks at the edge before requests hit API routes
+ */
+
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+/**
+ * Security headers to add to all responses
+ */
+const SECURITY_HEADERS = {
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'X-XSS-Protection': '1; mode=block',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+}
+
+/**
+ * Allowed origins for CORS (production domains)
+ * Add your domains here in production
+ */
+const ALLOWED_ORIGINS = new Set([
+  'http://localhost:3000',
+  'http://localhost:3001',
+  // Add production domains:
+  // 'https://pixeltrivia.com',
+  // 'https://www.pixeltrivia.com',
+])
+
+/**
+ * Check if the origin is allowed
+ */
+function isAllowedOrigin(origin: string | null, env: string | undefined): boolean {
+  if (!origin) return true // Same-origin requests don't have origin header
+  if (env === 'development') return true
+  return ALLOWED_ORIGINS.has(origin)
+}
+
+/**
+ * Apply CORS headers for API routes
+ */
+function applyCorsHeaders(response: NextResponse, request: NextRequest): void {
+  const origin = request.headers.get('origin')
+
+  if (origin && isAllowedOrigin(origin, process.env.NODE_ENV)) {
+    response.headers.set('Access-Control-Allow-Origin', origin)
+    response.headers.set('Access-Control-Allow-Credentials', 'true')
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    response.headers.set(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Authorization, X-Requested-With, X-API-Key'
+    )
+    response.headers.set('Access-Control-Max-Age', '86400')
+  }
+}
+
+/**
+ * Handle CORS preflight requests
+ */
+function handlePreflight(request: NextRequest): NextResponse {
+  const response = new NextResponse(null, { status: 204 })
+  applyCorsHeaders(response, request)
+  return response
+}
+
+/**
+ * Apply security headers to response
+ */
+function applySecurityHeaders(response: NextResponse): void {
+  Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
+    response.headers.set(key, value)
+  })
+}
+
+/**
+ * Check for suspicious patterns in the request
+ */
+function detectSuspiciousPatterns(request: NextRequest): boolean {
+  const url = request.nextUrl.pathname
+  const userAgent = request.headers.get('user-agent') || ''
+
+  // Block common attack patterns
+  const suspiciousPatterns = [
+    /\.\.\//, // Path traversal
+    /<script/i, // XSS attempt in URL
+    /\bonmouseover\b/i, // Event handler injection
+    /\bjavascript:/i, // JavaScript protocol
+    /\bdata:text\/html/i, // Data URL XSS
+    /SELECT.*FROM/i, // SQL injection (basic)
+    /UNION.*SELECT/i, // SQL injection
+    /exec\s*\(/i, // Command injection
+  ]
+
+  // Check URL
+  for (const pattern of suspiciousPatterns) {
+    if (pattern.test(url)) {
+      console.warn(`[Security] Blocked suspicious URL pattern: ${url}`)
+      return true
+    }
+  }
+
+  // Check for known malicious user agents
+  const maliciousAgents = [
+    /sqlmap/i, // SQL injection tool
+    /nikto/i, // Vulnerability scanner
+    /nessus/i, // Security scanner
+    /acunetix/i, // Web scanner
+  ]
+
+  for (const pattern of maliciousAgents) {
+    if (pattern.test(userAgent)) {
+      console.warn(`[Security] Blocked suspicious user agent: ${userAgent}`)
+      return true
+    }
+  }
+
+  return false
+}
+
+/**
+ * Main middleware function
+ */
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Handle CORS preflight
+  if (request.method === 'OPTIONS') {
+    return handlePreflight(request)
+  }
+
+  // Block suspicious requests
+  if (detectSuspiciousPatterns(request)) {
+    return new NextResponse(JSON.stringify({ error: 'Forbidden' }), {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+
+  // Continue to the route handler
+  const response = NextResponse.next()
+
+  // Apply security headers
+  applySecurityHeaders(response)
+
+  // Apply CORS for API routes
+  if (pathname.startsWith('/api/')) {
+    applyCorsHeaders(response, request)
+  }
+
+  return response
+}
+
+/**
+ * Configure which routes use this middleware
+ */
+export const config = {
+  matcher: [
+    // Match all API routes
+    '/api/:path*',
+    // Match all pages except static files
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$|.*\\.svg$).*)',
+  ],
+}
