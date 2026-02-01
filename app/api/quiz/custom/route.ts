@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 // Types for the API
 interface CustomQuizRequest {
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'Knowledge level is required and must be a string',
-          message: 'Invalid request parameters'
+          message: 'Invalid request parameters',
         },
         { status: 400 }
       )
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'Number of questions must be between 1 and 50',
-          message: 'Invalid request parameters'
+          message: 'Invalid request parameters',
         },
         { status: 400 }
       )
@@ -61,10 +61,9 @@ export async function POST(request: NextRequest) {
 
     // Construct prompt for DeepSeek
     const basePrompt = `Generate exactly ${numQuestions} trivia questions for the ${knowledgeLevel} level.`
-    const contextPrompt = context && context.trim() 
-      ? ` Focus on this context: ${context.trim()}`
-      : ''
-    
+    const contextPrompt =
+      context && context.trim() ? ` Focus on this context: ${context.trim()}` : ''
+
     const formatPrompt = `
 
 Return the questions in this exact JSON format (valid JSON only, no markdown or explanation):
@@ -95,29 +94,30 @@ Requirements:
     const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-        'X-Title': 'PixelTrivia'
+        'X-Title': 'PixelTrivia',
       },
       body: JSON.stringify({
         model: 'deepseek/deepseek-chat',
         messages: [
           {
             role: 'system',
-            content: 'You are a trivia question generator. Always respond with valid JSON only, no markdown formatting or additional text.'
+            content:
+              'You are a trivia question generator. Always respond with valid JSON only, no markdown formatting or additional text.',
           },
           {
             role: 'user',
-            content: fullPrompt
-          }
+            content: fullPrompt,
+          },
         ],
         temperature: 0.7,
         max_tokens: 2000,
         top_p: 1,
         frequency_penalty: 0,
-        presence_penalty: 0
-      })
+        presence_penalty: 0,
+      }),
     })
 
     if (!openRouterResponse.ok) {
@@ -161,25 +161,27 @@ Requirements:
     }
 
     // Format questions with IDs and validation
-    const formattedQuestions: QuizQuestion[] = parsedResponse.questions.map((q: any, index: number) => {
-      // Validate question structure
-      if (!q.question || !Array.isArray(q.options) || q.options.length !== 4) {
-        throw new Error(`Invalid question format at index ${index}`)
-      }
+    const formattedQuestions: QuizQuestion[] = parsedResponse.questions.map(
+      (q: any, index: number) => {
+        // Validate question structure
+        if (!q.question || !Array.isArray(q.options) || q.options.length !== 4) {
+          throw new Error(`Invalid question format at index ${index}`)
+        }
 
-      if (typeof q.correctAnswer !== 'number' || q.correctAnswer < 0 || q.correctAnswer > 3) {
-        throw new Error(`Invalid correct answer at index ${index}`)
-      }
+        if (typeof q.correctAnswer !== 'number' || q.correctAnswer < 0 || q.correctAnswer > 3) {
+          throw new Error(`Invalid correct answer at index ${index}`)
+        }
 
-      return {
-        id: `custom_${Date.now()}_${index}`,
-        question: q.question,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
-        category: q.category || 'Custom',
-        difficulty: q.difficulty || knowledgeLevel.toLowerCase()
+        return {
+          id: `custom_${Date.now()}_${index}`,
+          question: q.question,
+          options: q.options,
+          correctAnswer: q.correctAnswer,
+          category: q.category || 'Custom',
+          difficulty: q.difficulty || knowledgeLevel.toLowerCase(),
+        }
       }
-    })
+    )
 
     // Ensure we have the requested number of questions
     if (formattedQuestions.length === 0) {
@@ -198,13 +200,12 @@ Requirements:
           context: context || null,
           requestedQuestions: numQuestions,
           generatedQuestions: formattedQuestions.length,
-          generatedAt: new Date().toISOString()
+          generatedAt: new Date().toISOString(),
         },
-        message: `Successfully generated ${formattedQuestions.length} custom questions`
+        message: `Successfully generated ${formattedQuestions.length} custom questions`,
       },
       { status: 200 }
     )
-
   } catch (error) {
     console.error('Custom quiz generation error:', error)
 
@@ -232,7 +233,7 @@ Requirements:
         success: false,
         error: errorMessage,
         message: 'Failed to generate custom quiz questions',
-        details: process.env.NODE_ENV === 'development' ? error?.toString() : undefined
+        details: process.env.NODE_ENV === 'development' ? error?.toString() : undefined,
       },
       { status: statusCode }
     )
@@ -251,9 +252,9 @@ export async function GET() {
         body: {
           knowledgeLevel: 'string (classic|college|high-school|middle-school|elementary)',
           context: 'string (optional context for questions)',
-          numQuestions: 'number (1-50)'
-        }
-      }
+          numQuestions: 'number (1-50)',
+        },
+      },
     },
     { status: 405 }
   )
@@ -264,7 +265,7 @@ export async function PUT() {
     {
       success: false,
       error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests'
+      message: 'This endpoint only supports POST requests',
     },
     { status: 405 }
   )
@@ -275,7 +276,7 @@ export async function DELETE() {
     {
       success: false,
       error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests'
+      message: 'This endpoint only supports POST requests',
     },
     { status: 405 }
   )

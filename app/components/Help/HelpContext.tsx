@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 
 interface HelpContextType {
@@ -36,31 +36,35 @@ export const HelpProvider = ({ children }: HelpProviderProps) => {
 
   const getAvailableHelpTabs = (): string[] => {
     const tabs = ['general']
-    
+
     // Check if user has visited game mode routes
-    const hasVisitedQuick = visitedRoutes.some(route => 
-      route.includes('/game/mode') || route.includes('/game/select') || route.includes('/game/quick')
+    const hasVisitedQuick = visitedRoutes.some(
+      route =>
+        route.includes('/game/mode') ||
+        route.includes('/game/select') ||
+        route.includes('/game/quick')
     )
-    const hasVisitedCustom = visitedRoutes.some(route => 
-      route.includes('/game/create') || route.includes('/game/join') || route.includes('/game/custom')
+    const hasVisitedCustom = visitedRoutes.some(
+      route =>
+        route.includes('/game/create') ||
+        route.includes('/game/join') ||
+        route.includes('/game/custom')
     )
-    const hasVisitedAdvanced = visitedRoutes.some(route => 
-      route.includes('/game/advanced')
-    )
-    
+    const hasVisitedAdvanced = visitedRoutes.some(route => route.includes('/game/advanced'))
+
     if (hasVisitedQuick) tabs.push('quick')
     if (hasVisitedCustom) tabs.push('custom')
     if (hasVisitedAdvanced) tabs.push('advanced')
-    
+
     return tabs
   }
 
   return (
-    <HelpContext.Provider 
+    <HelpContext.Provider
       value={{
         visitedRoutes,
         currentRoute: pathname,
-        getAvailableHelpTabs
+        getAvailableHelpTabs,
       }}
     >
       {children}

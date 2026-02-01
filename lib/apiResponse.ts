@@ -5,7 +5,7 @@
 
 import { NextResponse } from 'next/server'
 import {
-  AppError,
+  type AppError,
   ValidationError,
   NotFoundError,
   DatabaseError,

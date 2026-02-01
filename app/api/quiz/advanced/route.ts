@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 // Input validation and sanitization interfaces
 interface QuizRequest {
@@ -69,7 +69,7 @@ function validateRequest(body: any): QuizRequest | null {
     filesSummary: sanitizeFilesSummary(filesSummary),
     numQuestions: validNumQuestions,
     format: validFormat,
-    timeLimit: validTimeLimit
+    timeLimit: validTimeLimit,
   }
 }
 
@@ -77,9 +77,10 @@ function validateRequest(body: any): QuizRequest | null {
 function constructPrompt(request: QuizRequest): string {
   const { filesSummary, numQuestions, format } = request
 
-  const formatInstruction = format === 'short' 
-    ? 'Keep questions concise and direct, focusing on key facts and concepts.'
-    : 'Create more detailed questions that may require deeper understanding and analysis.'
+  const formatInstruction =
+    format === 'short'
+      ? 'Keep questions concise and direct, focusing on key facts and concepts.'
+      : 'Create more detailed questions that may require deeper understanding and analysis.'
 
   return `You are a quiz generator. Generate exactly ${numQuestions} multiple-choice questions based ONLY on the provided content summary.
 
@@ -116,22 +117,22 @@ function parseAIResponse(response: string): QuizQuestion[] | null {
     const jsonString = jsonMatch ? jsonMatch[0] : response
 
     const parsed = JSON.parse(jsonString)
-    
+
     if (!Array.isArray(parsed)) {
       return null
     }
 
     const questions: QuizQuestion[] = []
-    
+
     for (const item of parsed) {
       if (!item || typeof item !== 'object') continue
-      
+
       const { question, options, answer } = item
-      
+
       // Validate question structure
       if (
-        typeof question !== 'string' || 
-        !Array.isArray(options) || 
+        typeof question !== 'string' ||
+        !Array.isArray(options) ||
         options.length !== 4 ||
         !options.every(opt => typeof opt === 'string') ||
         !['A', 'B', 'C', 'D'].includes(answer)
@@ -142,7 +143,7 @@ function parseAIResponse(response: string): QuizQuestion[] | null {
       questions.push({
         question: question.trim(),
         options: options.map(opt => opt.trim()) as [string, string, string, string],
-        answer: answer as 'A' | 'B' | 'C' | 'D'
+        answer: answer as 'A' | 'B' | 'C' | 'D',
       })
     }
 
@@ -160,10 +161,7 @@ export async function POST(request: NextRequest) {
     const apiKey = process.env.OPENROUTER_API_KEY
     if (!apiKey) {
       console.error('OPENROUTER_API_KEY not configured')
-      return NextResponse.json(
-        { error: 'Service configuration error' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: 'Service configuration error' }, { status: 500 })
     }
 
     // Parse and validate request
@@ -171,10 +169,7 @@ export async function POST(request: NextRequest) {
     try {
       body = await request.json()
     } catch (error) {
-      return NextResponse.json(
-        { error: 'Invalid JSON in request body' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 })
     }
 
     const validatedRequest = validateRequest(body)
@@ -196,60 +191,53 @@ export async function POST(request: NextRequest) {
     const prompt = constructPrompt(validatedRequest)
 
     // Call OpenRouter API
-    console.log(`Generating ${validatedRequest.numQuestions} questions in ${validatedRequest.format} format`)
-    
+    console.log(
+      `Generating ${validatedRequest.numQuestions} questions in ${validatedRequest.format} format`
+    )
+
     const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-        'X-Title': 'PixelTrivia Advanced Quiz Generator'
+        'X-Title': 'PixelTrivia Advanced Quiz Generator',
       },
       body: JSON.stringify({
         model: 'deepseek/deepseek-chat',
         messages: [
           {
             role: 'user',
-            content: prompt
-          }
+            content: prompt,
+          },
         ],
         temperature: 0.7,
         max_tokens: 4000,
-        top_p: 0.9
-      })
+        top_p: 0.9,
+      }),
     })
 
     if (!openRouterResponse.ok) {
       const errorText = await openRouterResponse.text()
       console.error('OpenRouter API error:', openRouterResponse.status, errorText)
-      
+
       if (openRouterResponse.status === 401) {
-        return NextResponse.json(
-          { error: 'API authentication failed' },
-          { status: 500 }
-        )
+        return NextResponse.json({ error: 'API authentication failed' }, { status: 500 })
       } else if (openRouterResponse.status === 429) {
         return NextResponse.json(
           { error: 'API rate limit exceeded. Please try again later.' },
           { status: 429 }
         )
       } else {
-        return NextResponse.json(
-          { error: 'AI service temporarily unavailable' },
-          { status: 503 }
-        )
+        return NextResponse.json({ error: 'AI service temporarily unavailable' }, { status: 503 })
       }
     }
 
     const aiResponse = await openRouterResponse.json()
-    
+
     if (!aiResponse.choices || !aiResponse.choices[0] || !aiResponse.choices[0].message) {
       console.error('Invalid AI response structure:', aiResponse)
-      return NextResponse.json(
-        { error: 'Invalid response from AI service' },
-        { status: 502 }
-      )
+      return NextResponse.json({ error: 'Invalid response from AI service' }, { status: 502 })
     }
 
     const generatedContent = aiResponse.choices[0].message.content
@@ -271,37 +259,24 @@ export async function POST(request: NextRequest) {
       metadata: {
         numQuestions: questions.length,
         format: validatedRequest.format,
-        timeLimit: validatedRequest.timeLimit
-      }
+        timeLimit: validatedRequest.timeLimit,
+      },
     })
-
   } catch (error) {
     console.error('Unexpected error in quiz generation:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
 // Handle unsupported methods
 export async function GET() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  )
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
 }
 
 export async function PUT() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  )
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
 }
 
 export async function DELETE() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  )
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
 }

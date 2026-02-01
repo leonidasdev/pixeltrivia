@@ -6,7 +6,7 @@
  */
 
 import { NextResponse } from 'next/server'
-import { z } from 'zod'
+import type { z } from 'zod'
 import { ValidationError } from './errors'
 import { validationErrorResponse } from './apiResponse'
 import { formatZodErrors, getFirstError } from './validation'

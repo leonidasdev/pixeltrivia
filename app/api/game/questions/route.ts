@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
         {
           success: false,
           error: 'Category parameter is required',
-          message: 'Please specify a category'
+          message: 'Please specify a category',
         },
         { status: 400 }
       )
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
         {
           success: false,
           error: 'Difficulty parameter is required',
-          message: 'Please specify a difficulty level'
+          message: 'Please specify a difficulty level',
         },
         { status: 400 }
       )
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
         {
           success: false,
           error: 'Invalid limit parameter',
-          message: 'Limit must be between 1 and 50'
+          message: 'Limit must be between 1 and 50',
         },
         { status: 400 }
       )
@@ -44,11 +44,11 @@ export async function GET(request: NextRequest) {
 
     // Map difficulty levels to our database difficulty values
     const difficultyMap: { [key: string]: string } = {
-      'elementary': 'easy',
+      elementary: 'easy',
       'middle-school': 'easy',
       'high-school': 'medium',
       'college-level': 'hard',
-      'classic': 'medium' // Default for classic mixed difficulty
+      classic: 'medium', // Default for classic mixed difficulty
     }
 
     const dbDifficulty = difficultyMap[difficulty] || 'medium'
@@ -64,9 +64,7 @@ export async function GET(request: NextRequest) {
       query = query.limit(limit * 2) // Get more to have variety after filtering
     } else {
       // Filter by difficulty and try to match category
-      query = query
-        .eq('difficulty', dbDifficulty)
-        .limit(limit * 2) // Get extra in case we need to filter
+      query = query.eq('difficulty', dbDifficulty).limit(limit * 2) // Get extra in case we need to filter
     }
 
     const { data: questions, error: fetchError } = await query
@@ -81,7 +79,7 @@ export async function GET(request: NextRequest) {
         {
           success: false,
           error: 'No questions found',
-          message: `No questions available for category "${category}" with difficulty "${difficulty}"`
+          message: `No questions available for category "${category}" with difficulty "${difficulty}"`,
         },
         { status: 404 }
       )
@@ -92,11 +90,12 @@ export async function GET(request: NextRequest) {
 
     // For non-classic modes, try to filter by category match
     if (difficulty !== 'classic') {
-      const categoryMatches = questions.filter(q => 
-        q.category?.toLowerCase().includes(category.toLowerCase()) ||
-        category.toLowerCase().includes(q.category?.toLowerCase() || '')
+      const categoryMatches = questions.filter(
+        q =>
+          q.category?.toLowerCase().includes(category.toLowerCase()) ||
+          category.toLowerCase().includes(q.category?.toLowerCase() || '')
       )
-      
+
       if (categoryMatches.length >= limit) {
         filteredQuestions = categoryMatches
       }
@@ -104,9 +103,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Randomize and limit the questions
-    const shuffled = filteredQuestions
-      .sort(() => Math.random() - 0.5)
-      .slice(0, limit)
+    const shuffled = filteredQuestions.sort(() => Math.random() - 0.5).slice(0, limit)
 
     // Format questions for the game
     const formattedQuestions = shuffled.map((q, index) => ({
@@ -117,7 +114,7 @@ export async function GET(request: NextRequest) {
       correctAnswer: q.correct_answer,
       category: q.category,
       difficulty: q.difficulty,
-      timeLimit: 30 // 30 seconds per question
+      timeLimit: 30, // 30 seconds per question
     }))
 
     return NextResponse.json(
@@ -128,21 +125,20 @@ export async function GET(request: NextRequest) {
           totalQuestions: formattedQuestions.length,
           selectedCategory: category,
           selectedDifficulty: difficulty,
-          timeLimit: 30
+          timeLimit: 30,
         },
-        message: 'Questions fetched successfully'
+        message: 'Questions fetched successfully',
       },
       { status: 200 }
     )
-
   } catch (error) {
     console.error('Quick game questions error:', error)
-    
+
     return NextResponse.json(
       {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
-        message: 'Failed to fetch questions'
+        message: 'Failed to fetch questions',
       },
       { status: 500 }
     )
@@ -155,7 +151,7 @@ export async function POST() {
     {
       success: false,
       error: 'Method not allowed',
-      message: 'This endpoint only supports GET requests'
+      message: 'This endpoint only supports GET requests',
     },
     { status: 405 }
   )

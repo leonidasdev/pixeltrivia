@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
     // Placeholder AI question generation endpoint
     // TODO: Implement actual AI integration
-    
+
     const body = await request.json()
     const { topic, difficulty, questionCount } = body
 
@@ -16,20 +16,17 @@ export async function POST(request: NextRequest) {
         `Option A for question ${i + 1}`,
         `Option B for question ${i + 1}`,
         `Option C for question ${i + 1}`,
-        `Option D for question ${i + 1}`
+        `Option D for question ${i + 1}`,
       ],
       correctAnswer: 0,
-      difficulty: difficulty || 'medium'
+      difficulty: difficulty || 'medium',
     }))
 
     return NextResponse.json({
       success: true,
-      questions: mockQuestions
+      questions: mockQuestions,
     })
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to generate questions' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to generate questions' }, { status: 500 })
   }
 }

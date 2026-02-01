@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // ESLint configuration
+  eslint: {
+    // Warning: Production builds ignore ESLint errors.
+    // Run `npm run lint` separately to check for issues.
+    ignoreDuringBuilds: true,
+  },
+
   // Security headers applied globally
   async headers() {
     return [

@@ -24,22 +24,26 @@ const AVATAR_OPTIONS = [
 export default function GameModePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  
+
   // State management
   const [showHelp, setShowHelp] = useState(false)
   const [playerSettings, setPlayerSettings] = useState<PlayerSettings>({
     name: '',
     avatar: 'knight',
-    volume: 50
+    volume: 50,
   })
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
 
   // Load player settings from URL params or localStorage
   useEffect(() => {
-    const name = searchParams.get('name') || localStorage.getItem('pixeltrivia_player_name') || 'Player1234'
-    const avatar = searchParams.get('avatar') || localStorage.getItem('pixeltrivia_player_avatar') || 'knight'
-    const volume = parseInt(searchParams.get('volume') || localStorage.getItem('pixeltrivia_player_volume') || '50')
-    
+    const name =
+      searchParams.get('name') || localStorage.getItem('pixeltrivia_player_name') || 'Player1234'
+    const avatar =
+      searchParams.get('avatar') || localStorage.getItem('pixeltrivia_player_avatar') || 'knight'
+    const volume = parseInt(
+      searchParams.get('volume') || localStorage.getItem('pixeltrivia_player_volume') || '50'
+    )
+
     setPlayerSettings({ name, avatar, volume })
   }, [searchParams])
 
@@ -55,7 +59,7 @@ export default function GameModePage() {
       mode: mode,
       name: playerSettings.name,
       avatar: playerSettings.avatar,
-      volume: playerSettings.volume.toString()
+      volume: playerSettings.volume.toString(),
     })
     router.push(`/game/select?${params.toString()}`)
   }
@@ -76,7 +80,7 @@ export default function GameModePage() {
         }
       }
     }
-    
+
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [showHelp, router])
@@ -87,9 +91,9 @@ export default function GameModePage() {
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 animate-pulse opacity-60"></div>
-        <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-pink-400 animate-pulse opacity-60 animation-delay-1000"></div>
-        <div className="absolute top-1/2 left-1/6 w-2 h-2 bg-cyan-400 animate-pulse opacity-60 animation-delay-2000"></div>
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 animate-pulse opacity-60" />
+        <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-pink-400 animate-pulse opacity-60 animation-delay-1000" />
+        <div className="absolute top-1/2 left-1/6 w-2 h-2 bg-cyan-400 animate-pulse opacity-60 animation-delay-2000" />
       </div>
 
       {/* Main content container */}
@@ -102,14 +106,17 @@ export default function GameModePage() {
           <p className="text-cyan-300 text-lg mb-4">
             Choose your trivia adventure, {playerSettings.name}!
           </p>
-          
+
           {/* Player info display */}
           <div className="flex items-center justify-center space-x-4 mb-6">
-            <div className={`w-12 h-12 ${avatarDetails.color} border-3 border-gray-600 rounded-lg flex items-center justify-center pixel-border`}>
+            <div
+              className={`w-12 h-12 ${avatarDetails.color} border-3 border-gray-600 rounded-lg flex items-center justify-center pixel-border`}
+            >
               <span className="text-2xl" role="img" aria-label={avatarDetails.name}>
                 {avatarDetails.emoji}
               </span>
-            </div>            <div className="text-left">
+            </div>{' '}
+            <div className="text-left">
               <div className="text-white font-bold">{playerSettings.name}</div>
               <div className="text-gray-400 text-sm">{avatarDetails.name} Avatar</div>
             </div>
@@ -123,7 +130,8 @@ export default function GameModePage() {
           >
             ?
           </button>
-        </header>        {/* Game Mode Selection */}
+        </header>{' '}
+        {/* Game Mode Selection */}
         <section className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
             {/* Quick Game Card */}
@@ -144,8 +152,8 @@ export default function GameModePage() {
               <div className="text-4xl mb-4">⚡</div>
               <h3 className="text-2xl font-bold mb-3 pixel-text-shadow">QUICK GAME</h3>
               <p className="text-orange-200 text-sm leading-relaxed">
-                Jump into instant trivia with predefined categories. 
-                Perfect for quick brain challenges with 10 random questions!
+                Jump into instant trivia with predefined categories. Perfect for quick brain
+                challenges with 10 random questions!
               </p>
               <div className="mt-4 text-xs text-orange-300 font-semibold">
                 • 10 Questions • Mixed Categories • Instant Start
@@ -170,8 +178,8 @@ export default function GameModePage() {
               <div className="text-4xl mb-4">🤖</div>
               <h3 className="text-2xl font-bold mb-3 pixel-text-shadow">CUSTOM GAME</h3>
               <p className="text-purple-200 text-sm leading-relaxed">
-                Create AI-powered questions on any topic you choose. 
-                Specify difficulty, question count, and educational level!
+                Create AI-powered questions on any topic you choose. Specify difficulty, question
+                count, and educational level!
               </p>
               <div className="mt-4 text-xs text-purple-300 font-semibold">
                 • AI Generated • Your Topics • Custom Settings
@@ -196,15 +204,16 @@ export default function GameModePage() {
               <div className="text-4xl mb-4">📚</div>
               <h3 className="text-2xl font-bold mb-3 pixel-text-shadow">ADVANCED GAME</h3>
               <p className="text-blue-200 text-sm leading-relaxed">
-                Upload your own documents for AI-powered trivia generation. 
-                Perfect for studying or testing knowledge of specific materials!
+                Upload your own documents for AI-powered trivia generation. Perfect for studying or
+                testing knowledge of specific materials!
               </p>
               <div className="mt-4 text-xs text-blue-300 font-semibold">
                 • Document Upload • Custom Timing • Contextual AI
               </div>
             </button>
           </div>
-        </section>        {/* Footer info */}
+        </section>{' '}
+        {/* Footer info */}
         <footer className="text-center text-gray-400 text-sm">
           <p>Use Escape key to go back • Arrow keys to navigate</p>
           <p className="text-xs mt-1 opacity-75">© 2025 PixelTrivia</p>
@@ -213,16 +222,16 @@ export default function GameModePage() {
 
       {/* Help Modal */}
       {showHelp && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
           onClick={closeHelp}
           role="dialog"
           aria-labelledby="help-title"
           aria-modal="true"
         >
-          <div 
+          <div
             className="bg-gray-900 border-4 border-gray-600 rounded-lg p-6 max-w-lg w-full pixel-border animate-slideIn"
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
               <h2 id="help-title" className="text-xl font-bold text-white pixel-text-shadow">
@@ -236,26 +245,26 @@ export default function GameModePage() {
                 ✕
               </button>
             </div>
-              <div className="space-y-4 text-white">
+            <div className="space-y-4 text-white">
               <div className="bg-gray-800 border-2 border-orange-600 rounded p-4">
                 <h3 className="font-bold text-orange-400 mb-2 flex items-center">
                   <span className="mr-2">⚡</span> Quick Game
                 </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  Choose from predefined categories and start immediately. 
-                  Perfect for when you want instant trivia action with 10 carefully curated questions 
-                  from various topics like Science, History, Sports, and Entertainment.
+                  Choose from predefined categories and start immediately. Perfect for when you want
+                  instant trivia action with 10 carefully curated questions from various topics like
+                  Science, History, Sports, and Entertainment.
                 </p>
               </div>
-              
+
               <div className="bg-gray-800 border-2 border-purple-600 rounded p-4">
                 <h3 className="font-bold text-purple-400 mb-2 flex items-center">
                   <span className="mr-2">🤖</span> Custom Game
                 </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  Define topic, education level, and number of AI-generated questions. 
-                  Our AI will create unique questions tailored to your specifications. 
-                  Great for studying specific subjects or exploring niche topics.
+                  Define topic, education level, and number of AI-generated questions. Our AI will
+                  create unique questions tailored to your specifications. Great for studying
+                  specific subjects or exploring niche topics.
                 </p>
               </div>
 
@@ -265,8 +274,8 @@ export default function GameModePage() {
                 </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">
                   In Advanced Game, you can upload documents to give richer context to the AI.
-                  Upload PDF, DOCX, TXT, or Markdown files and our AI will generate questions 
-                  based on your content. Note: It may take a couple minutes to process large files.
+                  Upload PDF, DOCX, TXT, or Markdown files and our AI will generate questions based
+                  on your content. Note: It may take a couple minutes to process large files.
                 </p>
               </div>
 
@@ -275,8 +284,8 @@ export default function GameModePage() {
                   <span className="mr-2">🎯</span> Next Step
                 </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  After selecting a game mode, you'll choose whether to play solo, 
-                  create a multiplayer room, or join an existing room with friends.
+                  After selecting a game mode, you&apos;ll choose whether to play solo, create a
+                  multiplayer room, or join an existing room with friends.
                 </p>
               </div>
             </div>

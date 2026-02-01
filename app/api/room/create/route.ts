@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { generateRoomCode, isValidRoomCode } from '@/lib/roomCode'
 
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         code: roomCode,
         created_at: new Date().toISOString(),
         status: 'waiting',
-        max_players: 8 // Default max players
+        max_players: 8, // Default max players
       })
       .select()
       .single()
@@ -69,22 +69,21 @@ export async function POST(request: NextRequest) {
         data: {
           roomCode: newRoom.code,
           createdAt: newRoom.created_at,
-          status: newRoom.status
+          status: newRoom.status,
         },
-        message: 'Room created successfully'
+        message: 'Room created successfully',
       },
       { status: 201 }
     )
-
   } catch (error) {
     console.error('Room creation error:', error)
-    
+
     // Return error response
     return NextResponse.json(
       {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
-        message: 'Failed to create room'
+        message: 'Failed to create room',
       },
       { status: 500 }
     )
@@ -97,7 +96,7 @@ export async function GET() {
     {
       success: false,
       error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests'
+      message: 'This endpoint only supports POST requests',
     },
     { status: 405 }
   )
@@ -108,7 +107,7 @@ export async function PUT() {
     {
       success: false,
       error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests'
+      message: 'This endpoint only supports POST requests',
     },
     { status: 405 }
   )
@@ -118,8 +117,8 @@ export async function DELETE() {
   return NextResponse.json(
     {
       success: false,
-      error: 'Method not allowed', 
-      message: 'This endpoint only supports POST requests'
+      error: 'Method not allowed',
+      message: 'This endpoint only supports POST requests',
     },
     { status: 405 }
   )

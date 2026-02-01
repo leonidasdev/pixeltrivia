@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'Category is required',
-          message: 'Please provide a category in the request body'
+          message: 'Please provide a category in the request body',
         },
         { status: 400 }
       )
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'Invalid category',
-          message: 'Category must be a non-empty string'
+          message: 'Category must be a non-empty string',
         },
         { status: 400 }
       )
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'Database query failed',
-          message: 'Failed to fetch questions from the database'
+          message: 'Failed to fetch questions from the database',
         },
         { status: 500 }
       )
@@ -57,16 +57,14 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'No questions found',
-          message: `No questions found for category "${trimmedCategory}"`
+          message: `No questions found for category "${trimmedCategory}"`,
         },
         { status: 404 }
       )
     }
 
     // Randomize and select exactly 10 questions (or fewer if not enough available)
-    const shuffledQuestions = questions
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 10)
+    const shuffledQuestions = questions.sort(() => Math.random() - 0.5).slice(0, 10)
 
     // Format the questions for the quiz
     const formattedQuestions = shuffledQuestions.map(q => {
@@ -85,18 +83,19 @@ export async function POST(request: NextRequest) {
         options,
         correctAnswer: q.correct_answer,
         category: q.category,
-        difficulty: q.difficulty
+        difficulty: q.difficulty,
       }
     })
 
     // Validate that all questions have the required structure
-    const validQuestions = formattedQuestions.filter(q => 
-      q.question && 
-      Array.isArray(q.options) && 
-      q.options.length > 0 && 
-      typeof q.correctAnswer === 'number' &&
-      q.correctAnswer >= 0 &&
-      q.correctAnswer < q.options.length
+    const validQuestions = formattedQuestions.filter(
+      q =>
+        q.question &&
+        Array.isArray(q.options) &&
+        q.options.length > 0 &&
+        typeof q.correctAnswer === 'number' &&
+        q.correctAnswer >= 0 &&
+        q.correctAnswer < q.options.length
     )
 
     if (validQuestions.length === 0) {
@@ -104,7 +103,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'No valid questions found',
-          message: 'Questions found but they contain invalid data'
+          message: 'Questions found but they contain invalid data',
         },
         { status: 500 }
       )
@@ -117,11 +116,10 @@ export async function POST(request: NextRequest) {
       meta: {
         totalFound: questions.length,
         returned: validQuestions.length,
-        category: trimmedCategory
+        category: trimmedCategory,
       },
-      message: `Found ${validQuestions.length} questions for category "${trimmedCategory}"`
+      message: `Found ${validQuestions.length} questions for category "${trimmedCategory}"`,
     })
-
   } catch (error) {
     console.error('Quick quiz API error:', error)
 
@@ -131,7 +129,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'Invalid JSON',
-          message: 'Request body must be valid JSON'
+          message: 'Request body must be valid JSON',
         },
         { status: 400 }
       )
@@ -142,7 +140,7 @@ export async function POST(request: NextRequest) {
       {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
-        message: 'Internal server error'
+        message: 'Internal server error',
       },
       { status: 500 }
     )
@@ -155,7 +153,7 @@ export async function GET() {
     {
       success: false,
       error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests. Send category in request body.'
+      message: 'This endpoint only supports POST requests. Send category in request body.',
     },
     { status: 405 }
   )
@@ -166,7 +164,7 @@ export async function PUT() {
     {
       success: false,
       error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests'
+      message: 'This endpoint only supports POST requests',
     },
     { status: 405 }
   )
@@ -177,7 +175,7 @@ export async function DELETE() {
     {
       success: false,
       error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests'
+      message: 'This endpoint only supports POST requests',
     },
     { status: 405 }
   )

@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import CustomGameConfigurator, { type CustomGameConfig } from '@/app/components/CustomGameConfigurator'
+import CustomGameConfigurator, {
+  type CustomGameConfig,
+} from '@/app/components/CustomGameConfigurator'
 import { generateCustomQuiz, type CustomQuizRequest } from '@/lib/customQuizApi'
 
 export default function CustomGamePage() {
@@ -11,45 +13,48 @@ export default function CustomGamePage() {
 
   const handleStartCustomGame = async (config: CustomGameConfig) => {
     setIsGenerating(true)
-    
+
     try {
       console.log('Starting custom game with config:', config)
-      
+
       // Convert config to API request format
       const quizRequest: CustomQuizRequest = {
         knowledgeLevel: config.knowledgeLevel,
         context: config.context,
-        numQuestions: config.numberOfQuestions
+        numQuestions: config.numberOfQuestions,
       }
-      
+
       // Call the custom quiz API
       const response = await generateCustomQuiz(quizRequest)
-      
+
       if (!response.success) {
         throw new Error(response.error || 'Failed to generate questions')
       }
 
       console.log('Generated questions:', response.data)
-      
+
       // TODO: Store questions in session storage or pass to game screen
       if (response.data) {
         sessionStorage.setItem('customGameQuestions', JSON.stringify(response.data))
         sessionStorage.setItem('customGameConfig', JSON.stringify(config))
       }
-      
+
       // Show success message with details
-      alert(`🎯 Custom Quiz Generated Successfully!\n\n` +
-            `Knowledge Level: ${config.knowledgeLevel}\n` +
-            `Questions Generated: ${response.data?.length || 0}\n` +
-            `Context: ${config.context || 'General knowledge'}\n\n` +
-            `Ready to start your custom trivia game!`)
-      
+      alert(
+        `🎯 Custom Quiz Generated Successfully!\n\n` +
+          `Knowledge Level: ${config.knowledgeLevel}\n` +
+          `Questions Generated: ${response.data?.length || 0}\n` +
+          `Context: ${config.context || 'General knowledge'}\n\n` +
+          `Ready to start your custom trivia game!`
+      )
+
       // TODO: Navigate to game screen with generated questions
       // router.push('/game/play')
-      
     } catch (error) {
       console.error('Error generating custom game:', error)
-      alert(`❌ Failed to generate custom game:\n\n${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease try again or check your API configuration.`)
+      alert(
+        `❌ Failed to generate custom game:\n\n${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease try again or check your API configuration.`
+      )
     } finally {
       setIsGenerating(false)
     }
@@ -63,10 +68,10 @@ export default function CustomGamePage() {
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 animate-pulse opacity-60"></div>
-        <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-pink-400 animate-pulse opacity-60 animation-delay-1000"></div>
-        <div className="absolute top-1/2 left-1/6 w-2 h-2 bg-cyan-400 animate-pulse opacity-60 animation-delay-2000"></div>
-        <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-green-400 animate-pulse opacity-60 animation-delay-3000"></div>
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 animate-pulse opacity-60" />
+        <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-pink-400 animate-pulse opacity-60 animation-delay-1000" />
+        <div className="absolute top-1/2 left-1/6 w-2 h-2 bg-cyan-400 animate-pulse opacity-60 animation-delay-2000" />
+        <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-green-400 animate-pulse opacity-60 animation-delay-3000" />
       </div>
 
       {/* Main content */}
@@ -90,7 +95,7 @@ export default function CustomGamePage() {
         </header>
 
         {/* Custom Game Configurator */}
-        <CustomGameConfigurator 
+        <CustomGameConfigurator
           onStartCustomGame={handleStartCustomGame}
           onCancel={handleCancel}
           isLoading={isGenerating}
@@ -101,19 +106,25 @@ export default function CustomGamePage() {
           <div className="bg-gray-900 bg-opacity-60 rounded-lg p-4">
             <div className="text-3xl mb-2">🎯</div>
             <h3 className="text-white font-bold mb-1">Targeted Learning</h3>
-            <p className="text-gray-400 text-sm">Questions tailored to your specific topic and knowledge level</p>
+            <p className="text-gray-400 text-sm">
+              Questions tailored to your specific topic and knowledge level
+            </p>
           </div>
-          
+
           <div className="bg-gray-900 bg-opacity-60 rounded-lg p-4">
             <div className="text-3xl mb-2">⚡</div>
             <h3 className="text-white font-bold mb-1">Instant Generation</h3>
-            <p className="text-gray-400 text-sm">AI creates fresh questions in seconds based on your context</p>
+            <p className="text-gray-400 text-sm">
+              AI creates fresh questions in seconds based on your context
+            </p>
           </div>
-          
+
           <div className="bg-gray-900 bg-opacity-60 rounded-lg p-4">
             <div className="text-3xl mb-2">📚</div>
             <h3 className="text-white font-bold mb-1">Any Subject</h3>
-            <p className="text-gray-400 text-sm">From textbook chapters to hobby topics - unlimited possibilities</p>
+            <p className="text-gray-400 text-sm">
+              From textbook chapters to hobby topics - unlimited possibilities
+            </p>
           </div>
         </section>
 
@@ -134,11 +145,21 @@ export default function CustomGamePage() {
             <div>
               <h4 className="text-cyan-300 font-bold mb-2">🎓 Knowledge levels:</h4>
               <ul className="space-y-1 text-xs">
-                <li>• <strong>Elementary:</strong> Simple concepts, basic vocabulary</li>
-                <li>• <strong>Middle School:</strong> Core subjects, foundational knowledge</li>
-                <li>• <strong>High School:</strong> Academic rigor, detailed concepts</li>
-                <li>• <strong>College:</strong> Advanced topics, specialized knowledge</li>
-                <li>• <strong>Classic:</strong> Mixed difficulty, general knowledge</li>
+                <li>
+                  • <strong>Elementary:</strong> Simple concepts, basic vocabulary
+                </li>
+                <li>
+                  • <strong>Middle School:</strong> Core subjects, foundational knowledge
+                </li>
+                <li>
+                  • <strong>High School:</strong> Academic rigor, detailed concepts
+                </li>
+                <li>
+                  • <strong>College:</strong> Advanced topics, specialized knowledge
+                </li>
+                <li>
+                  • <strong>Classic:</strong> Mixed difficulty, general knowledge
+                </li>
               </ul>
             </div>
           </div>
