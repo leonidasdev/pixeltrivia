@@ -7,6 +7,10 @@
  * @since 1.0.0
  */
 
+// ============================================================================
+// Core Components
+// ============================================================================
+
 export { PixelButton } from './PixelButton'
 export type { PixelButtonProps, PixelButtonVariant, PixelButtonSize } from './PixelButton'
 
@@ -24,3 +28,49 @@ export type { PixelInputProps } from './PixelInput'
 
 export { PixelBadge } from './PixelBadge'
 export type { PixelBadgeProps, PixelBadgeVariant } from './PixelBadge'
+
+// ============================================================================
+// Background & Animation Components
+// ============================================================================
+
+export { AnimatedBackground, PageBackground, SparklesOverlay } from './AnimatedBackground'
+export type {
+  AnimatedBackgroundProps,
+  SparkleConfig,
+  SparklePreset,
+  GradientPreset,
+} from './AnimatedBackground'
+
+// ============================================================================
+// Layout Components
+// ============================================================================
+
+export { PageHeader, SectionHeader } from './PageHeader'
+export type { PageHeaderProps, SectionHeaderProps } from './PageHeader'
+
+export {
+  GamePageLayout,
+  MenuPageLayout,
+  ConfigPageLayout,
+  ContentCard,
+  ActionGroup,
+} from './GamePageLayout'
+export type {
+  GamePageLayoutProps,
+  MenuPageLayoutProps,
+  ConfigPageLayoutProps,
+  ContentCardProps,
+  ActionGroupProps,
+} from './GamePageLayout'
+
+// ============================================================================
+// Player Components
+// ============================================================================
+
+export { AvatarDisplay, PlayerDisplay, PlayerBadge, PlayerList } from './PlayerDisplay'
+export type {
+  AvatarDisplayProps,
+  PlayerDisplayProps,
+  PlayerBadgeProps,
+  PlayerListProps,
+} from './PlayerDisplay'

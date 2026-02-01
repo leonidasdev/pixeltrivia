@@ -247,7 +247,11 @@ PixelTrivia is a well-structured trivia game with a solid foundation but has sig
   - [x] Create reusable card component (`app/components/ui/PixelCard.tsx`)
   - [x] Create reusable input component (`app/components/ui/PixelInput.tsx`)
   - [x] Create reusable badge component (`app/components/ui/PixelBadge.tsx`)
-  - [ ] Consolidate background animation elements
+  - [x] Consolidate background animation elements (`app/components/ui/AnimatedBackground.tsx`)
+  - [x] Create shared page layout components (`app/components/ui/GamePageLayout.tsx`)
+  - [x] Create page header components (`app/components/ui/PageHeader.tsx`)
+  - [x] Create player display components (`app/components/ui/PlayerDisplay.tsx`)
+  - [x] Create player settings hook (`hooks/usePlayerSettings.ts`)
 
 ### 3.3 Performance Optimization
 **Status:** Not optimized
