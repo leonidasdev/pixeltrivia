@@ -18,11 +18,11 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/$1',
   },
 
-  // Test file patterns
-  testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+  // Test file patterns - only run __tests__ folder, not Playwright tests in /tests
+  testMatch: ['**/__tests__/**/*.[jt]s?(x)'],
 
-  // Files to ignore
-  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
+  // Files to ignore - exclude Playwright tests and node_modules
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/', '<rootDir>/tests/'],
 
   // Coverage configuration
   collectCoverageFrom: [

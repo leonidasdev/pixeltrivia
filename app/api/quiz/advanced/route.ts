@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // Input validation and sanitization interfaces
 interface QuizRequest {
@@ -44,12 +45,13 @@ function sanitizeFilesSummary(input: string): string {
 }
 
 // Validate request parameters
-function validateRequest(body: any): QuizRequest | null {
+function validateRequest(body: unknown): QuizRequest | null {
   if (!body || typeof body !== 'object') {
     return null
   }
 
-  const { filesSummary, numQuestions = 10, format = 'short', timeLimit = 20 } = body
+  const requestBody = body as Record<string, unknown>
+  const { filesSummary, numQuestions = 10, format = 'short', timeLimit = 20 } = requestBody
 
   // Validate filesSummary
   if (!filesSummary || typeof filesSummary !== 'string' || filesSummary.trim().length === 0) {
@@ -191,7 +193,7 @@ export async function POST(request: NextRequest) {
     const prompt = constructPrompt(validatedRequest)
 
     // Call OpenRouter API
-    console.log(
+    logger.info(
       `Generating ${validatedRequest.numQuestions} questions in ${validatedRequest.format} format`
     )
 
@@ -251,7 +253,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log(`Successfully generated ${questions.length} questions`)
+    logger.info(`Successfully generated ${questions.length} questions`)
 
     // Return successful response
     return NextResponse.json({

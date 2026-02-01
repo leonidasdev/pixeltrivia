@@ -3,8 +3,7 @@
  * Applies security checks at the edge before requests hit API routes
  */
 
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
 /**
  * Security headers to add to all responses

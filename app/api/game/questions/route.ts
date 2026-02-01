@@ -1,8 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getSupabaseClient()
+
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const difficulty = searchParams.get('difficulty')

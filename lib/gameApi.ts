@@ -2,6 +2,8 @@
  * Types and utilities for game questions
  */
 
+import { logger } from './logger'
+
 export interface GameQuestion {
   id: number
   questionNumber: number
@@ -30,15 +32,15 @@ export interface FetchQuestionsResponse {
  * Fetches questions for a quick game
  */
 export async function fetchQuestions(
-  category: string, 
-  difficulty: string, 
+  category: string,
+  difficulty: string,
   limit: number = 10
 ): Promise<FetchQuestionsResponse> {
   try {
     const params = new URLSearchParams({
       category,
       difficulty,
-      limit: limit.toString()
+      limit: limit.toString(),
     })
 
     const response = await fetch(`/api/game/questions?${params}`, {
@@ -60,7 +62,7 @@ export async function fetchQuestions(
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
-      message: 'Failed to fetch questions'
+      message: 'Failed to fetch questions',
     }
   }
 }
@@ -88,8 +90,8 @@ export interface GameSession {
  * Creates a new game session
  */
 export function createGameSession(
-  questions: GameQuestion[], 
-  category: string, 
+  questions: GameQuestion[],
+  category: string,
   difficulty: string
 ): GameSession {
   return {
@@ -100,7 +102,7 @@ export function createGameSession(
     startTime: new Date(),
     answers: [],
     category,
-    difficulty
+    difficulty,
   }
 }
 
@@ -120,7 +122,7 @@ export function calculateScore(session: GameSession): {
   const accuracy = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0
   const totalTime = session.answers.reduce((sum, a) => sum + a.timeSpent, 0)
   const averageTime = totalQuestions > 0 ? totalTime / totalQuestions : 0
-  
+
   // Score calculation: Base points for correct answers + time bonus
   const basePoints = correctAnswers * 100
   const timeBonus = session.answers.reduce((bonus, answer) => {
@@ -131,16 +133,16 @@ export function calculateScore(session: GameSession): {
     }
     return bonus
   }, 0)
-  
+
   const finalScore = Math.round(basePoints + timeBonus)
-  
+
   return {
     correctAnswers,
     totalQuestions,
     accuracy: Math.round(accuracy * 10) / 10,
     totalTime: Math.round(totalTime * 10) / 10,
     averageTime: Math.round(averageTime * 10) / 10,
-    finalScore
+    finalScore,
   }
 }
 
@@ -148,19 +150,19 @@ export function calculateScore(session: GameSession): {
  * Example usage for testing
  */
 export async function testQuestionFetching() {
-  console.log('Testing question fetching...')
-  
+  logger.debug('Testing question fetching...')
+
   const result = await fetchQuestions('General Knowledge', 'classic', 5)
-  
+
   if (result.success && result.data) {
-    console.log('✅ Questions fetched successfully!')
-    console.log('Category:', result.data.selectedCategory)
-    console.log('Difficulty:', result.data.selectedDifficulty)
-    console.log('Total Questions:', result.data.totalQuestions)
-    console.log('Questions:', result.data.questions)
+    logger.info('✅ Questions fetched successfully!')
+    logger.debug('Category:', result.data.selectedCategory)
+    logger.debug('Difficulty:', result.data.selectedDifficulty)
+    logger.debug('Total Questions:', result.data.totalQuestions)
+    logger.debug('Questions:', result.data.questions)
   } else {
-    console.error('❌ Failed to fetch questions:', result.error)
+    logger.error('❌ Failed to fetch questions:', result.error)
   }
-  
+
   return result
 }

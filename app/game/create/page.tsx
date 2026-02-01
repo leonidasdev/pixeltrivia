@@ -1,10 +1,10 @@
 'use client'
 
 import { useSearchParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 
-export default function CreateGamePage() {
-  const router = useRouter()
+function CreateGameContent() {
+  const _router = useRouter()
   const searchParams = useSearchParams()
   const [playerSettings, setPlayerSettings] = useState({
     name: '',
@@ -59,5 +59,17 @@ export default function CreateGamePage() {
         </footer>
       </div>
     </main>
+  )
+}
+
+export default function CreateGamePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>
+      }
+    >
+      <CreateGameContent />
+    </Suspense>
   )
 }

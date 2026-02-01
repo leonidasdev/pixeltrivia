@@ -7,7 +7,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ecf8e?logo=supabase)
-![Tests](https://img.shields.io/badge/Tests-236%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-333%20passing-brightgreen)
 
 **A retro-styled trivia game with AI-powered question generation**
 
@@ -32,7 +32,7 @@
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - Supabase account (for database)
 - OpenRouter API key (for AI question generation)

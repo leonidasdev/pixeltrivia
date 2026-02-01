@@ -1,7 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { generateCustomQuiz, testCustomQuizAPI, type CustomQuizRequest, type CustomQuizQuestion } from '@/lib/customQuizApi'
+import {
+  generateCustomQuiz,
+  testCustomQuizAPI,
+  type CustomQuizRequest,
+  type CustomQuizQuestion,
+  type CustomQuizResponse,
+} from '@/lib/customQuizApi'
 
 export default function CustomQuizTestPage() {
   const [knowledgeLevel, setKnowledgeLevel] = useState('college')
@@ -10,7 +16,7 @@ export default function CustomQuizTestPage() {
   const [questions, setQuestions] = useState<CustomQuizQuestion[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<CustomQuizResponse | null>(null)
 
   const handleGenerateQuiz = async () => {
     if (numQuestions < 1 || numQuestions > 50) {
@@ -26,12 +32,12 @@ export default function CustomQuizTestPage() {
       const config: CustomQuizRequest = {
         knowledgeLevel,
         context: context.trim(),
-        numQuestions
+        numQuestions,
       }
 
       const response = await generateCustomQuiz(config)
       setResult(response)
-      
+
       if (response.success && response.data) {
         setQuestions(response.data)
         setError(null)
@@ -67,7 +73,7 @@ export default function CustomQuizTestPage() {
     { value: 'middle-school', label: 'Middle School' },
     { value: 'high-school', label: 'High School' },
     { value: 'college', label: 'College' },
-    { value: 'classic', label: 'Classic' }
+    { value: 'classic', label: 'Classic' },
   ]
 
   const contextExamples = [
@@ -75,7 +81,7 @@ export default function CustomQuizTestPage() {
     'JavaScript programming fundamentals',
     'World War II Pacific Theater',
     'Photosynthesis and plant biology',
-    'Shakespeare\'s Romeo and Juliet'
+    "Shakespeare's Romeo and Juliet",
   ]
 
   return (
@@ -91,7 +97,7 @@ export default function CustomQuizTestPage() {
         {/* Test Controls */}
         <div className="bg-gray-900 bg-opacity-80 rounded-lg p-6 mb-6">
           <h2 className="text-2xl font-bold text-white mb-4">Test Controls</h2>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
             <div>
               <label htmlFor="knowledgeLevel" className="block text-cyan-300 font-bold mb-2">
@@ -100,7 +106,7 @@ export default function CustomQuizTestPage() {
               <select
                 id="knowledgeLevel"
                 value={knowledgeLevel}
-                onChange={(e) => setKnowledgeLevel(e.target.value)}
+                onChange={e => setKnowledgeLevel(e.target.value)}
                 className="w-full px-4 py-2 bg-gray-800 border-2 border-gray-600 text-white rounded-md
                          focus:border-cyan-400 focus:outline-none"
               >
@@ -111,7 +117,7 @@ export default function CustomQuizTestPage() {
                 ))}
               </select>
             </div>
-            
+
             <div>
               <label htmlFor="numQuestions" className="block text-cyan-300 font-bold mb-2">
                 Number of Questions (1-50):
@@ -122,7 +128,7 @@ export default function CustomQuizTestPage() {
                 min="1"
                 max="50"
                 value={numQuestions}
-                onChange={(e) => setNumQuestions(parseInt(e.target.value) || 1)}
+                onChange={e => setNumQuestions(parseInt(e.target.value) || 1)}
                 className="w-full px-4 py-2 bg-gray-800 border-2 border-gray-600 text-white rounded-md
                          focus:border-cyan-400 focus:outline-none"
               />
@@ -136,7 +142,7 @@ export default function CustomQuizTestPage() {
             <textarea
               id="context"
               value={context}
-              onChange={(e) => setContext(e.target.value)}
+              onChange={e => setContext(e.target.value)}
               placeholder="Enter specific topic, subject, or context for the questions..."
               maxLength={1000}
               rows={4}
@@ -169,16 +175,16 @@ export default function CustomQuizTestPage() {
             <button
               onClick={handleGenerateQuiz}
               disabled={loading}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-600 
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-600
                        text-white font-bold rounded-md transition-colors flex-1 min-w-48"
             >
               {loading ? 'Generating...' : '🤖 Generate Custom Quiz'}
             </button>
-            
+
             <button
               onClick={handleTestAPI}
               disabled={loading}
-              className="px-6 py-3 bg-green-600 hover:bg-green-500 disabled:bg-gray-600 
+              className="px-6 py-3 bg-green-600 hover:bg-green-500 disabled:bg-gray-600
                        text-white font-bold rounded-md transition-colors"
             >
               🧪 Run Test
@@ -207,10 +213,8 @@ export default function CustomQuizTestPage() {
         {/* Questions Display */}
         {questions.length > 0 && (
           <div className="bg-gray-900 bg-opacity-80 rounded-lg p-6">
-            <h3 className="text-white font-bold mb-4">
-              Generated Questions ({questions.length}):
-            </h3>
-            
+            <h3 className="text-white font-bold mb-4">Generated Questions ({questions.length}):</h3>
+
             <div className="space-y-4">
               {questions.map((question, index) => (
                 <div key={question.id} className="bg-gray-800 rounded-lg p-4">
@@ -227,9 +231,9 @@ export default function CustomQuizTestPage() {
                       </span>
                     </div>
                   </div>
-                  
+
                   <p className="text-white mb-3 font-medium">{question.question}</p>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {question.options.map((option, optIndex) => (
                       <div
@@ -240,13 +244,15 @@ export default function CustomQuizTestPage() {
                             : 'bg-gray-700 text-gray-300 border border-gray-600'
                         }`}
                       >
-                        <span className="font-bold">{String.fromCharCode(65 + optIndex)}.</span> {option}
+                        <span className="font-bold">{String.fromCharCode(65 + optIndex)}.</span>{' '}
+                        {option}
                       </div>
                     ))}
                   </div>
-                  
+
                   <p className="text-green-400 text-sm mt-3 font-medium">
-                    ✅ Correct Answer: {String.fromCharCode(65 + question.correctAnswer)} - {question.options[question.correctAnswer]}
+                    ✅ Correct Answer: {String.fromCharCode(65 + question.correctAnswer)} -{' '}
+                    {question.options[question.correctAnswer]}
                   </p>
                 </div>
               ))}
@@ -258,7 +264,7 @@ export default function CustomQuizTestPage() {
         <div className="bg-gray-900 bg-opacity-60 rounded-lg p-6 mt-8 text-gray-300 text-sm">
           <h4 className="text-white font-bold mb-3">API Usage:</h4>
           <pre className="bg-gray-800 p-3 rounded text-green-300 mb-3">
-{`POST /api/quiz/custom
+            {`POST /api/quiz/custom
 Content-Type: application/json
 
 {
@@ -267,12 +273,14 @@ Content-Type: application/json
   "numQuestions": 10
 }`}
           </pre>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <h5 className="text-cyan-300 font-bold mb-2">Required Environment:</h5>
               <ul className="space-y-1 text-xs">
-                <li>• <code>OPENROUTER_API_KEY</code> - Your OpenRouter API key</li>
+                <li>
+                  • <code>OPENROUTER_API_KEY</code> - Your OpenRouter API key
+                </li>
                 <li>• DeepSeek model access through OpenRouter</li>
                 <li>• Internet connection for AI API calls</li>
               </ul>

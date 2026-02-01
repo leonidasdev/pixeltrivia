@@ -6,6 +6,7 @@ import CustomGameConfigurator, {
   type CustomGameConfig,
 } from '@/app/components/CustomGameConfigurator'
 import { generateCustomQuiz, type CustomQuizRequest } from '@/lib/customQuizApi'
+import { logger } from '@/lib/logger'
 
 export default function CustomGamePage() {
   const router = useRouter()
@@ -15,7 +16,7 @@ export default function CustomGamePage() {
     setIsGenerating(true)
 
     try {
-      console.log('Starting custom game with config:', config)
+      logger.debug('Starting custom game with config:', config)
 
       // Convert config to API request format
       const quizRequest: CustomQuizRequest = {
@@ -31,7 +32,7 @@ export default function CustomGamePage() {
         throw new Error(response.error || 'Failed to generate questions')
       }
 
-      console.log('Generated questions:', response.data)
+      logger.debug('Generated questions:', response.data)
 
       // TODO: Store questions in session storage or pass to game screen
       if (response.data) {

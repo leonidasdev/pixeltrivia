@@ -3,7 +3,7 @@
  * Tests game session management utilities
  */
 
-import { createGameSession, type GameQuestion, type GameSession } from '@/lib/gameApi'
+import { createGameSession, type GameQuestion } from '@/lib/gameApi'
 
 describe('gameApi', () => {
   const mockQuestions: GameQuestion[] = [

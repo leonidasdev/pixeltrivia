@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 // Game mode types
@@ -21,7 +21,7 @@ const AVATAR_OPTIONS = [
   { id: 'mage', name: 'Mage', emoji: '✨', color: 'bg-blue-600' },
 ]
 
-export default function GameModePage() {
+function GameModeContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -293,5 +293,17 @@ export default function GameModePage() {
         </div>
       )}
     </main>
+  )
+}
+
+export default function GameModePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>
+      }
+    >
+      <GameModeContent />
+    </Suspense>
   )
 }

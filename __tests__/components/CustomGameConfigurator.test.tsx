@@ -4,11 +4,9 @@
  */
 
 import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CustomGameConfigurator, {
-  type CustomGameConfig,
-} from '@/app/components/CustomGameConfigurator'
+import CustomGameConfigurator from '@/app/components/CustomGameConfigurator'
 
 describe('CustomGameConfigurator', () => {
   const mockOnStartGame = jest.fn()

@@ -2,6 +2,8 @@
  * Client-side utilities for quick quiz functionality
  */
 
+import { logger } from './logger'
+
 export interface QuickQuizQuestion {
   id: number
   question: string
@@ -37,7 +39,7 @@ export async function fetchQuickQuiz(category: string): Promise<QuickQuizRespons
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ category: category.trim() })
+      body: JSON.stringify({ category: category.trim() }),
     })
 
     const data: QuickQuizResponse = await response.json()
@@ -52,7 +54,7 @@ export async function fetchQuickQuiz(category: string): Promise<QuickQuizRespons
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
-      message: 'Failed to fetch quiz questions'
+      message: 'Failed to fetch quiz questions',
     }
   }
 }
@@ -60,21 +62,23 @@ export async function fetchQuickQuiz(category: string): Promise<QuickQuizRespons
 /**
  * Validates a quiz question structure
  */
-export function validateQuizQuestion(question: any): question is QuickQuizQuestion {
+export function validateQuizQuestion(question: unknown): question is QuickQuizQuestion {
+  if (typeof question !== 'object' || question === null) return false
+
+  const q = question as Record<string, unknown>
+
   return (
-    typeof question === 'object' &&
-    question !== null &&
-    typeof question.id === 'number' &&
-    typeof question.question === 'string' &&
-    question.question.length > 0 &&
-    Array.isArray(question.options) &&
-    question.options.length > 1 &&
-    question.options.every((opt: any) => typeof opt === 'string') &&
-    typeof question.correctAnswer === 'number' &&
-    question.correctAnswer >= 0 &&
-    question.correctAnswer < question.options.length &&
-    typeof question.category === 'string' &&
-    typeof question.difficulty === 'string'
+    typeof q.id === 'number' &&
+    typeof q.question === 'string' &&
+    q.question.length > 0 &&
+    Array.isArray(q.options) &&
+    q.options.length > 1 &&
+    q.options.every((opt: unknown) => typeof opt === 'string') &&
+    typeof q.correctAnswer === 'number' &&
+    q.correctAnswer >= 0 &&
+    q.correctAnswer < q.options.length &&
+    typeof q.category === 'string' &&
+    typeof q.difficulty === 'string'
   )
 }
 
@@ -110,7 +114,7 @@ export interface QuickQuizSession {
 }
 
 export function createQuickQuizSession(
-  questions: QuickQuizQuestion[], 
+  questions: QuickQuizQuestion[],
   category: string
 ): QuickQuizSession {
   return {
@@ -120,7 +124,7 @@ export function createQuickQuizSession(
     answers: [],
     startTime: new Date(),
     category,
-    isComplete: false
+    isComplete: false,
   }
 }
 
@@ -146,11 +150,11 @@ export function recordAnswer(
         selectedAnswer,
         isCorrect,
         timeSpent,
-        timestamp: new Date()
-      }
+        timestamp: new Date(),
+      },
     ],
     currentQuestionIndex: session.currentQuestionIndex + 1,
-    isComplete: session.currentQuestionIndex + 1 >= session.questions.length
+    isComplete: session.currentQuestionIndex + 1 >= session.questions.length,
   }
 
   return updatedSession
@@ -182,7 +186,7 @@ export function calculateQuizResults(session: QuickQuizSession): QuizResults {
     if (answer.isCorrect) {
       // Base points for correct answer
       score += 100
-      
+
       // Time bonus (faster = more points, max 20 bonus per question)
       const timeBonus = Math.max(0, Math.min(20, (30 - answer.timeSpent) * (20 / 30)))
       score += timeBonus
@@ -203,7 +207,7 @@ export function calculateQuizResults(session: QuickQuizSession): QuizResults {
     totalTime: Math.round(totalTime * 10) / 10,
     averageTime: Math.round(averageTime * 10) / 10,
     score: Math.round(score),
-    grade
+    grade,
   }
 }
 
@@ -211,29 +215,29 @@ export function calculateQuizResults(session: QuickQuizSession): QuizResults {
  * Example usage for testing the API
  */
 export async function testQuickQuizAPI() {
-  console.log('Testing Quick Quiz API...')
-  
+  logger.debug('Testing Quick Quiz API...')
+
   try {
     // Test with a valid category
     const result = await fetchQuickQuiz('Science')
-    console.log('API Response:', result)
-    
+    logger.debug('API Response:', result)
+
     if (result.success && result.data) {
-      console.log(`✅ Success! Found ${result.data.length} questions for Science category`)
-      
+      logger.info(`✅ Success! Found ${result.data.length} questions for Science category`)
+
       // Validate each question
       const validQuestions = result.data.filter(validateQuizQuestion)
-      console.log(`📝 ${validQuestions.length} out of ${result.data.length} questions are valid`)
-      
+      logger.debug(`📝 ${validQuestions.length} out of ${result.data.length} questions are valid`)
+
       // Create a test session
       if (validQuestions.length > 0) {
         const session = createQuickQuizSession(validQuestions, 'Science')
-        console.log('🎮 Test session created:', session.sessionId)
+        logger.debug('🎮 Test session created:', session.sessionId)
       }
     } else {
-      console.error('❌ API call failed:', result.error)
+      logger.error('❌ API call failed:', result.error)
     }
-    
+
     return result
   } catch (error) {
     console.error('❌ Test failed:', error)

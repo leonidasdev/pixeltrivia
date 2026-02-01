@@ -2,6 +2,8 @@
  * Client-side utilities for room management
  */
 
+import { logger } from './logger'
+
 export interface CreateRoomResponse {
   success: boolean
   data?: {
@@ -33,11 +35,11 @@ export async function createRoom(): Promise<CreateRoomResponse> {
 
     return data
   } catch (error) {
-    console.error('Error creating room:', error)
+    logger.error('Error creating room:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
-      message: 'Failed to create room'
+      message: 'Failed to create room',
     }
   }
 }
@@ -46,18 +48,18 @@ export async function createRoom(): Promise<CreateRoomResponse> {
  * Example usage function for testing
  */
 export async function testRoomCreation() {
-  console.log('Testing room creation...')
-  
+  logger.debug('Testing room creation...')
+
   const result = await createRoom()
-  
+
   if (result.success && result.data) {
-    console.log('✅ Room created successfully!')
-    console.log('Room Code:', result.data.roomCode)
-    console.log('Created At:', result.data.createdAt)
-    console.log('Status:', result.data.status)
+    logger.info('✅ Room created successfully!')
+    logger.debug('Room Code:', result.data.roomCode)
+    logger.debug('Created At:', result.data.createdAt)
+    logger.debug('Status:', result.data.status)
   } else {
-    console.error('❌ Failed to create room:', result.error)
+    logger.error('❌ Failed to create room:', result.error)
   }
-  
+
   return result
 }

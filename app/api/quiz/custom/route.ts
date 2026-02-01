@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // Types for the API
 interface CustomQuizRequest {
@@ -88,7 +89,7 @@ Requirements:
 
     const fullPrompt = basePrompt + contextPrompt + formatPrompt
 
-    console.log('Sending prompt to DeepSeek:', fullPrompt.substring(0, 200) + '...')
+    logger.debug('Sending prompt to DeepSeek:', fullPrompt.substring(0, 200) + '...')
 
     // Call OpenRouter API with DeepSeek model
     const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -122,12 +123,12 @@ Requirements:
 
     if (!openRouterResponse.ok) {
       const errorText = await openRouterResponse.text()
-      console.error('OpenRouter API error:', openRouterResponse.status, errorText)
+      logger.error(`OpenRouter API error: ${openRouterResponse.status}`, errorText)
       throw new Error(`OpenRouter API error: ${openRouterResponse.status} - ${errorText}`)
     }
 
     const aiResponse: OpenRouterResponse = await openRouterResponse.json()
-    console.log('OpenRouter response received')
+    logger.debug('OpenRouter response received')
 
     // Extract and parse the AI response
     const rawContent = aiResponse.choices?.[0]?.message?.content
@@ -135,7 +136,7 @@ Requirements:
       throw new Error('No content received from AI')
     }
 
-    console.log('Raw AI response:', rawContent.substring(0, 300) + '...')
+    logger.debug('Raw AI response:', rawContent.substring(0, 300) + '...')
 
     // Clean up the response (remove markdown if present)
     let cleanContent = rawContent.trim()
@@ -160,9 +161,19 @@ Requirements:
       throw new Error('Invalid response format: missing questions array')
     }
 
+    // Type for AI-generated question structure
+    interface AIQuestion {
+      question?: string
+      options?: string[]
+      correctAnswer?: number
+      category?: string
+      difficulty?: string
+      explanation?: string
+    }
+
     // Format questions with IDs and validation
     const formattedQuestions: QuizQuestion[] = parsedResponse.questions.map(
-      (q: any, index: number) => {
+      (q: AIQuestion, index: number) => {
         // Validate question structure
         if (!q.question || !Array.isArray(q.options) || q.options.length !== 4) {
           throw new Error(`Invalid question format at index ${index}`)
@@ -188,7 +199,7 @@ Requirements:
       throw new Error('No valid questions generated')
     }
 
-    console.log(`Successfully generated ${formattedQuestions.length} questions`)
+    logger.info(`Successfully generated ${formattedQuestions.length} questions`)
 
     // Return success response
     return NextResponse.json(

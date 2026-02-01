@@ -12,6 +12,7 @@ Comprehensive guide to testing in PixelTrivia.
   - [Unit Tests](#unit-tests)
   - [Component Tests](#component-tests)
   - [API Tests](#api-tests)
+- [E2E Testing with Playwright](#e2e-testing-with-playwright)
 - [Mocking](#mocking)
 - [Coverage](#coverage)
 - [Best Practices](#best-practices)
@@ -23,8 +24,9 @@ Comprehensive guide to testing in PixelTrivia.
 
 PixelTrivia uses a comprehensive testing setup with:
 
-- **236 tests** across 11 test suites
-- **Jest 30** as the test runner
+- **333 tests** total (305 Jest + 28 Playwright E2E)
+- **Jest 30** as the unit/component test runner
+- **Playwright** for E2E testing (Chromium + Firefox)
 - **React Testing Library** for component tests
 - **>20% coverage** threshold (and growing)
 
@@ -38,11 +40,12 @@ Tests run automatically:
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| Jest | 30.2.0 | Test runner |
+| Jest | 30.2.0 | Unit/Component test runner |
 | @testing-library/react | 16.4.1 | Component testing |
 | @testing-library/jest-dom | 6.6.3 | DOM matchers |
 | @testing-library/user-event | 14.x | User interaction simulation |
 | jest-environment-jsdom | 30.2.0 | Browser environment |
+| Playwright | 1.51.x | E2E testing |
 
 ---
 
@@ -100,22 +103,31 @@ This generates:
 ## Test Structure
 
 ```
-__tests__/
+__tests__/                         # Jest unit & component tests
 ├── components/                    # Component tests
 │   ├── CustomGameConfigurator.test.tsx
 │   ├── QuickGameSelector.test.tsx
-│   └── ErrorBoundary.test.tsx
-└── unit/                         # Unit tests
+│   ├── SettingsPanel.test.tsx
+│   ├── ErrorBoundary.test.tsx
+│   └── Help/
+│       └── HelpModal.test.tsx
+├── integration/                   # Integration tests
+│   └── api/
+└── unit/                          # Unit tests
     └── lib/
-        ├── errors.test.ts        # Error classes
-        ├── validation.test.ts    # Zod schemas
-        ├── rateLimit.test.ts     # Rate limiting
-        ├── security.test.ts      # Security functions
-        ├── roomCode.test.ts      # Room code utils
-        ├── roomApi.test.ts       # Room API client
-        ├── gameApi.test.ts       # Game API client
-        ├── quickQuizApi.test.ts  # Quick quiz client
-        └── customQuizApi.test.ts # Custom quiz client
+        ├── errors.test.ts         # Error classes
+        ├── validation.test.ts     # Zod schemas
+        ├── rateLimit.test.ts      # Rate limiting
+        ├── security.test.ts       # Security functions
+        ├── roomCode.test.ts       # Room code utils
+        ├── roomApi.test.ts        # Room API client
+        ├── gameApi.test.ts        # Game API client
+        ├── quickQuizApi.test.ts   # Quick quiz client
+        └── customQuizApi.test.ts  # Custom quiz client
+
+tests/                             # Playwright E2E tests
+├── home.spec.ts                   # Home page E2E tests
+└── game-flow.spec.ts              # Game flow E2E tests
 ```
 
 ### Naming Conventions
@@ -194,7 +206,7 @@ jest.mock('next/navigation', () => ({
 describe('QuickGameSelector', () => {
   it('should render category buttons', () => {
     render(<QuickGameSelector />);
-    
+
     expect(screen.getByText('Gaming')).toBeInTheDocument();
     expect(screen.getByText('Movies')).toBeInTheDocument();
     expect(screen.getByText('Science')).toBeInTheDocument();
@@ -202,17 +214,17 @@ describe('QuickGameSelector', () => {
 
   it('should have accessible button roles', () => {
     render(<QuickGameSelector />);
-    
+
     const buttons = screen.getAllByRole('button');
     expect(buttons.length).toBeGreaterThan(0);
   });
 
   it('should apply hover styles on interaction', async () => {
     render(<QuickGameSelector />);
-    
+
     const gamingButton = screen.getByText('Gaming');
     fireEvent.mouseEnter(gamingButton);
-    
+
     // Check for visual feedback
     expect(gamingButton.closest('button')).toHaveClass('hover:bg-green-600');
   });
@@ -228,24 +240,24 @@ describe('CustomGameConfigurator', () => {
   it('should update question count when slider changes', async () => {
     const user = userEvent.setup();
     render(<CustomGameConfigurator />);
-    
+
     const slider = screen.getByRole('slider', { name: /questions/i });
-    
+
     // Simulate user changing slider value
     await user.type(slider, '{arrowright}{arrowright}');
-    
+
     expect(screen.getByText(/12 questions/i)).toBeInTheDocument();
   });
 
   it('should submit form with entered values', async () => {
     const user = userEvent.setup();
     const onSubmit = jest.fn();
-    
+
     render(<CustomGameConfigurator onSubmit={onSubmit} />);
-    
+
     await user.type(screen.getByLabelText(/topic/i), 'Space');
     await user.click(screen.getByText('Start Quiz'));
-    
+
     expect(onSubmit).toHaveBeenCalledWith(
       expect.objectContaining({ topic: 'Space' })
     );
@@ -280,7 +292,7 @@ describe('roomApi', () => {
       });
 
       const result = await createRoom();
-      
+
       expect(fetch).toHaveBeenCalledWith('/api/room/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
@@ -302,6 +314,90 @@ describe('roomApi', () => {
   });
 });
 ```
+
+---
+
+## E2E Testing with Playwright
+
+### Overview
+
+We use Playwright for end-to-end testing across Chromium and Firefox browsers.
+
+### Running E2E Tests
+
+```bash
+# Run all E2E tests
+npm run test:e2e
+
+# Run with UI mode (interactive)
+npm run test:e2e:ui
+
+# Run headed (see browser)
+npm run test:e2e:headed
+
+# Run specific test file
+npx playwright test tests/home.spec.ts
+
+# Generate test code
+npx playwright codegen http://localhost:3000
+```
+
+### E2E Test Structure
+
+```typescript
+// tests/home.spec.ts
+import { test, expect } from '@playwright/test';
+
+test.describe('Home Page', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+  });
+
+  test('should display main title', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: /pixeltrivia/i })).toBeVisible();
+  });
+
+  test('should navigate to game modes', async ({ page }) => {
+    await page.getByRole('button', { name: /play/i }).click();
+    await expect(page).toHaveURL(/\/game\/mode/);
+  });
+});
+```
+
+### Playwright Configuration
+
+```typescript
+// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: true,
+  retries: process.env.CI ? 2 : 0,
+  reporter: 'html',
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
+  },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+  ],
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  },
+});
+```
+
+### Best Practices for E2E Tests
+
+1. **Use semantic locators** - `getByRole`, `getByLabel`, `getByText` over CSS selectors
+2. **Wait for stability** - Use `expect` with auto-waiting instead of manual waits
+3. **Test user flows** - Focus on complete user journeys, not isolated clicks
+4. **Keep tests independent** - Each test should start fresh
+5. **Use fixtures** - Share setup code across tests
 
 ---
 
@@ -375,10 +471,10 @@ describe('rate limiting', () => {
     for (let i = 0; i < 100; i++) {
       rateLimiter.check('test-ip');
     }
-    
+
     // Advance time past the rate limit window
     jest.advanceTimersByTime(60 * 1000);
-    
+
     // Should be allowed again
     expect(rateLimiter.check('test-ip')).toBe(true);
   });

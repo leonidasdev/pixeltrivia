@@ -1,9 +1,11 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase'
 import { generateRoomCode, isValidRoomCode } from '@/lib/roomCode'
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
+    const supabase = getSupabaseClient()
+
     // Generate a unique room code
     let roomCode: string
     let isUnique = false

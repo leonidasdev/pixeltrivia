@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import SettingsPanel from './components/SettingsPanel'
 
 // Avatar options with pixel-style descriptions
-const AVATAR_OPTIONS = [
+const _AVATAR_OPTIONS = [
   { id: 'knight', name: 'Knight', emoji: '🛡️', color: 'bg-red-600' },
   { id: 'wizard', name: 'Wizard', emoji: '🧙', color: 'bg-purple-600' },
   { id: 'archer', name: 'Archer', emoji: '🏹', color: 'bg-green-600' },
@@ -25,7 +25,7 @@ export default function HomePage() {
   const [volume, setVolume] = useState(50)
   const [playerName, setPlayerName] = useState('')
   const [selectedAvatar, setSelectedAvatar] = useState('knight')
-  const [isCreatingRoom, setIsCreatingRoom] = useState(false)
+  const [isCreatingRoom, _setIsCreatingRoom] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
 
@@ -54,6 +54,7 @@ export default function HomePage() {
     }
 
     // TODO: Navigate to join game screen
+    // eslint-disable-next-line no-console
     console.log('Joining existing game...', { playerName, volume, selectedAvatar })
     alert(
       `Coming soon! Join game functionality will be available once backend is configured.\n\nPlayer: ${playerName}\nAvatar: ${selectedAvatar}\nVolume: ${volume}%`

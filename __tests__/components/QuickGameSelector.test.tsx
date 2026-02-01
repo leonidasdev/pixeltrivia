@@ -4,7 +4,7 @@
  */
 
 import React from 'react'
-import { render, screen, fireEvent, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import QuickGameSelector from '@/app/components/QuickGameSelector'
 
@@ -27,7 +27,7 @@ describe('QuickGameSelector', () => {
   }
 
   // Helper to find difficulty accordion buttons by their aria-controls attribute
-  const getDifficultyButton = (difficulty: string) => {
+  const _getDifficultyButton = (difficulty: string) => {
     const sectionId = `section-${difficulty.toLowerCase().replace(' ', '-')}`
     return (
       screen

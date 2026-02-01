@@ -7,7 +7,7 @@
 const mockFetch = jest.fn()
 global.fetch = mockFetch
 
-import { createRoom, testRoomCreation, CreateRoomResponse } from '@/lib/roomApi'
+import { createRoom, testRoomCreation, type CreateRoomResponse } from '@/lib/roomApi'
 
 describe('roomApi', () => {
   beforeEach(() => {
@@ -122,18 +122,13 @@ describe('roomApi', () => {
   })
 
   describe('testRoomCreation', () => {
-    let consoleSpy: jest.SpyInstance
-
     beforeEach(() => {
-      consoleSpy = jest.spyOn(console, 'log').mockImplementation()
+      // Logger output is suppressed in tests, so we just test the behavior
+      jest.spyOn(console, 'log').mockImplementation()
       jest.spyOn(console, 'error').mockImplementation()
     })
 
-    afterEach(() => {
-      consoleSpy.mockRestore()
-    })
-
-    it('should log success message on successful creation', async () => {
+    it('should call createRoom and return success on successful creation', async () => {
       const mockResponse: CreateRoomResponse = {
         success: true,
         data: {
@@ -149,16 +144,13 @@ describe('roomApi', () => {
         json: () => Promise.resolve(mockResponse),
       })
 
-      await testRoomCreation()
+      const result = await testRoomCreation()
 
-      expect(consoleSpy).toHaveBeenCalledWith('Testing room creation...')
-      expect(consoleSpy).toHaveBeenCalledWith('✅ Room created successfully!')
-      expect(consoleSpy).toHaveBeenCalledWith('Room Code:', 'SUCC01')
+      expect(result.success).toBe(true)
+      expect(result.data?.roomCode).toBe('SUCC01')
     })
 
-    it('should log error message on failed creation', async () => {
-      const errorSpy = jest.spyOn(console, 'error')
-
+    it('should return failure result on failed creation', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         json: () =>
@@ -169,9 +161,9 @@ describe('roomApi', () => {
           }),
       })
 
-      await testRoomCreation()
+      const result = await testRoomCreation()
 
-      expect(errorSpy).toHaveBeenCalledWith('❌ Failed to create room:', expect.any(String))
+      expect(result.success).toBe(false)
     })
 
     it('should return the result from createRoom', async () => {

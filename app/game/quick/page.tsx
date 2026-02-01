@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import QuickGameSelector from '@/app/components/QuickGameSelector'
 import { fetchQuestions, createGameSession } from '@/lib/gameApi'
+import { logger } from '@/lib/logger'
 
 export default function QuickGamePage() {
   const router = useRouter()
@@ -12,7 +13,7 @@ export default function QuickGamePage() {
     setIsStartingGame(true)
 
     try {
-      console.log('Starting quick game:', { category, difficulty })
+      logger.debug('Starting quick game:', { category, difficulty })
 
       // Fetch 10 questions for the selected category and difficulty
       const questionsResult = await fetchQuestions(category, difficulty, 10)
@@ -24,7 +25,7 @@ export default function QuickGamePage() {
       // Create game session
       const gameSession = createGameSession(questionsResult.data.questions, category, difficulty)
 
-      console.log('Game session created:', gameSession)
+      logger.debug('Game session created:', gameSession)
 
       // Store game session in localStorage for the game screen
       localStorage.setItem('currentGameSession', JSON.stringify(gameSession))

@@ -1,5 +1,7 @@
 // Client utility for custom quiz API interactions
 
+import { logger } from './logger'
+
 export interface CustomQuizRequest {
   knowledgeLevel: string
   context: string
@@ -54,12 +56,12 @@ export async function generateCustomQuiz(config: CustomQuizRequest): Promise<Cus
     return data
   } catch (error) {
     console.error('Custom quiz generation failed:', error)
-    
+
     // Return a properly formatted error response
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
-      message: 'Failed to generate custom quiz'
+      message: 'Failed to generate custom quiz',
     }
   }
 }
@@ -72,10 +74,10 @@ export async function testCustomQuizAPI(): Promise<CustomQuizResponse> {
   const testConfig: CustomQuizRequest = {
     knowledgeLevel: 'college',
     context: 'Ancient Greek mythology and gods',
-    numQuestions: 5
+    numQuestions: 5,
   }
 
-  console.log('Testing custom quiz API with config:', testConfig)
+  logger.debug('Testing custom quiz API with config:', testConfig)
   return generateCustomQuiz(testConfig)
 }
 
@@ -97,7 +99,11 @@ export function validateCustomQuizConfig(config: CustomQuizRequest): {
   }
 
   // Validate number of questions
-  if (typeof config.numQuestions !== 'number' || config.numQuestions < 1 || config.numQuestions > 50) {
+  if (
+    typeof config.numQuestions !== 'number' ||
+    config.numQuestions < 1 ||
+    config.numQuestions > 50
+  ) {
     errors.push('Number of questions must be between 1 and 50')
   }
 
@@ -108,7 +114,7 @@ export function validateCustomQuizConfig(config: CustomQuizRequest): {
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   }
 }
 
@@ -119,11 +125,11 @@ export function validateCustomQuizConfig(config: CustomQuizRequest): {
  */
 export function formatKnowledgeLevel(level: string): string {
   const levelMap: Record<string, string> = {
-    'classic': 'Classic',
-    'college': 'College Level',
+    classic: 'Classic',
+    college: 'College Level',
     'high-school': 'High School',
     'middle-school': 'Middle School',
-    'elementary': 'Elementary'
+    elementary: 'Elementary',
   }
 
   return levelMap[level] || level
@@ -146,7 +152,7 @@ export function getEstimatedGenerationTime(numQuestions: number): number {
  * @returns Game session object
  */
 export function createCustomGameSession(
-  questions: CustomQuizQuestion[], 
+  questions: CustomQuizQuestion[],
   config: CustomQuizRequest
 ) {
   return {
@@ -159,6 +165,6 @@ export function createCustomGameSession(
     score: 0,
     answers: [] as number[],
     timeStarted: null as string | null,
-    timeEnded: null as string | null
+    timeEnded: null as string | null,
   }
 }

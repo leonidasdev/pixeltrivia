@@ -1,10 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AdvancedGameConfigurator, {
   type AdvancedGameConfig,
-  type UploadedFile,
 } from '../../components/AdvancedGameConfigurator'
 
 // Game mode types
@@ -26,7 +25,7 @@ const AVATAR_OPTIONS = [
   { id: 'mage', name: 'Mage', emoji: '✨', color: 'bg-blue-600' },
 ]
 
-export default function GameSelectPage() {
+function GameSelectContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   // State management
@@ -83,8 +82,9 @@ export default function GameSelectPage() {
       }
     } else if (option === 'create') {
       // Navigate to room creation
+      if (!selectedGameMode) return
       const params = new URLSearchParams({
-        mode: selectedGameMode!,
+        mode: selectedGameMode,
         name: playerSettings.name,
         avatar: playerSettings.avatar,
         volume: playerSettings.volume.toString(),
@@ -96,8 +96,9 @@ export default function GameSelectPage() {
       router.push(`/game/create?${params.toString()}`)
     } else if (option === 'join') {
       // Navigate to room joining
+      if (!selectedGameMode) return
       const params = new URLSearchParams({
-        mode: selectedGameMode!,
+        mode: selectedGameMode,
         name: playerSettings.name,
         avatar: playerSettings.avatar,
         volume: playerSettings.volume.toString(),
@@ -110,7 +111,7 @@ export default function GameSelectPage() {
     }
   }
   // Handle back navigation from multiplayer options
-  const handleBackToGameMode = () => {
+  const handleBackToGameMode = useCallback(() => {
     // Navigate back to game mode selection with player settings
     const params = new URLSearchParams({
       name: playerSettings.name,
@@ -118,7 +119,7 @@ export default function GameSelectPage() {
       volume: playerSettings.volume.toString(),
     })
     router.push(`/game/mode?${params.toString()}`)
-  }
+  }, [playerSettings, router])
 
   // Close help modal
   const closeHelp = () => {
@@ -141,7 +142,7 @@ export default function GameSelectPage() {
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [showHelp, selectedGameMode, router])
+  }, [showHelp, selectedGameMode, router, handleBackToGameMode])
 
   const avatarDetails = getAvatarDetails(playerSettings.avatar)
 
@@ -441,5 +442,17 @@ export default function GameSelectPage() {
         </div>
       )}
     </main>
+  )
+}
+
+export default function GameSelectPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>
+      }
+    >
+      <GameSelectContent />
+    </Suspense>
   )
 }

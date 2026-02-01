@@ -1,14 +1,19 @@
 'use client'
 
 import { useState } from 'react'
-import { fetchQuickQuiz, testQuickQuizAPI, type QuickQuizQuestion } from '@/lib/quickQuizApi'
+import {
+  fetchQuickQuiz,
+  testQuickQuizAPI,
+  type QuickQuizQuestion,
+  type QuickQuizResponse,
+} from '@/lib/quickQuizApi'
 
 export default function QuizTestPage() {
   const [category, setCategory] = useState('')
   const [questions, setQuestions] = useState<QuickQuizQuestion[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<QuickQuizResponse | null>(null)
 
   const handleFetchQuiz = async () => {
     if (!category.trim()) {
@@ -23,7 +28,7 @@ export default function QuizTestPage() {
     try {
       const response = await fetchQuickQuiz(category)
       setResult(response)
-      
+
       if (response.success && response.data) {
         setQuestions(response.data)
         setError(null)
@@ -54,7 +59,17 @@ export default function QuizTestPage() {
     }
   }
 
-  const categories = ['Science', 'Geography', 'Mathematics', 'Animals', 'Art', 'History', 'Sports', 'Music', 'Food']
+  const categories = [
+    'Science',
+    'Geography',
+    'Mathematics',
+    'Animals',
+    'Art',
+    'History',
+    'Sports',
+    'Music',
+    'Food',
+  ]
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-6">
@@ -69,7 +84,7 @@ export default function QuizTestPage() {
         {/* Test Controls */}
         <div className="bg-gray-900 bg-opacity-80 rounded-lg p-6 mb-6">
           <h2 className="text-2xl font-bold text-white mb-4">Test Controls</h2>
-          
+
           <div className="flex flex-wrap gap-4 mb-4">
             <div className="flex-1 min-w-64">
               <label htmlFor="category" className="block text-cyan-300 font-bold mb-2">
@@ -79,27 +94,27 @@ export default function QuizTestPage() {
                 id="category"
                 type="text"
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={e => setCategory(e.target.value)}
                 placeholder="Enter category (e.g., Science)"
                 className="w-full px-4 py-2 bg-gray-800 border-2 border-gray-600 text-white rounded-md
                          focus:border-cyan-400 focus:outline-none"
               />
             </div>
-            
+
             <div className="flex items-end space-x-2">
               <button
                 onClick={handleFetchQuiz}
                 disabled={loading}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600
                          text-white font-bold rounded-md transition-colors"
               >
                 {loading ? 'Loading...' : 'Fetch Quiz'}
               </button>
-              
+
               <button
                 onClick={handleTestAPI}
                 disabled={loading}
-                className="px-6 py-2 bg-green-600 hover:bg-green-500 disabled:bg-gray-600 
+                className="px-6 py-2 bg-green-600 hover:bg-green-500 disabled:bg-gray-600
                          text-white font-bold rounded-md transition-colors"
               >
                 Run Test
@@ -143,10 +158,8 @@ export default function QuizTestPage() {
         {/* Questions Display */}
         {questions.length > 0 && (
           <div className="bg-gray-900 bg-opacity-80 rounded-lg p-6">
-            <h3 className="text-white font-bold mb-4">
-              Questions Found ({questions.length}):
-            </h3>
-            
+            <h3 className="text-white font-bold mb-4">Questions Found ({questions.length}):</h3>
+
             <div className="space-y-4">
               {questions.map((question, index) => (
                 <div key={question.id} className="bg-gray-800 rounded-lg p-4">
@@ -163,9 +176,9 @@ export default function QuizTestPage() {
                       </span>
                     </div>
                   </div>
-                  
+
                   <p className="text-white mb-3">{question.question}</p>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {question.options.map((option, optIndex) => (
                       <div
@@ -180,9 +193,10 @@ export default function QuizTestPage() {
                       </div>
                     ))}
                   </div>
-                  
+
                   <p className="text-green-400 text-xs mt-2">
-                    Correct Answer: {question.correctAnswer + 1} - {question.options[question.correctAnswer]}
+                    Correct Answer: {question.correctAnswer + 1} -{' '}
+                    {question.options[question.correctAnswer]}
                   </p>
                 </div>
               ))}
@@ -194,14 +208,17 @@ export default function QuizTestPage() {
         <div className="bg-gray-900 bg-opacity-60 rounded-lg p-6 mt-8 text-gray-300 text-sm">
           <h4 className="text-white font-bold mb-2">API Usage:</h4>
           <pre className="bg-gray-800 p-3 rounded text-green-300 mb-2">
-{`POST /api/quiz/quick
+            {`POST /api/quiz/quick
 Content-Type: application/json
 
 {
   "category": "Science"
 }`}
           </pre>
-          <p>The API returns up to 10 questions matching the category with question, options, correctAnswer, and id fields.</p>
+          <p>
+            The API returns up to 10 questions matching the category with question, options,
+            correctAnswer, and id fields.
+          </p>
         </div>
       </div>
     </main>
