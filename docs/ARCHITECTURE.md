@@ -150,6 +150,39 @@ lib/
 └── customQuizApi.ts   # Custom quiz API client
 ```
 
+### Types Structure
+
+```
+types/
+├── index.ts           # Re-exports all types
+├── game.ts            # Game state, questions, sessions, players
+├── api.ts             # API request/response types, error codes
+├── room.ts            # Multiplayer room types and events
+└── quiz.ts            # Quiz configuration and session types
+```
+
+### Constants Structure
+
+```
+constants/
+├── index.ts           # Re-exports all constants
+├── avatars.ts         # Player avatar options
+├── categories.ts      # Game categories by difficulty
+├── difficulties.ts    # Knowledge levels and scoring configs
+└── game.ts            # Game mechanics configuration
+```
+
+### Hooks Structure
+
+```
+hooks/
+├── index.ts           # Re-exports all hooks
+├── useGameState.ts    # Game state management
+├── useLocalStorage.ts # Typed localStorage with React sync
+├── useTimer.ts        # Countdown timer with callbacks
+└── useQuizSession.ts  # Complete quiz session management
+```
+
 ---
 
 ## Component Architecture

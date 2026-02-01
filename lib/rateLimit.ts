@@ -4,7 +4,7 @@
  * For production, consider using Redis-based solution
  */
 
-import { NextResponse } from 'next/server'
+import type { NextResponse } from 'next/server'
 import { RateLimitError } from './errors'
 import { errorResponse } from './apiResponse'
 
@@ -49,7 +49,8 @@ function startCleanup() {
 
   cleanupTimer = setInterval(() => {
     const now = Date.now()
-    for (const [key, entry] of rateLimitStore.entries()) {
+    const entries = Array.from(rateLimitStore.entries())
+    for (const [key, entry] of entries) {
       if (entry.resetTime < now) {
         rateLimitStore.delete(key)
       }

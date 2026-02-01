@@ -100,6 +100,27 @@ pixeltrivia/
 │   ├── quickQuizApi.ts       # Quick quiz API client
 │   └── customQuizApi.ts      # Custom quiz API client
 │
+├── types/                    # Shared TypeScript types
+│   ├── index.ts              # Re-exports all types
+│   ├── game.ts               # Game state, questions, sessions, players
+│   ├── api.ts                # API request/response types
+│   ├── room.ts               # Multiplayer room types
+│   └── quiz.ts               # Quiz configuration types
+│
+├── constants/                # Application constants
+│   ├── index.ts              # Re-exports all constants
+│   ├── avatars.ts            # Player avatar options
+│   ├── categories.ts         # Game categories by difficulty
+│   ├── difficulties.ts       # Knowledge levels and scoring
+│   └── game.ts               # Game mechanics configuration
+│
+├── hooks/                    # Custom React hooks
+│   ├── index.ts              # Re-exports all hooks
+│   ├── useGameState.ts       # Game state management
+│   ├── useLocalStorage.ts    # Typed localStorage with React sync
+│   ├── useTimer.ts           # Countdown timer
+│   └── useQuizSession.ts     # Quiz session management
+│
 ├── database/
 │   └── schema.sql            # PostgreSQL schema for Supabase
 │

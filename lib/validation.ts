@@ -131,9 +131,12 @@ export const quickQuizSchema = z.object({
  */
 export const customQuizSchema = z.object({
   knowledgeLevel: knowledgeLevelSchema,
-  context: sanitizedString.pipe(
-    z.string().max(2000, 'Context must be 2000 characters or less').optional()
-  ),
+  context: z
+    .string()
+    .trim()
+    .max(2000, 'Context must be 2000 characters or less')
+    .transform(val => val.replace(/[<>]/g, '').slice(0, 2000))
+    .optional(),
   numberOfQuestions: rangedNumberSchema(1, 50).optional().default(10),
 })
 
@@ -185,7 +188,12 @@ export const generateQuestionsSchema = z.object({
   topic: sanitizedString.pipe(z.string().min(1, 'Topic is required').max(500, 'Topic too long')),
   difficulty: knowledgeLevelSchema,
   count: rangedNumberSchema(1, 20).optional().default(10),
-  context: sanitizedString.pipe(z.string().max(2000).optional()),
+  context: z
+    .string()
+    .trim()
+    .max(2000)
+    .transform(val => val.replace(/[<>]/g, '').slice(0, 2000))
+    .optional(),
   language: z.enum(['en', 'es', 'fr', 'de']).optional().default('en'),
 })
 
