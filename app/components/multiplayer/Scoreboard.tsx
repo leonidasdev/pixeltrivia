@@ -3,6 +3,7 @@
  *
  * Displays the final scores and rankings for a multiplayer game.
  * Shows podium positions, scores, and answer statistics.
+ * Styled with pixel-art aesthetic for retro game feel.
  *
  * @module components/multiplayer/Scoreboard
  * @since 1.1.0
@@ -37,7 +38,7 @@ export function Scoreboard({
   currentPlayerId,
   isFinal,
   onFinish,
-  isHost,
+  isHost: _isHost,
 }: ScoreboardProps) {
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
 
@@ -54,7 +55,7 @@ export function Scoreboard({
       {/* Title */}
       <div className="text-center">
         <div className="text-5xl mb-3">{isFinal ? '🏆' : '📊'}</div>
-        <h2 className="text-3xl font-bold text-white pixel-text-shadow">
+        <h2 className="font-pixel text-2xl text-white pixel-text-shadow">
           {isFinal ? 'FINAL SCORES' : 'SCOREBOARD'}
         </h2>
       </div>
@@ -69,7 +70,7 @@ export function Scoreboard({
             <div
               key={player.id}
               className={`
-                flex items-center gap-4 p-4 rounded-lg border-3 transition-all
+                flex items-center gap-4 p-4 pixel-border border-4 transition-all
                 ${podium ? `${podium.bg} ${podium.border}` : 'bg-gray-800/50 border-gray-700'}
                 ${isCurrentPlayer ? 'ring-2 ring-cyan-400 ring-opacity-50' : ''}
               `}
@@ -79,13 +80,13 @@ export function Scoreboard({
                 {podium ? (
                   <span className="text-2xl">{podium.badge}</span>
                 ) : (
-                  <span className="text-lg text-gray-500 font-bold">#{index + 1}</span>
+                  <span className="font-pixel text-sm text-gray-500">#{index + 1}</span>
                 )}
               </div>
 
               {/* Avatar */}
               <div
-                className={`w-10 h-10 ${getAvatarColor(player.avatar)} rounded-lg flex items-center justify-center text-xl border-2 border-gray-600`}
+                className={`w-10 h-10 ${getAvatarColor(player.avatar)} pixel-border flex items-center justify-center text-xl border-2 border-gray-600`}
               >
                 {getAvatarEmoji(player.avatar)}
               </div>
@@ -93,11 +94,13 @@ export function Scoreboard({
               {/* Name */}
               <div className="flex-1 min-w-0">
                 <span
-                  className={`font-bold text-white ${podium ? 'text-lg' : 'text-base'} truncate block`}
+                  className={`font-pixel-body font-bold text-white ${podium ? 'text-xl' : 'text-lg'} truncate block`}
                 >
                   {player.name}
                   {isCurrentPlayer && (
-                    <span className="ml-2 text-xs text-cyan-400 font-normal">(you)</span>
+                    <span className="ml-2 font-pixel text-[8px] text-cyan-400 font-normal">
+                      (you)
+                    </span>
                   )}
                 </span>
               </div>
@@ -105,11 +108,11 @@ export function Scoreboard({
               {/* Score */}
               <div className="text-right">
                 <span
-                  className={`font-bold font-mono ${podium ? `text-2xl ${podium.color}` : 'text-xl text-gray-300'}`}
+                  className={`font-pixel font-bold ${podium ? `text-lg ${podium.color}` : 'text-base text-gray-300'}`}
                 >
                   {player.score}
                 </span>
-                <span className="text-xs text-gray-500 block">points</span>
+                <span className="font-pixel-body text-sm text-gray-500 block">points</span>
               </div>
             </div>
           )
@@ -121,9 +124,9 @@ export function Scoreboard({
         <div className="flex flex-col gap-3 pt-4">
           <button
             onClick={onFinish}
-            className="w-full py-4 text-lg font-bold bg-cyan-600 hover:bg-cyan-500 border-4 border-cyan-800 text-white rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50"
+            className="w-full py-4 font-pixel text-sm bg-cyan-600 hover:bg-cyan-500 border-4 border-cyan-800 text-white pixel-border pixel-shadow transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50 pixel-glow-hover"
           >
-            {isHost ? '🏠 BACK TO HOME' : '🏠 BACK TO HOME'}
+            🏠 BACK TO HOME
           </button>
         </div>
       )}

@@ -3,6 +3,7 @@
  *
  * Controls visible only to the game host during gameplay.
  * Allows advancing to the next question, pausing, etc.
+ * Styled with pixel-art aesthetic for retro game feel.
  *
  * @module components/multiplayer/HostControls
  * @since 1.1.0
@@ -31,13 +32,13 @@ export function HostControls({
   totalPlayers,
 }: HostControlsProps) {
   return (
-    <div className="bg-yellow-900/20 border-2 border-yellow-600 rounded-lg p-4">
+    <div className="bg-yellow-900/20 border-4 border-yellow-600 p-4 pixel-border">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-yellow-400 text-xs font-bold uppercase tracking-wider">
+          <p className="font-pixel text-[10px] text-yellow-400 uppercase tracking-wider pixel-text-shadow">
             Host Controls
           </p>
-          <p className="text-gray-300 text-sm mt-1">
+          <p className="font-pixel-body text-base text-gray-300 mt-1">
             {answeredCount}/{totalPlayers} players answered
           </p>
         </div>
@@ -46,11 +47,11 @@ export function HostControls({
           onClick={onNextQuestion}
           disabled={!canAdvance || isLoading}
           className={`
-            px-6 py-2 font-bold rounded-lg border-3 transition-all
+            px-6 py-2 font-pixel text-xs pixel-border border-4 transition-all
             focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-50
             ${
               canAdvance && !isLoading
-                ? 'bg-yellow-600 hover:bg-yellow-500 border-yellow-800 text-white cursor-pointer'
+                ? 'bg-yellow-600 hover:bg-yellow-500 border-yellow-800 text-white cursor-pointer pixel-glow-hover'
                 : 'bg-gray-700 border-gray-800 text-gray-400 cursor-not-allowed'
             }
           `}
@@ -60,9 +61,9 @@ export function HostControls({
       </div>
 
       {/* Progress bar of answered players */}
-      <div className="w-full bg-gray-700 rounded-full h-2 mt-3">
+      <div className="w-full bg-gray-700 h-2 mt-3 pixel-border" style={{ borderWidth: '2px' }}>
         <div
-          className="bg-yellow-400 h-2 rounded-full transition-all duration-500"
+          className="bg-yellow-400 h-full transition-all duration-500"
           style={{ width: `${totalPlayers > 0 ? (answeredCount / totalPlayers) * 100 : 0}%` }}
         />
       </div>

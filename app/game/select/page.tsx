@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import AdvancedGameConfigurator, {
   type AdvancedGameConfig,
 } from '../../components/AdvancedGameConfigurator'
-import { LoadingOverlay, SparklesOverlay } from '@/app/components/ui'
+import { LoadingOverlay, SparklesOverlay, PageTransition } from '@/app/components/ui'
 
 // Game mode types
 type GameMode = 'quick' | 'custom' | 'advanced' | null
@@ -141,219 +141,223 @@ function GameSelectContent() {
       <SparklesOverlay />
 
       {/* Main content container */}
-      <div className="flex flex-col items-center space-y-8 z-10 max-w-4xl w-full">
-        {/* Header with player info */}
-        <header className="text-center relative w-full">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 pixel-text-shadow">
-            SELECT GAME MODE
-          </h1>
-          <p className="text-cyan-300 text-lg mb-4">
-            Choose your trivia adventure, {playerSettings.name}!
-          </p>
+      <PageTransition>
+        <div className="flex flex-col items-center space-y-8 z-10 max-w-4xl w-full">
+          {/* Header with player info */}
+          <header className="text-center relative w-full">
+            <h1 className="text-2xl md:text-4xl font-pixel text-white mb-2 pixel-text-shadow">
+              SELECT GAME MODE
+            </h1>
+            <p className="text-cyan-300 font-pixel-body text-xl mb-4">
+              Choose your trivia adventure, {playerSettings.name}!
+            </p>
 
-          {/* Player info display */}
-          <div className="flex items-center justify-center space-x-4 mb-6">
-            <div
-              className={`w-12 h-12 ${avatarDetails.color} border-3 border-gray-600 rounded-lg flex items-center justify-center pixel-border`}
-            >
-              <span className="text-2xl" role="img" aria-label={avatarDetails.name}>
-                {avatarDetails.emoji}
-              </span>
-            </div>{' '}
-            <div className="text-left">
-              <div className="text-white font-bold">{playerSettings.name}</div>
-              <div className="text-gray-400 text-sm">{avatarDetails.name} Avatar</div>
+            {/* Player info display */}
+            <div className="flex items-center justify-center space-x-4 mb-6">
+              <div
+                className={`w-12 h-12 ${avatarDetails.color} border-3 border-gray-600 rounded-lg flex items-center justify-center pixel-border`}
+              >
+                <span className="text-2xl" role="img" aria-label={avatarDetails.name}>
+                  {avatarDetails.emoji}
+                </span>
+              </div>{' '}
+              <div className="text-left">
+                <div className="text-white font-pixel text-xs">{playerSettings.name}</div>
+                <div className="text-gray-400 font-pixel-body text-base">
+                  {avatarDetails.name} Avatar
+                </div>
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        {!selectedGameMode ? (
-          /* Game Mode Selection */
-          <section className="w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-              {/* Quick Game Card */}
-              <button
-                onClick={() => handleGameModeSelect('quick')}
-                onMouseEnter={() => setHoveredCard('quick')}
-                onMouseLeave={() => setHoveredCard(null)}
-                onFocus={() => setHoveredCard('quick')}
-                onBlur={() => setHoveredCard(null)}
-                className={`
-                  p-8 bg-gradient-to-br from-orange-600 to-orange-700 border-4 border-orange-800 rounded-lg
+          {!selectedGameMode ? (
+            /* Game Mode Selection */
+            <section className="w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                {/* Quick Game Card */}
+                <button
+                  onClick={() => handleGameModeSelect('quick')}
+                  onMouseEnter={() => setHoveredCard('quick')}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  onFocus={() => setHoveredCard('quick')}
+                  onBlur={() => setHoveredCard(null)}
+                  className={`
+                  p-8 bg-gradient-to-br from-orange-600 to-orange-700 border-4 border-orange-800
                   text-white text-center transition-all duration-200 pixel-border
                   focus:outline-none focus:ring-4 focus:ring-orange-300 focus:ring-opacity-50
                   ${hoveredCard === 'quick' ? 'scale-105 pixel-shadow transform translate-x-1 translate-y-1' : 'hover:scale-105 hover:pixel-shadow hover:transform hover:translate-x-1 hover:translate-y-1'}
                   active:scale-95 active:translate-x-0 active:translate-y-0
                 `}
-              >
-                <div className="text-4xl mb-4">⚡</div>
-                <h3 className="text-2xl font-bold mb-3 pixel-text-shadow">QUICK GAME</h3>
-                <p className="text-orange-200 text-sm leading-relaxed">
-                  Jump into instant trivia with predefined categories. Perfect for quick brain
-                  challenges with 10 random questions!
-                </p>
-                <div className="mt-4 text-xs text-orange-300 font-semibold">
-                  • 10 Questions • Mixed Categories • Instant Start
-                </div>
-              </button>{' '}
-              {/* Custom Game Card */}
-              <button
-                onClick={() => handleGameModeSelect('custom')}
-                onMouseEnter={() => setHoveredCard('custom')}
-                onMouseLeave={() => setHoveredCard(null)}
-                onFocus={() => setHoveredCard('custom')}
-                onBlur={() => setHoveredCard(null)}
-                className={`
-                  p-8 bg-gradient-to-br from-purple-600 to-purple-700 border-4 border-purple-800 rounded-lg
+                >
+                  <div className="text-4xl mb-4">⚡</div>
+                  <h3 className="text-lg font-pixel mb-3 pixel-text-shadow">QUICK GAME</h3>
+                  <p className="text-orange-200 font-pixel-body text-base leading-relaxed">
+                    Jump into instant trivia with predefined categories. Perfect for quick brain
+                    challenges with 10 random questions!
+                  </p>
+                  <div className="mt-4 font-pixel text-[8px] text-orange-300">
+                    • 10 Questions • Mixed Categories • Instant Start
+                  </div>
+                </button>{' '}
+                {/* Custom Game Card */}
+                <button
+                  onClick={() => handleGameModeSelect('custom')}
+                  onMouseEnter={() => setHoveredCard('custom')}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  onFocus={() => setHoveredCard('custom')}
+                  onBlur={() => setHoveredCard(null)}
+                  className={`
+                  p-8 bg-gradient-to-br from-purple-600 to-purple-700 border-4 border-purple-800
                   text-white text-center transition-all duration-200 pixel-border
                   focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-opacity-50
                   ${hoveredCard === 'custom' ? 'scale-105 pixel-shadow transform translate-x-1 translate-y-1' : 'hover:scale-105 hover:pixel-shadow hover:transform hover:translate-x-1 hover:translate-y-1'}
                   active:scale-95 active:translate-x-0 active:translate-y-0
                 `}
-              >
-                <div className="text-4xl mb-4">🤖</div>
-                <h3 className="text-2xl font-bold mb-3 pixel-text-shadow">CUSTOM GAME</h3>
-                <p className="text-purple-200 text-sm leading-relaxed">
-                  Create AI-powered questions on any topic you choose. Specify difficulty, question
-                  count, and educational level!
-                </p>
-                <div className="mt-4 text-xs text-purple-300 font-semibold">
-                  • AI Generated • Your Topics • Custom Settings
-                </div>
-              </button>
-              {/* Advanced Game Card */}
-              <button
-                onClick={() => handleGameModeSelect('advanced')}
-                onMouseEnter={() => setHoveredCard('advanced')}
-                onMouseLeave={() => setHoveredCard(null)}
-                onFocus={() => setHoveredCard('advanced')}
-                onBlur={() => setHoveredCard(null)}
-                className={`
-                  p-8 bg-gradient-to-br from-blue-600 to-blue-700 border-4 border-blue-800 rounded-lg
+                >
+                  <div className="text-4xl mb-4">🤖</div>
+                  <h3 className="text-lg font-pixel mb-3 pixel-text-shadow">CUSTOM GAME</h3>
+                  <p className="text-purple-200 font-pixel-body text-base leading-relaxed">
+                    Create AI-powered questions on any topic you choose. Specify difficulty,
+                    question count, and educational level!
+                  </p>
+                  <div className="mt-4 font-pixel text-[8px] text-purple-300">
+                    • AI Generated • Your Topics • Custom Settings
+                  </div>
+                </button>
+                {/* Advanced Game Card */}
+                <button
+                  onClick={() => handleGameModeSelect('advanced')}
+                  onMouseEnter={() => setHoveredCard('advanced')}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  onFocus={() => setHoveredCard('advanced')}
+                  onBlur={() => setHoveredCard(null)}
+                  className={`
+                  p-8 bg-gradient-to-br from-blue-600 to-blue-700 border-4 border-blue-800
                   text-white text-center transition-all duration-200 pixel-border
                   focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50
                   ${hoveredCard === 'advanced' ? 'scale-105 pixel-shadow transform translate-x-1 translate-y-1' : 'hover:scale-105 hover:pixel-shadow hover:transform hover:translate-x-1 hover:translate-y-1'}
                   active:scale-95 active:translate-x-0 active:translate-y-0 md:col-span-2
                 `}
-              >
-                <div className="text-4xl mb-4">📚</div>
-                <h3 className="text-2xl font-bold mb-3 pixel-text-shadow">ADVANCED GAME</h3>
-                <p className="text-blue-200 text-sm leading-relaxed">
-                  Upload your own documents for AI-powered trivia generation. Perfect for studying
-                  or testing knowledge of specific materials!
-                </p>
-                <div className="mt-4 text-xs text-blue-300 font-semibold">
-                  • Document Upload • Custom Timing • Contextual AI
-                </div>
-              </button>
-            </div>
-          </section>
-        ) : (
-          /* Play Option Selection */
-          <section className="w-full max-w-2xl">
-            {' '}
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-white mb-2 pixel-text-shadow">
-                {selectedGameMode === 'quick'
-                  ? '⚡ QUICK GAME'
-                  : selectedGameMode === 'custom'
-                    ? '🤖 CUSTOM GAME'
-                    : '📚 ADVANCED GAME'}{' '}
-                SELECTED
-              </h2>
-              <p className="text-gray-300">
-                {selectedGameMode === 'advanced'
-                  ? 'Configure your document-based trivia game, then choose how to play.'
-                  : 'You can play alone or with up to 8 players. The game starts when everyone is ready, or after a brief countdown.'}
-              </p>{' '}
-            </div>
-            {/* Advanced Game Configuration */}
-            {selectedGameMode === 'advanced' && (
-              <div className="mb-8 p-6 bg-gray-900 border-3 border-gray-600 rounded-lg pixel-border">
-                <h3 className="text-xl font-bold text-white mb-4 pixel-text-shadow">
-                  📚 Configure Advanced Game
-                </h3>
-                <AdvancedGameConfigurator
-                  config={advancedGameConfig}
-                  onConfigChange={setAdvancedGameConfig}
-                />
+                >
+                  <div className="text-4xl mb-4">📚</div>
+                  <h3 className="text-lg font-pixel mb-3 pixel-text-shadow">ADVANCED GAME</h3>
+                  <p className="text-blue-200 font-pixel-body text-base leading-relaxed">
+                    Upload your own documents for AI-powered trivia generation. Perfect for studying
+                    or testing knowledge of specific materials!
+                  </p>
+                  <div className="mt-4 font-pixel text-[8px] text-blue-300">
+                    • Document Upload • Custom Timing • Contextual AI
+                  </div>
+                </button>
               </div>
-            )}
-            <div className="space-y-4">
-              {/* Solo Play Option */}
-              <button
-                onClick={() => handlePlayOptionSelect('solo')}
-                onMouseEnter={() => setHoveredCard('solo')}
-                onMouseLeave={() => setHoveredCard(null)}
-                className={`
-                  w-full p-6 bg-gradient-to-r from-green-600 to-green-700 border-4 border-green-800 rounded-lg
+            </section>
+          ) : (
+            /* Play Option Selection */
+            <section className="w-full max-w-2xl">
+              {' '}
+              <div className="text-center mb-8">
+                <h2 className="text-lg font-pixel text-white mb-2 pixel-text-shadow">
+                  {selectedGameMode === 'quick'
+                    ? '⚡ QUICK GAME'
+                    : selectedGameMode === 'custom'
+                      ? '🤖 CUSTOM GAME'
+                      : '📚 ADVANCED GAME'}{' '}
+                  SELECTED
+                </h2>
+                <p className="text-gray-300 font-pixel-body text-base">
+                  {selectedGameMode === 'advanced'
+                    ? 'Configure your document-based trivia game, then choose how to play.'
+                    : 'You can play alone or with up to 8 players. The game starts when everyone is ready, or after a brief countdown.'}
+                </p>{' '}
+              </div>
+              {/* Advanced Game Configuration */}
+              {selectedGameMode === 'advanced' && (
+                <div className="mb-8 p-6 bg-gray-900 border-4 border-gray-600 pixel-border">
+                  <h3 className="text-sm font-pixel text-white mb-4 pixel-text-shadow">
+                    📚 Configure Advanced Game
+                  </h3>
+                  <AdvancedGameConfigurator
+                    config={advancedGameConfig}
+                    onConfigChange={setAdvancedGameConfig}
+                  />
+                </div>
+              )}
+              <div className="space-y-4">
+                {/* Solo Play Option */}
+                <button
+                  onClick={() => handlePlayOptionSelect('solo')}
+                  onMouseEnter={() => setHoveredCard('solo')}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  className={`
+                  w-full p-6 bg-gradient-to-r from-green-600 to-green-700 border-4 border-green-800
                   text-white text-center transition-all duration-200 pixel-border
                   focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50
                   ${hoveredCard === 'solo' ? 'scale-105 pixel-shadow transform translate-x-1 translate-y-1' : 'hover:scale-105 hover:pixel-shadow hover:transform hover:translate-x-1 hover:translate-y-1'}
                   active:scale-95 active:translate-x-0 active:translate-y-0
                 `}
-              >
-                <div className="flex items-center justify-center space-x-4">
-                  <span className="text-3xl">🎯</span>
-                  <div className="text-left">
-                    <h3 className="text-xl font-bold pixel-text-shadow">PLAY SOLO</h3>
-                    <p className="text-green-200 text-sm">
-                      Start immediately • No waiting • Practice mode
-                    </p>
+                >
+                  <div className="flex items-center justify-center space-x-4">
+                    <span className="text-3xl">🎯</span>
+                    <div className="text-left">
+                      <h3 className="text-sm font-pixel pixel-text-shadow">PLAY SOLO</h3>
+                      <p className="text-green-200 font-pixel-body text-base">
+                        Start immediately • No waiting • Practice mode
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </button>
+                </button>
 
-              {/* Multiplayer Options */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {' '}
-                <button
-                  onClick={() => handlePlayOptionSelect('create')}
-                  onMouseEnter={() => setHoveredCard('create')}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  className={`
-                    p-6 bg-gradient-to-r from-blue-600 to-blue-700 border-4 border-blue-800 rounded-lg
+                {/* Multiplayer Options */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {' '}
+                  <button
+                    onClick={() => handlePlayOptionSelect('create')}
+                    onMouseEnter={() => setHoveredCard('create')}
+                    onMouseLeave={() => setHoveredCard(null)}
+                    className={`
+                    p-6 bg-gradient-to-r from-blue-600 to-blue-700 border-4 border-blue-800
                     text-white text-center transition-all duration-200 pixel-border
                     focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50
                     ${hoveredCard === 'create' ? 'scale-105 pixel-shadow transform translate-x-1 translate-y-1' : 'hover:scale-105 hover:pixel-shadow hover:transform hover:translate-x-1 hover:translate-y-1'}
                     active:scale-95 active:translate-x-0 active:translate-y-0
                   `}
-                >
-                  <div className="text-3xl mb-3">🎪</div>
-                  <h3 className="text-lg font-bold mb-2 pixel-text-shadow">CREATE ROOM</h3>
-                  <p className="text-blue-200 text-sm">
-                    Host a game • Get 6-digit code • Invite friends
-                  </p>
-                </button>{' '}
-                <button
-                  onClick={() => handlePlayOptionSelect('join')}
-                  onMouseEnter={() => setHoveredCard('join')}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  className={`
-                    p-6 bg-gradient-to-r from-indigo-600 to-indigo-700 border-4 border-indigo-800 rounded-lg
+                  >
+                    <div className="text-3xl mb-3">🎪</div>
+                    <h3 className="text-xs font-pixel mb-2 pixel-text-shadow">CREATE ROOM</h3>
+                    <p className="text-blue-200 font-pixel-body text-base">
+                      Host a game • Get 6-digit code • Invite friends
+                    </p>
+                  </button>{' '}
+                  <button
+                    onClick={() => handlePlayOptionSelect('join')}
+                    onMouseEnter={() => setHoveredCard('join')}
+                    onMouseLeave={() => setHoveredCard(null)}
+                    className={`
+                    p-6 bg-gradient-to-r from-indigo-600 to-indigo-700 border-4 border-indigo-800
                     text-white text-center transition-all duration-200 pixel-border
                     focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:ring-opacity-50
                     ${hoveredCard === 'join' ? 'scale-105 pixel-shadow transform translate-x-1 translate-y-1' : 'hover:scale-105 hover:pixel-shadow hover:transform hover:translate-x-1 hover:translate-y-1'}
                     active:scale-95 active:translate-x-0 active:translate-y-0
                   `}
-                >
-                  <div className="text-3xl mb-3">🚪</div>
-                  <h3 className="text-lg font-bold mb-2 pixel-text-shadow">JOIN ROOM</h3>{' '}
-                  <p className="text-indigo-200 text-sm">
-                    Enter room code • Join friends • Play together
-                  </p>
-                </button>
+                  >
+                    <div className="text-3xl mb-3">🚪</div>
+                    <h3 className="text-xs font-pixel mb-2 pixel-text-shadow">JOIN ROOM</h3>{' '}
+                    <p className="text-indigo-200 font-pixel-body text-base">
+                      Enter room code • Join friends • Play together
+                    </p>
+                  </button>
+                </div>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
 
-        {/* Footer info */}
-        <footer className="text-center text-gray-400 text-sm">
-          <p>Use Escape key to go back • Arrow keys to navigate</p>
-          <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia</p>
-        </footer>
-      </div>
+          {/* Footer info */}
+          <footer className="text-center text-gray-400 font-pixel-body text-base">
+            <p>Use Escape key to go back • Arrow keys to navigate</p>
+            <p className="font-pixel text-[8px] mt-1 opacity-75">© 2026 PixelTrivia</p>
+          </footer>
+        </div>
+      </PageTransition>
     </main>
   )
 }

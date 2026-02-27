@@ -4,7 +4,13 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { AdvancedGameConfig } from '../../components/AdvancedGameConfigurator'
 import { STORAGE_KEYS } from '@/constants/game'
-import { ToastContainer, useToast, SparklesOverlay, LoadingOverlay } from '@/app/components/ui'
+import {
+  ToastContainer,
+  useToast,
+  SparklesOverlay,
+  LoadingOverlay,
+  PageTransition,
+} from '@/app/components/ui'
 
 export default function AdvancedGamePage() {
   const router = useRouter()
@@ -105,110 +111,122 @@ export default function AdvancedGamePage() {
       <SparklesOverlay />
 
       {/* Main content container */}
-      <div className="flex flex-col items-center space-y-8 z-10 max-w-4xl w-full">
-        {/* Header */}
-        <header className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 pixel-text-shadow">
-            📚 ADVANCED GAME
-          </h1>
-          <p className="text-cyan-300 text-lg">Solo Play with Custom Documents</p>
-        </header>
-        {/* Game Configuration Display */}
-        <section className="w-full max-w-2xl bg-gray-900 border-4 border-gray-600 rounded-lg p-6 pixel-border">
-          <h2 className="text-xl font-bold text-white mb-4 pixel-text-shadow">
-            Game Configuration
-          </h2>
-
-          <div className="space-y-4">
-            {/* Files */}
-            <div>
-              <h3 className="text-cyan-300 font-bold mb-2">Uploaded Documents:</h3>
-              {gameConfig.files.length > 0 ? (
-                <div className="space-y-2">
-                  {gameConfig.files.map(file => (
-                    <div
-                      key={file.id}
-                      className="bg-gray-800 border-2 border-gray-600 rounded p-3 flex items-center space-x-3"
-                    >
-                      <span className="text-lg">📄</span>
-                      <div>
-                        <div className="text-white text-sm font-medium">{file.name}</div>
-                        <div className="text-gray-400 text-xs">
-                          {(file.size / 1024).toFixed(1)} KB
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-400">No documents uploaded</p>
-              )}
-            </div>
-
-            {/* Time and Format */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h3 className="text-cyan-300 font-bold mb-2">Time Per Question:</h3>
-                <p className="text-white text-lg">{gameConfig.timePerQuestion} seconds</p>
-              </div>
-              <div>
-                <h3 className="text-cyan-300 font-bold mb-2">Question Format:</h3>
-                <p className="text-white text-lg capitalize">
-                  {gameConfig.questionFormat === 'short' ? 'Short Questions' : 'Longer Questions'}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>{' '}
-        {/* Game Start Section */}
-        <section className="w-full max-w-lg">
-          {error && (
-            <div className="mb-4 p-4 bg-red-900 bg-opacity-30 border-2 border-red-600 rounded-lg">
-              <h4 className="text-red-300 font-bold text-sm mb-2">⚠️ Error</h4>
-              <p className="text-red-200 text-sm">{error}</p>
-            </div>
-          )}
-
-          <div className="bg-blue-900 bg-opacity-30 border-2 border-blue-600 rounded-lg p-6 text-center">
-            <h3 className="text-xl font-bold text-white mb-4 pixel-text-shadow">
-              🚀 Ready to Start!
-            </h3>
-            <p className="text-blue-200 text-sm mb-6">
-              {gameConfig.files.length > 0
-                ? 'Your documents will be processed by our AI to generate personalized trivia questions. This may take a moment for large files.'
-                : "Since no documents were uploaded, we'll generate general trivia questions based on your preferences."}
-            </p>
+      <PageTransition>
+        <div className="flex flex-col items-center space-y-8 z-10 max-w-4xl w-full">
+          {/* Header */}
+          <header className="text-center">
+            <h1 className="text-2xl md:text-4xl font-pixel text-white mb-2 pixel-text-shadow">
+              📚 ADVANCED GAME
+            </h1>
+            <p className="text-cyan-300 font-pixel-body text-xl">Solo Play with Custom Documents</p>
+          </header>
+          {/* Game Configuration Display */}
+          <section className="w-full max-w-2xl bg-gray-900 border-4 border-gray-600 p-6 pixel-border">
+            <h2 className="text-sm font-pixel text-white mb-4 pixel-text-shadow">
+              Game Configuration
+            </h2>
 
             <div className="space-y-4">
-              <button
-                onClick={handleStartGame}
-                disabled={isGenerating}
-                className={`
-                  w-full py-4 px-6 text-xl font-bold text-white rounded-lg transition-all duration-150
-                  focus:outline-none focus:ring-4 focus:ring-opacity-50 pixel-border
+              {/* Files */}
+              <div>
+                <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Uploaded Documents:</h3>
+                {gameConfig.files.length > 0 ? (
+                  <div className="space-y-2">
+                    {gameConfig.files.map(file => (
+                      <div
+                        key={file.id}
+                        className="bg-gray-800 border-4 border-gray-600 pixel-border p-3 flex items-center space-x-3"
+                      >
+                        <span className="text-lg">📄</span>
+                        <div>
+                          <div className="text-white font-pixel-body text-base font-medium">
+                            {file.name}
+                          </div>
+                          <div className="text-gray-400 font-pixel text-[8px]">
+                            {(file.size / 1024).toFixed(1)} KB
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-400 font-pixel-body text-base">No documents uploaded</p>
+                )}
+              </div>
+
+              {/* Time and Format */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Time Per Question:</h3>
+                  <p className="text-white font-pixel-body text-xl">
+                    {gameConfig.timePerQuestion} seconds
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Question Format:</h3>
+                  <p className="text-white font-pixel-body text-xl capitalize">
+                    {gameConfig.questionFormat === 'short' ? 'Short Questions' : 'Longer Questions'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>{' '}
+          {/* Game Start Section */}
+          <section className="w-full max-w-lg">
+            {error && (
+              <div className="mb-4 p-4 bg-red-900 bg-opacity-30 border-4 border-red-600 pixel-border">
+                <h4 className="text-red-300 font-pixel text-[10px] mb-2">⚠️ Error</h4>
+                <p className="text-red-200 font-pixel-body text-base">{error}</p>
+              </div>
+            )}
+
+            <div className="bg-blue-900 bg-opacity-30 border-4 border-blue-600 pixel-border p-6 text-center">
+              <h3 className="text-sm font-pixel text-white mb-4 pixel-text-shadow">
+                🚀 Ready to Start!
+              </h3>
+              <p className="text-blue-200 font-pixel-body text-base mb-6">
+                {gameConfig.files.length > 0
+                  ? 'Your documents will be processed by our AI to generate personalized trivia questions. This may take a moment for large files.'
+                  : "Since no documents were uploaded, we'll generate general trivia questions based on your preferences."}
+              </p>
+
+              <div className="space-y-4">
+                <button
+                  onClick={handleStartGame}
+                  disabled={isGenerating}
+                  className={`
+                  w-full py-4 px-6 font-pixel text-sm text-white transition-all duration-150
+                  focus:outline-none focus:ring-4 focus:ring-opacity-50 pixel-border pixel-glow-hover
                   ${
                     isGenerating
                       ? 'bg-gray-600 border-4 border-gray-800 cursor-not-allowed'
-                      : 'bg-green-600 hover:bg-green-500 border-4 border-green-800 hover:border-green-600 hover:scale-105 hover:pixel-shadow active:scale-95 focus:ring-green-300'
+                      : 'bg-green-600 hover:bg-green-500 border-4 border-green-800 hover:border-green-600 hover:scale-105 pixel-shadow active:scale-95 focus:ring-green-300'
                   }
                 `}
-              >
-                <span className="block">{isGenerating ? '🔄 GENERATING...' : '🎯 START GAME'}</span>
-                <span className="block text-sm mt-1 font-normal opacity-80">
-                  {isGenerating
-                    ? 'AI is creating your questions...'
-                    : 'Generate questions from your documents'}
-                </span>
-              </button>
+                >
+                  <span className="block">
+                    {isGenerating ? '🔄 GENERATING...' : '🎯 START GAME'}
+                  </span>
+                  <span className="block font-pixel-body text-base mt-1 opacity-80">
+                    {isGenerating
+                      ? 'AI is creating your questions...'
+                      : 'Generate questions from your documents'}
+                  </span>
+                </button>
+              </div>
             </div>
-          </div>
-        </section>
-        {/* Processing Info */}
-        <footer className="text-center text-gray-400 text-sm">
-          <p>💡 Tip: Questions will be generated based on the content of your uploaded documents</p>
-          <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia Advanced Mode</p>
-        </footer>
-      </div>
+          </section>
+          {/* Processing Info */}
+          <footer className="text-center text-gray-400 font-pixel-body text-base">
+            <p>
+              💡 Tip: Questions will be generated based on the content of your uploaded documents
+            </p>
+            <p className="font-pixel text-[8px] mt-1 opacity-75">
+              © 2026 PixelTrivia Advanced Mode
+            </p>
+          </footer>
+        </div>
+      </PageTransition>
 
       {/* Toast notifications */}
       <ToastContainer messages={toasts} onDismiss={dismissToast} />

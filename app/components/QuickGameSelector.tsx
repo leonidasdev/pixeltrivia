@@ -7,7 +7,7 @@ interface QuickGameSelectorProps {
 
 // Category data structure with difficulty levels and their categories
 const GAME_CATEGORIES = {
-  'elementary': {
+  elementary: {
     title: 'Elementary',
     emoji: '🎈',
     description: 'Ages 6-10 • Fun & Simple',
@@ -22,8 +22,8 @@ const GAME_CATEGORIES = {
       'Numbers',
       'Weather',
       'Transportation',
-      'Body Parts'
-    ]
+      'Body Parts',
+    ],
   },
   'middle-school': {
     title: 'Middle School',
@@ -40,8 +40,8 @@ const GAME_CATEGORIES = {
       'American History',
       'Sports',
       'Technology',
-      'Art & Music'
-    ]
+      'Art & Music',
+    ],
   },
   'high-school': {
     title: 'High School',
@@ -58,8 +58,8 @@ const GAME_CATEGORIES = {
       'Chemistry',
       'Physics',
       'Biology',
-      'Government & Politics'
-    ]
+      'Government & Politics',
+    ],
   },
   'college-level': {
     title: 'College Level',
@@ -76,10 +76,10 @@ const GAME_CATEGORIES = {
       'Psychology',
       'Biochemistry',
       'Engineering',
-      'Law & Ethics'
-    ]
+      'Law & Ethics',
+    ],
   },
-  'classic': {
+  classic: {
     title: 'Classic',
     emoji: '🌟',
     description: 'Mixed Difficulty • All Ages',
@@ -94,14 +94,20 @@ const GAME_CATEGORIES = {
       'Food & Drink',
       'Nature',
       'Travel',
-      'Pop Culture'
-    ]
-  }
+      'Pop Culture',
+    ],
+  },
 }
 
-export default function QuickGameSelector({ onCategorySelected, onCancel }: QuickGameSelectorProps) {
+export default function QuickGameSelector({
+  onCategorySelected,
+  onCancel,
+}: QuickGameSelectorProps) {
   const [expandedSection, setExpandedSection] = useState<string | null>('classic')
-  const [selectedCategory, setSelectedCategory] = useState<{ category: string; difficulty: string } | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<{
+    category: string
+    difficulty: string
+  } | null>(null)
   const [hoveredButton, setHoveredButton] = useState<string | null>(null)
 
   const handleSectionToggle = (sectionKey: string) => {
@@ -124,23 +130,21 @@ export default function QuickGameSelector({ onCategorySelected, onCancel }: Quic
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-gray-900 bg-opacity-90 border-4 border-gray-600 rounded-lg p-6 backdrop-blur-sm">
+    <div className="w-full max-w-2xl mx-auto bg-gray-900 bg-opacity-90 border-4 border-gray-600 p-6 pixel-border backdrop-blur-sm">
       <header className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-white pixel-text-shadow mb-2">
-          QUICK GAME
-        </h2>
-        <p className="text-cyan-300 text-sm">
+        <h2 className="text-lg font-pixel text-white pixel-text-shadow mb-2">QUICK GAME</h2>
+        <p className="text-cyan-300 font-pixel-body text-base">
           Choose your difficulty level and category for 10 questions
         </p>
       </header>
 
       <div className="space-y-3">
         {Object.entries(GAME_CATEGORIES).map(([key, section]) => (
-          <div key={key} className="border-2 border-gray-600 rounded-lg overflow-hidden">
+          <div key={key} className="border-4 border-gray-600 pixel-border overflow-hidden">
             {/* Section Header */}
             <button
               onClick={() => handleSectionToggle(key)}
-              onKeyDown={(e) => handleKeyDown(e, () => handleSectionToggle(key))}
+              onKeyDown={e => handleKeyDown(e, () => handleSectionToggle(key))}
               className={`
                 w-full px-4 py-3 flex items-center justify-between
                 ${section.color} ${section.hoverColor} ${section.borderColor}
@@ -156,15 +160,21 @@ export default function QuickGameSelector({ onCategorySelected, onCancel }: Quic
                   {section.emoji}
                 </span>
                 <div className="text-left">
-                  <div className="text-lg font-bold">{section.title}</div>
-                  <div className="text-xs opacity-90">{section.description}</div>
+                  <div className="text-lg font-pixel text-xs">{section.title}</div>
+                  <div className="font-pixel-body text-sm opacity-90">{section.description}</div>
                 </div>
               </div>
-              <div className={`transform transition-transform duration-200 ${
-                expandedSection === key ? 'rotate-180' : ''
-              }`}>
+              <div
+                className={`transform transition-transform duration-200 ${
+                  expandedSection === key ? 'rotate-180' : ''
+                }`}
+              >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
             </button>
@@ -179,10 +189,12 @@ export default function QuickGameSelector({ onCategorySelected, onCancel }: Quic
             >
               <div className="p-4 bg-gray-800 bg-opacity-50">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {section.categories.map((category) => {
+                  {section.categories.map(category => {
                     const buttonKey = `${key}-${category}`
-                    const isSelected = selectedCategory?.category === category && selectedCategory?.difficulty === key
-                    
+                    const isSelected =
+                      selectedCategory?.category === category &&
+                      selectedCategory?.difficulty === key
+
                     return (
                       <button
                         key={category}
@@ -191,23 +203,22 @@ export default function QuickGameSelector({ onCategorySelected, onCancel }: Quic
                         onMouseLeave={() => setHoveredButton(null)}
                         onFocus={() => setHoveredButton(buttonKey)}
                         onBlur={() => setHoveredButton(null)}
-                        onKeyDown={(e) => handleKeyDown(e, () => handleCategorySelect(category, key))}
+                        onKeyDown={e => handleKeyDown(e, () => handleCategorySelect(category, key))}
                         className={`
-                          px-3 py-2 text-sm font-bold text-center rounded-md
-                          border-2 transition-all duration-150 ease-in-out
+                          px-3 py-2 font-pixel-body text-sm font-bold text-center
+                          border-4 pixel-border transition-all duration-150 ease-in-out
                           focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
-                          ${isSelected
-                            ? `${section.color} border-white text-white scale-105 pixel-shadow`
-                            : hoveredButton === buttonKey
-                            ? `${section.color} ${section.borderColor} text-white scale-105 hover:pixel-shadow`
-                            : `bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600 hover:border-gray-500 hover:text-white hover:scale-105`
+                          ${
+                            isSelected
+                              ? `${section.color} border-white text-white scale-105 pixel-shadow`
+                              : hoveredButton === buttonKey
+                                ? `${section.color} ${section.borderColor} text-white scale-105 hover:pixel-shadow`
+                                : `bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600 hover:border-gray-500 hover:text-white hover:scale-105 pixel-glow-hover`
                           }
                         `}
                         aria-label={`Select ${category} category for ${section.title} difficulty`}
                       >
-                        <span className="block leading-tight">
-                          {category}
-                        </span>
+                        <span className="block leading-tight">{category}</span>
                       </button>
                     )
                   })}
@@ -223,17 +234,19 @@ export default function QuickGameSelector({ onCategorySelected, onCancel }: Quic
         {onCancel && (
           <button
             onClick={onCancel}
-            className="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white font-bold rounded-md
-                     border-2 border-gray-700 hover:border-gray-600 transition-all duration-150
+            className="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white font-pixel text-xs
+                     border-4 border-gray-700 hover:border-gray-600 pixel-border transition-all duration-150
                      focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50
-                     hover:scale-105 active:scale-95"
+                     hover:scale-105 active:scale-95 pixel-glow-hover"
           >
             Cancel
           </button>
         )}
-        <div className="text-center text-gray-400 text-xs">
+        <div className="text-center text-gray-400 font-pixel-body text-sm">
           <p>🎮 Use keyboard arrows and Enter to navigate</p>
-          <p className="opacity-75">10 questions per category • Instant start</p>
+          <p className="opacity-75 font-pixel text-[8px]">
+            10 questions per category • Instant start
+          </p>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
  *
  * Displays a list of players in a multiplayer room
  * with their avatars, scores, and status indicators.
+ * Styled with pixel-art aesthetic for retro game feel.
  *
  * @module components/multiplayer/PlayerList
  * @since 1.1.0
@@ -49,7 +50,7 @@ export function PlayerList({
         <div
           key={player.id}
           className={`
-            flex items-center gap-3 p-2 rounded-lg border-2 transition-colors
+            flex items-center gap-3 pixel-border border-4 transition-colors
             ${player.id === currentPlayerId ? 'border-cyan-400 bg-cyan-900/20' : 'border-gray-700 bg-gray-800/50'}
             ${compact ? 'p-1.5' : 'p-3'}
           `}
@@ -57,7 +58,7 @@ export function PlayerList({
           {/* Avatar */}
           <div
             className={`
-              ${getAvatarColor(player.avatar)} rounded-lg flex items-center justify-center border-2 border-gray-600
+              ${getAvatarColor(player.avatar)} pixel-border flex items-center justify-center border-2 border-gray-600
               ${compact ? 'w-8 h-8 text-lg' : 'w-10 h-10 text-xl'}
             `}
           >
@@ -68,17 +69,23 @@ export function PlayerList({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <span
-                className={`font-bold text-white truncate ${compact ? 'text-sm' : 'text-base'}`}
+                className={`font-pixel-body font-bold text-white truncate ${compact ? 'text-base' : 'text-lg'}`}
               >
                 {player.name}
               </span>
               {player.isHost && (
-                <span className="px-1.5 py-0.5 text-xs font-bold bg-yellow-500 text-black rounded">
+                <span
+                  className="px-2 py-0.5 font-pixel text-[8px] font-bold bg-yellow-500 text-black pixel-border"
+                  style={{ borderWidth: '2px' }}
+                >
                   HOST
                 </span>
               )}
               {player.id === currentPlayerId && !player.isHost && (
-                <span className="px-1.5 py-0.5 text-xs font-bold bg-cyan-500 text-black rounded">
+                <span
+                  className="px-2 py-0.5 font-pixel text-[8px] font-bold bg-cyan-500 text-black pixel-border"
+                  style={{ borderWidth: '2px' }}
+                >
                   YOU
                 </span>
               )}
@@ -88,7 +95,9 @@ export function PlayerList({
           {/* Score */}
           {showScores && (
             <div className="text-right">
-              <span className={`font-bold text-yellow-400 ${compact ? 'text-sm' : 'text-lg'}`}>
+              <span
+                className={`font-pixel font-bold text-yellow-400 ${compact ? 'text-xs' : 'text-sm'}`}
+              >
                 {player.score}
               </span>
             </div>
@@ -98,11 +107,17 @@ export function PlayerList({
           {showAnswerStatus && (
             <div className="flex-shrink-0">
               {player.hasAnswered ? (
-                <span className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-xs">
+                <span
+                  className="w-6 h-6 pixel-border bg-green-500 flex items-center justify-center font-pixel text-[8px]"
+                  style={{ borderWidth: '2px' }}
+                >
                   ✓
                 </span>
               ) : (
-                <span className="w-6 h-6 rounded-full bg-gray-600 animate-pulse flex items-center justify-center text-xs text-gray-400">
+                <span
+                  className="w-6 h-6 pixel-border bg-gray-600 animate-pulse flex items-center justify-center font-pixel text-[8px] text-gray-400"
+                  style={{ borderWidth: '2px' }}
+                >
                   •
                 </span>
               )}

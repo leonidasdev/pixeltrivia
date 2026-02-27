@@ -3,6 +3,7 @@
  *
  * Displays the waiting room before a multiplayer game starts.
  * Shows room code, player list, settings, and start button (host only).
+ * Styled with pixel-art aesthetic for retro game feel.
  *
  * @module components/multiplayer/LobbyView
  * @since 1.1.0
@@ -45,21 +46,25 @@ export function LobbyView({
     <div className="max-w-xl w-full mx-auto space-y-6">
       {/* Room Code Display */}
       <div className="text-center">
-        <p className="text-gray-400 text-sm uppercase tracking-wider mb-2">Room Code</p>
-        <div className="bg-gray-800 border-4 border-cyan-500 rounded-xl px-8 py-4 inline-block">
-          <span className="text-4xl md:text-5xl font-mono font-bold text-cyan-300 tracking-[0.3em]">
+        <p className="font-pixel-body text-lg text-gray-400 uppercase tracking-wider mb-2">
+          Room Code
+        </p>
+        <div className="bg-gray-800 border-4 border-cyan-500 px-8 py-4 inline-block pixel-border pixel-shadow">
+          <span className="text-4xl md:text-5xl font-pixel font-bold text-cyan-300 tracking-[0.3em] pixel-text-shadow">
             {formatRoomCode(room.code)}
           </span>
         </div>
-        <p className="text-gray-500 text-sm mt-2">Share this code with friends to join</p>
+        <p className="font-pixel-body text-base text-gray-500 mt-2">
+          Share this code with friends to join
+        </p>
       </div>
 
       {/* Game Settings */}
-      <div className="bg-gray-900 border-2 border-gray-700 rounded-lg p-4">
-        <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">
+      <div className="bg-gray-900 border-4 border-gray-700 p-4 pixel-border">
+        <h3 className="font-pixel text-xs text-gray-400 uppercase tracking-wider mb-3 pixel-text-shadow">
           Game Settings
         </h3>
-        <div className="grid grid-cols-2 gap-3 text-sm">
+        <div className="grid grid-cols-2 gap-3 font-pixel-body text-base">
           <div className="flex justify-between">
             <span className="text-gray-500">Mode</span>
             <span className="text-white font-semibold capitalize">{room.gameMode ?? 'Quick'}</span>
@@ -86,13 +91,13 @@ export function LobbyView({
       </div>
 
       {/* Player List */}
-      <div className="bg-gray-900 border-2 border-gray-700 rounded-lg p-4">
-        <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">
+      <div className="bg-gray-900 border-4 border-gray-700 p-4 pixel-border">
+        <h3 className="font-pixel text-xs text-gray-400 uppercase tracking-wider mb-3 pixel-text-shadow">
           Players ({playerCount}/{room.maxPlayers})
         </h3>
         <PlayerList players={room.players} currentPlayerId={playerId} />
         {playerCount < MIN_PLAYERS_TO_START && (
-          <p className="text-yellow-400 text-sm mt-3 text-center">
+          <p className="font-pixel-body text-base text-yellow-400 mt-3 text-center">
             Need at least {MIN_PLAYERS_TO_START} players to start
           </p>
         )}
@@ -105,18 +110,18 @@ export function LobbyView({
             onClick={onStartGame}
             disabled={!canStart || isStarting}
             className={`
-              w-full py-4 text-xl font-bold rounded-lg border-4 transition-all duration-200
+              w-full py-4 font-pixel text-lg pixel-border border-4 transition-all duration-200
               focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50
               ${
                 canStart && !isStarting
-                  ? 'bg-green-600 hover:bg-green-500 border-green-800 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98]'
+                  ? 'bg-green-600 hover:bg-green-500 border-green-800 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] pixel-shadow pixel-glow-hover'
                   : 'bg-gray-700 border-gray-800 text-gray-400 cursor-not-allowed'
               }
             `}
           >
             {isStarting ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="animate-spin">⏳</span> STARTING...
+                <span className="animate-pixel-bounce">⏳</span> STARTING...
               </span>
             ) : canStart ? (
               '🎮 START GAME'
@@ -128,14 +133,16 @@ export function LobbyView({
 
         {!isHost && (
           <div className="text-center py-4">
-            <div className="text-2xl mb-2 animate-bounce">⏳</div>
-            <p className="text-gray-300 font-semibold">Waiting for host to start the game...</p>
+            <div className="text-2xl mb-2 animate-pixel-bounce">⏳</div>
+            <p className="font-pixel-body text-lg text-gray-300">
+              Waiting for host to start the game...
+            </p>
           </div>
         )}
 
         <button
           onClick={onLeave}
-          className="w-full py-2 text-sm font-bold text-gray-400 hover:text-red-400 border-2 border-gray-700 hover:border-red-600 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
+          className="w-full py-2 font-pixel text-xs text-gray-400 hover:text-red-400 border-4 border-gray-700 hover:border-red-600 pixel-border transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
         >
           LEAVE ROOM
         </button>

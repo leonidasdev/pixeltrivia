@@ -22,19 +22,21 @@ export default function Error({
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-gray-900 bg-opacity-95 border-4 border-red-600 rounded-lg p-6 text-center">
+      <div className="w-full max-w-md bg-gray-900 bg-opacity-95 border-4 border-red-600 pixel-border p-6 text-center">
         <div className="text-6xl mb-4">⚠️</div>
-        <h2 className="text-2xl font-bold text-red-400 pixel-text-shadow mb-2">
+        <h2 className="text-lg font-pixel text-red-400 pixel-text-shadow mb-2">
           Something Went Wrong
         </h2>
-        <p className="text-gray-300 mb-4">We hit a snag loading this page. Let&apos;s try again!</p>
+        <p className="text-gray-300 font-pixel-body text-base mb-4">
+          We hit a snag loading this page. Let&apos;s try again!
+        </p>
 
         {process.env.NODE_ENV === 'development' && (
           <details className="mb-4 text-left">
             <summary className="text-sm text-gray-400 cursor-pointer hover:text-gray-300">
               Error Details
             </summary>
-            <pre className="mt-2 p-3 bg-gray-800 rounded text-xs text-red-300 overflow-auto max-h-32">
+            <pre className="mt-2 p-3 bg-gray-800 pixel-border text-xs text-red-300 overflow-auto max-h-32 font-pixel-body">
               {error.message}
             </pre>
             {error.digest && <p className="text-gray-500 text-xs mt-2">Digest: {error.digest}</p>}
@@ -44,19 +46,19 @@ export default function Error({
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={reset}
-            className="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg
-                       border-2 border-cyan-700 hover:border-cyan-600 transition-all duration-150
+            className="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-pixel text-xs
+                       border-4 border-cyan-700 hover:border-cyan-600 pixel-border transition-all duration-150
                        focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
-                       hover:scale-105 active:scale-95"
+                       hover:scale-105 active:scale-95 pixel-glow-hover"
           >
             🔄 Try Again
           </button>
           <a
             href="/"
-            className="px-6 py-3 bg-gray-600 hover:bg-gray-500 text-white font-bold rounded-lg
-                       border-2 border-gray-700 hover:border-gray-600 transition-all duration-150
+            className="px-6 py-3 bg-gray-600 hover:bg-gray-500 text-white font-pixel text-xs
+                       border-4 border-gray-700 hover:border-gray-600 pixel-border transition-all duration-150
                        focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50
-                       hover:scale-105 active:scale-95 text-center"
+                       hover:scale-105 active:scale-95 pixel-glow-hover text-center"
           >
             🏠 Main Menu
           </a>
