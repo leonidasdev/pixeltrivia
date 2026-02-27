@@ -186,7 +186,43 @@ export default function HomePage() {
             </button>
 
             {/* Settings Row */}
-            <div className="flex justify-center w-full">
+            <div className="flex justify-center w-full gap-3">
+              {/* Stats Button */}
+              <button
+                onClick={() => {
+                  playSound('navigate')
+                  router.push('/game/stats')
+                }}
+                onMouseEnter={() => {
+                  setHoveredButton('stats')
+                  playSound('hover')
+                }}
+                onMouseLeave={() => setHoveredButton(null)}
+                onFocus={() => setHoveredButton('stats')}
+                onBlur={() => setHoveredButton(null)}
+                className={`
+                w-1/2 py-3 px-6 text-lg font-bold text-center
+                bg-purple-600 hover:bg-purple-500 active:bg-purple-700
+                text-white border-4 border-purple-800 hover:border-purple-600
+                transform transition-all duration-150 ease-in-out
+                focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-opacity-50
+                ${
+                  hoveredButton === 'stats'
+                    ? 'scale-105 pixel-shadow translate-x-1 translate-y-1'
+                    : 'hover:scale-105 hover:pixel-shadow hover:translate-x-1 hover:translate-y-1'
+                }
+                active:scale-95 active:translate-x-0 active:translate-y-0
+                pixel-border
+              `}
+                role="menuitem"
+                aria-label="View game stats and history"
+              >
+                <span className="block">📊 STATS</span>
+                <span className="block text-xs text-purple-200 mt-1 font-normal">
+                  History & records
+                </span>
+              </button>
+
               {/* Settings Button */}
               <button
                 onClick={handleSettingsToggle}
@@ -198,7 +234,7 @@ export default function HomePage() {
                 onFocus={() => setHoveredButton('settings')}
                 onBlur={() => setHoveredButton(null)}
                 className={`
-                w-full py-3 px-6 text-lg font-bold text-center
+                w-1/2 py-3 px-6 text-lg font-bold text-center
                 bg-gray-600 hover:bg-gray-500 active:bg-gray-700
                 text-white border-4 border-gray-800 hover:border-gray-600
                 transform transition-all duration-150 ease-in-out
@@ -216,7 +252,7 @@ export default function HomePage() {
               >
                 <span className="block">⚙️ SETTINGS</span>
                 <span className="block text-xs text-gray-200 mt-1 font-normal">
-                  Player name, avatar & volume
+                  Name, avatar & volume
                 </span>
               </button>
             </div>

@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation'
 import { useRoom } from '@/hooks/useRoom'
 import { useMultiplayerGame } from '@/hooks/useMultiplayerGame'
 import { useSound } from '@/hooks/useSound'
+import { addHistoryEntry } from '@/lib/storage'
 import { GameQuestion, PlayerList, Scoreboard, HostControls } from '@/app/components/multiplayer'
 import {
   LoadingOverlay,
@@ -111,19 +112,47 @@ function PlayContent({ params }: PlayPageProps) {
     }
   }, [game.timeRemaining, playSound])
 
-  // Victory confetti + sound
+  // Victory confetti + sound + save to history
   useEffect(() => {
     if (game.phase === 'finished') {
       playSound('victory')
       setShowConfetti(true)
+
+      // Save game to history
+      if (room && playerId) {
+        const currentPlayer = room.players.find(p => p.id === playerId)
+        const totalCorrect = currentPlayer?.score
+          ? Math.round((currentPlayer.score / (room.totalQuestions * 100)) * room.totalQuestions)
+          : 0
+        const accuracy =
+          room.totalQuestions > 0 ? Math.round((totalCorrect / room.totalQuestions) * 100) : 0
+
+        addHistoryEntry({
+          mode: 'multiplayer',
+          category: room.category || 'Mixed',
+          difficulty: room.gameMode || 'medium',
+          score: currentPlayer?.score ?? 0,
+          correctAnswers: totalCorrect,
+          totalQuestions: room.totalQuestions,
+          accuracy,
+          duration: Math.round((Date.now() - new Date(room.createdAt).getTime()) / 1000),
+          streak: 0,
+          playerName: currentPlayer?.name ?? 'Player',
+        })
+      }
     }
-  }, [game.phase, playSound])
+  }, [game.phase, playSound, room, playerId])
 
   const handleFinish = () => {
     localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.PLAYER_ID)
     localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.ROOM_CODE)
     localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.IS_HOST)
     router.push('/')
+  }
+
+  const handleViewStats = () => {
+    playSound('navigate')
+    router.push('/game/stats')
   }
 
   // Lobby redirect if not active
@@ -151,6 +180,14 @@ function PlayContent({ params }: PlayPageProps) {
             onFinish={handleFinish}
             isHost={isHost}
           />
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={handleViewStats}
+              className="font-pixel text-xs bg-cyan-600 hover:bg-cyan-500 text-white pixel-border px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              📊 VIEW STATS
+            </button>
+          </div>
         </PageTransition>
         <ToastContainer messages={toasts} onDismiss={dismissToast} />
       </main>

@@ -23,3 +23,5 @@ export type {
 } from './useMultiplayerGame'
 export { useSound } from './useSound'
 export type { UseSoundReturn } from './useSound'
+export { useGameHistory } from './useGameHistory'
+export type { UseGameHistoryReturn } from './useGameHistory'
