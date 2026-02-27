@@ -1,7 +1,20 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { getSupabaseClient } from '@/lib/supabase'
+import { logger } from '@/lib/logger'
+import {
+  successResponse,
+  validationErrorResponse,
+  notFoundResponse,
+  databaseErrorResponse,
+  serverErrorResponse,
+  methodNotAllowedResponse,
+} from '@/lib/apiResponse'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 export async function POST(request: NextRequest) {
+  const rateLimited = rateLimit(request, RATE_LIMITS.quiz)
+  if (rateLimited) return rateLimited
+
   try {
     const supabase = getSupabaseClient()
 
@@ -10,25 +23,10 @@ export async function POST(request: NextRequest) {
     const { category } = body
 
     // Validate category parameter
-    if (!category) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Category is required',
-          message: 'Please provide a category in the request body',
-        },
-        { status: 400 }
-      )
-    }
-
-    if (typeof category !== 'string' || category.trim().length === 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid category',
-          message: 'Category must be a non-empty string',
-        },
-        { status: 400 }
+    if (!category || typeof category !== 'string' || category.trim().length === 0) {
+      return validationErrorResponse(
+        'Category is required and must be a non-empty string',
+        'category'
       )
     }
 
@@ -42,40 +40,31 @@ export async function POST(request: NextRequest) {
       .limit(20) // Get more than needed for randomization
 
     if (fetchError) {
-      console.error('Supabase fetch error:', fetchError)
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Database query failed',
-          message: 'Failed to fetch questions from the database',
-        },
-        { status: 500 }
-      )
+      logger.error('Supabase fetch error:', fetchError)
+      return databaseErrorResponse('Failed to fetch questions from the database')
     }
 
     // Check if we found any questions
     if (!questions || questions.length === 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'No questions found',
-          message: `No questions found for category "${trimmedCategory}"`,
-        },
-        { status: 404 }
-      )
+      return notFoundResponse('questions', trimmedCategory)
     }
 
-    // Randomize and select exactly 10 questions (or fewer if not enough available)
-    const shuffledQuestions = questions.sort(() => Math.random() - 0.5).slice(0, 10)
+    // Randomize using Fisher-Yates and select exactly 10 questions
+    const shuffledQuestions = [...questions]
+    for (let i = shuffledQuestions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffledQuestions[i], shuffledQuestions[j]] = [shuffledQuestions[j], shuffledQuestions[i]]
+    }
+    const selectedQuestions = shuffledQuestions.slice(0, 10)
 
     // Format the questions for the quiz
-    const formattedQuestions = shuffledQuestions.map(q => {
+    const formattedQuestions = selectedQuestions.map(q => {
       // Parse options if they're stored as JSON string
       let options: string[]
       try {
         options = Array.isArray(q.options) ? q.options : JSON.parse(q.options)
       } catch (parseError) {
-        console.error('Error parsing options for question:', q.id, parseError)
+        logger.error(`Error parsing options for question ${q.id}`, parseError)
         options = []
       }
 
@@ -101,84 +90,27 @@ export async function POST(request: NextRequest) {
     )
 
     if (validQuestions.length === 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'No valid questions found',
-          message: 'Questions found but they contain invalid data',
-        },
-        { status: 500 }
-      )
+      return serverErrorResponse('Questions found but they contain invalid data')
     }
 
     // Return the successful response
-    return NextResponse.json({
-      success: true,
-      data: validQuestions,
-      meta: {
-        totalFound: questions.length,
-        returned: validQuestions.length,
-        category: trimmedCategory,
-      },
-      message: `Found ${validQuestions.length} questions for category "${trimmedCategory}"`,
-    })
+    return successResponse(
+      validQuestions,
+      `Found ${validQuestions.length} questions for category "${trimmedCategory}"`
+    )
   } catch (error) {
-    console.error('Quick quiz API error:', error)
+    logger.error('Quick quiz API error:', error)
 
     // Handle JSON parsing errors
     if (error instanceof SyntaxError) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid JSON',
-          message: 'Request body must be valid JSON',
-        },
-        { status: 400 }
-      )
+      return validationErrorResponse('Request body must be valid JSON')
     }
 
-    // Handle other errors
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-        message: 'Internal server error',
-      },
-      { status: 500 }
-    )
+    return serverErrorResponse(error instanceof Error ? error.message : 'Unknown error occurred')
   }
 }
 
 // Handle unsupported HTTP methods
-export async function GET() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests. Send category in request body.',
-    },
-    { status: 405 }
-  )
-}
-
-export async function PUT() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests',
-    },
-    { status: 405 }
-  )
-}
-
-export async function DELETE() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests',
-    },
-    { status: 405 }
-  )
-}
+export const GET = () => methodNotAllowedResponse('POST')
+export const PUT = () => methodNotAllowedResponse('POST')
+export const DELETE = () => methodNotAllowedResponse('POST')

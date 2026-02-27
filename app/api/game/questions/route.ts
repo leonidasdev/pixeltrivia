@@ -1,7 +1,20 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { getSupabaseClient } from '@/lib/supabase'
+import { logger } from '@/lib/logger'
+import {
+  successResponse,
+  validationErrorResponse,
+  notFoundResponse,
+  databaseErrorResponse,
+  serverErrorResponse,
+  methodNotAllowedResponse,
+} from '@/lib/apiResponse'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 export async function GET(request: NextRequest) {
+  const rateLimited = rateLimit(request, RATE_LIMITS.quiz)
+  if (rateLimited) return rateLimited
+
   try {
     const supabase = getSupabaseClient()
 
@@ -12,36 +25,15 @@ export async function GET(request: NextRequest) {
 
     // Validate parameters
     if (!category) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Category parameter is required',
-          message: 'Please specify a category',
-        },
-        { status: 400 }
-      )
+      return validationErrorResponse('Category parameter is required', 'category')
     }
 
     if (!difficulty) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Difficulty parameter is required',
-          message: 'Please specify a difficulty level',
-        },
-        { status: 400 }
-      )
+      return validationErrorResponse('Difficulty parameter is required', 'difficulty')
     }
 
     if (limit < 1 || limit > 50) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid limit parameter',
-          message: 'Limit must be between 1 and 50',
-        },
-        { status: 400 }
-      )
+      return validationErrorResponse('Limit must be between 1 and 50', 'limit')
     }
 
     // Map difficulty levels to our database difficulty values
@@ -62,29 +54,20 @@ export async function GET(request: NextRequest) {
 
     // For classic mode, get mixed categories and difficulties
     if (difficulty === 'classic') {
-      // Get random questions from various categories
-      query = query.limit(limit * 2) // Get more to have variety after filtering
+      query = query.limit(limit * 2)
     } else {
-      // Filter by difficulty and try to match category
-      query = query.eq('difficulty', dbDifficulty).limit(limit * 2) // Get extra in case we need to filter
+      query = query.eq('difficulty', dbDifficulty).limit(limit * 2)
     }
 
     const { data: questions, error: fetchError } = await query
 
     if (fetchError) {
-      console.error('Error fetching questions:', fetchError)
-      throw new Error('Failed to fetch questions from database')
+      logger.error('Error fetching questions:', fetchError)
+      return databaseErrorResponse('Failed to fetch questions from database')
     }
 
     if (!questions || questions.length === 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'No questions found',
-          message: `No questions available for category "${category}" with difficulty "${difficulty}"`,
-        },
-        { status: 404 }
-      )
+      return notFoundResponse('questions', `${category}/${difficulty}`)
     }
 
     // Filter and randomize questions
@@ -101,14 +84,18 @@ export async function GET(request: NextRequest) {
       if (categoryMatches.length >= limit) {
         filteredQuestions = categoryMatches
       }
-      // If not enough category matches, use all questions with the right difficulty
     }
 
-    // Randomize and limit the questions
-    const shuffled = filteredQuestions.sort(() => Math.random() - 0.5).slice(0, limit)
+    // Randomize using Fisher-Yates and limit the questions
+    const shuffled = [...filteredQuestions]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    const selected = shuffled.slice(0, limit)
 
     // Format questions for the game
-    const formattedQuestions = shuffled.map((q, index) => ({
+    const formattedQuestions = selected.map((q, index) => ({
       id: q.id,
       questionNumber: index + 1,
       question: q.question_text,
@@ -116,45 +103,24 @@ export async function GET(request: NextRequest) {
       correctAnswer: q.correct_answer,
       category: q.category,
       difficulty: q.difficulty,
-      timeLimit: 30, // 30 seconds per question
+      timeLimit: 30,
     }))
 
-    return NextResponse.json(
+    return successResponse(
       {
-        success: true,
-        data: {
-          questions: formattedQuestions,
-          totalQuestions: formattedQuestions.length,
-          selectedCategory: category,
-          selectedDifficulty: difficulty,
-          timeLimit: 30,
-        },
-        message: 'Questions fetched successfully',
+        questions: formattedQuestions,
+        totalQuestions: formattedQuestions.length,
+        selectedCategory: category,
+        selectedDifficulty: difficulty,
+        timeLimit: 30,
       },
-      { status: 200 }
+      'Questions fetched successfully'
     )
   } catch (error) {
-    console.error('Quick game questions error:', error)
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-        message: 'Failed to fetch questions',
-      },
-      { status: 500 }
-    )
+    logger.error('Quick game questions error:', error)
+    return serverErrorResponse(error instanceof Error ? error.message : 'Unknown error occurred')
   }
 }
 
 // Handle unsupported HTTP methods
-export async function POST() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports GET requests',
-    },
-    { status: 405 }
-  )
-}
+export const POST = () => methodNotAllowedResponse('GET')

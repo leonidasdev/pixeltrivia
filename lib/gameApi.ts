@@ -3,15 +3,11 @@
  */
 
 import { logger } from './logger'
+import type { Question } from '@/types'
 
-export interface GameQuestion {
+export interface GameQuestion extends Question {
   id: number
   questionNumber: number
-  question: string
-  options: string[]
-  correctAnswer: number
-  category: string
-  difficulty: string
   timeLimit: number
 }
 
@@ -25,7 +21,11 @@ export interface FetchQuestionsResponse {
     timeLimit: number
   }
   error?: string
-  message: string
+  code?: string
+  message?: string
+  meta?: {
+    timestamp: string
+  }
 }
 
 /**

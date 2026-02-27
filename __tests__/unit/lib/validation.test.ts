@@ -171,7 +171,7 @@ describe('Validation Schemas', () => {
       const result = customQuizSchema.safeParse({
         knowledgeLevel: 'college',
         context: 'Focus on military history',
-        numberOfQuestions: 5,
+        numQuestions: 5,
       })
       expect(result.success).toBe(true)
     })
@@ -197,7 +197,7 @@ describe('Validation Schemas', () => {
       const result = advancedQuizSchema.safeParse({
         knowledgeLevel: 'high-school',
         categories: ['physics', 'chemistry'],
-        numberOfQuestions: 10,
+        numQuestions: 10,
         timePerQuestion: 30,
         enableHints: true,
       })

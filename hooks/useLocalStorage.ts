@@ -90,20 +90,23 @@ export function useLocalStorage<T>(
   const setValue = useCallback(
     (value: T | ((prev: T) => T)) => {
       try {
-        // Allow value to be a function (like React setState)
-        const valueToStore = value instanceof Function ? value(storedValue) : value
+        // Delegate to React's functional updater to avoid stale closure issues
+        // when setValue is called multiple times before a re-render
+        setStoredValue(prev => {
+          const valueToStore = value instanceof Function ? value(prev) : value
 
-        setStoredValue(valueToStore)
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem(key, serializer(valueToStore))
+          }
 
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem(key, serializer(valueToStore))
-        }
+          return valueToStore
+        })
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn(`Error setting localStorage key "${key}":`, error)
       }
     },
-    [key, serializer, storedValue]
+    [key, serializer]
   )
 
   /**

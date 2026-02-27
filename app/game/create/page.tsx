@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
+import { LoadingOverlay } from '@/app/components/ui'
 
 function CreateGameContent() {
   const _router = useRouter()
@@ -55,7 +56,7 @@ function CreateGameContent() {
 
         <footer className="text-center text-gray-400 text-sm mt-8">
           <p>Room will be created when you&apos;re ready to play</p>
-          <p className="text-xs mt-1 opacity-75">© 2025 PixelTrivia</p>
+          <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia</p>
         </footer>
       </div>
     </main>
@@ -64,11 +65,7 @@ function CreateGameContent() {
 
 export default function CreateGamePage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>
-      }
-    >
+    <Suspense fallback={<LoadingOverlay label="Loading room creation..." />}>
       <CreateGameContent />
     </Suspense>
   )

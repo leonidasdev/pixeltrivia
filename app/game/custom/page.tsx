@@ -7,10 +7,12 @@ import CustomGameConfigurator, {
 } from '@/app/components/CustomGameConfigurator'
 import { generateCustomQuiz, type CustomQuizRequest } from '@/lib/customQuizApi'
 import { logger } from '@/lib/logger'
+import { ToastContainer, useToast, SparklesOverlay } from '@/app/components/ui'
 
 export default function CustomGamePage() {
   const router = useRouter()
   const [isGenerating, setIsGenerating] = useState(false)
+  const { messages: toasts, dismissToast, toast } = useToast()
 
   const handleStartCustomGame = async (config: CustomGameConfig) => {
     setIsGenerating(true)
@@ -41,20 +43,16 @@ export default function CustomGamePage() {
       }
 
       // Show success message with details
-      alert(
-        `🎯 Custom Quiz Generated Successfully!\n\n` +
-          `Knowledge Level: ${config.knowledgeLevel}\n` +
-          `Questions Generated: ${response.data?.length || 0}\n` +
-          `Context: ${config.context || 'General knowledge'}\n\n` +
-          `Ready to start your custom trivia game!`
+      toast.success(
+        `Custom quiz generated! Level: ${config.knowledgeLevel} • ${response.data?.length || 0} questions • Context: ${config.context || 'General knowledge'}. Ready to play!`
       )
 
       // TODO: Navigate to game screen with generated questions
       // router.push('/game/play')
-    } catch (error) {
-      console.error('Error generating custom game:', error)
-      alert(
-        `❌ Failed to generate custom game:\n\n${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease try again or check your API configuration.`
+    } catch (err) {
+      console.error('Error generating custom game:', err)
+      toast.error(
+        `Failed to generate custom game: ${err instanceof Error ? err.message : 'Unknown error'}. Please try again.`
       )
     } finally {
       setIsGenerating(false)
@@ -67,13 +65,7 @@ export default function CustomGamePage() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 animate-pulse opacity-60" />
-        <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-pink-400 animate-pulse opacity-60 animation-delay-1000" />
-        <div className="absolute top-1/2 left-1/6 w-2 h-2 bg-cyan-400 animate-pulse opacity-60 animation-delay-2000" />
-        <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-green-400 animate-pulse opacity-60 animation-delay-3000" />
-      </div>
+      <SparklesOverlay />
 
       {/* Main content */}
       <div className="z-10 w-full max-w-4xl">
@@ -166,6 +158,9 @@ export default function CustomGamePage() {
           </div>
         </section>
       </div>
+
+      {/* Toast notifications */}
+      <ToastContainer messages={toasts} onDismiss={dismissToast} />
     </main>
   )
 }

@@ -1,35 +1,23 @@
 // Client utility for custom quiz API interactions
 
-import { logger } from './logger'
+import type {
+  CustomQuizRequest as _CustomQuizRequest,
+  CustomQuizQuestion as _CustomQuizQuestion,
+} from '@/types/quiz'
 
-export interface CustomQuizRequest {
-  knowledgeLevel: string
-  context: string
-  numQuestions: number
-}
-
-export interface CustomQuizQuestion {
-  id: string
-  question: string
-  options: string[]
-  correctAnswer: number
-  category: string
-  difficulty: string
-}
+// Re-export canonical types so existing imports from this module continue to work
+export type CustomQuizRequest = _CustomQuizRequest
+export type CustomQuizQuestion = _CustomQuizQuestion
 
 export interface CustomQuizResponse {
   success: boolean
   data?: CustomQuizQuestion[]
-  metadata?: {
-    knowledgeLevel: string
-    context: string | null
-    requestedQuestions: number
-    generatedQuestions: number
-    generatedAt: string
-  }
   error?: string
-  message: string
-  details?: string
+  code?: string
+  message?: string
+  meta?: {
+    timestamp: string
+  }
 }
 
 /**
@@ -67,26 +55,16 @@ export async function generateCustomQuiz(config: CustomQuizRequest): Promise<Cus
 }
 
 /**
- * Test the custom quiz API with sample data
- * @returns Promise with test results
- */
-export async function testCustomQuizAPI(): Promise<CustomQuizResponse> {
-  const testConfig: CustomQuizRequest = {
-    knowledgeLevel: 'college',
-    context: 'Ancient Greek mythology and gods',
-    numQuestions: 5,
-  }
 
-  logger.debug('Testing custom quiz API with config:', testConfig)
-  return generateCustomQuiz(testConfig)
-}
-
-/**
  * Validate custom quiz configuration
  * @param config Configuration to validate
  * @returns Validation result with any errors
  */
-export function validateCustomQuizConfig(config: CustomQuizRequest): {
+export function validateCustomQuizConfig(config: {
+  knowledgeLevel: string
+  context: string
+  numQuestions: number
+}): {
   isValid: boolean
   errors: string[]
 } {

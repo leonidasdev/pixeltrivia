@@ -108,16 +108,28 @@ export const MAX_BODY_SIZES = {
 // ============================================================================
 
 /**
- * Allowed origins for CORS
- * Add your production domains here
+ * Allowed origins for CORS.
+ * In production, set ALLOWED_ORIGINS env var as a comma-separated list.
+ * Example: ALLOWED_ORIGINS=https://pixeltrivia.com,https://www.pixeltrivia.com
  */
-export const ALLOWED_ORIGINS = [
-  'http://localhost:3000',
-  'http://localhost:3001',
-  // Add production domains:
-  // 'https://pixeltrivia.com',
-  // 'https://www.pixeltrivia.com',
-]
+function getAllowedOrigins(): string[] {
+  const envOrigins = process.env.ALLOWED_ORIGINS
+  const baseOrigins = ['http://localhost:3000', 'http://localhost:3001']
+
+  if (envOrigins) {
+    return [
+      ...baseOrigins,
+      ...envOrigins
+        .split(',')
+        .map(o => o.trim())
+        .filter(Boolean),
+    ]
+  }
+
+  return baseOrigins
+}
+
+export const ALLOWED_ORIGINS = getAllowedOrigins()
 
 /**
  * Check if origin is allowed

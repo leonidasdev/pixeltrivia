@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { AdvancedGameConfig } from '../../components/AdvancedGameConfigurator'
+import { STORAGE_KEYS } from '@/constants/game'
+import { ToastContainer, useToast, SparklesOverlay, LoadingOverlay } from '@/app/components/ui'
 
 export default function AdvancedGamePage() {
   const router = useRouter()
@@ -10,10 +12,11 @@ export default function AdvancedGamePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { messages: toasts, dismissToast, toast } = useToast()
 
   useEffect(() => {
     // Load the advanced game configuration from localStorage
-    const savedConfig = localStorage.getItem('pixeltrivia_advanced_config')
+    const savedConfig = localStorage.getItem(STORAGE_KEYS.ADVANCED_CONFIG)
     if (savedConfig) {
       try {
         const config = JSON.parse(savedConfig)
@@ -71,12 +74,12 @@ export default function AdvancedGamePage() {
       const result = await response.json()
 
       // Store the generated questions and navigate to game
-      localStorage.setItem('pixeltrivia_generated_questions', JSON.stringify(result.questions))
-      localStorage.setItem('pixeltrivia_game_metadata', JSON.stringify(result.metadata))
+      localStorage.setItem(STORAGE_KEYS.GENERATED_QUESTIONS, JSON.stringify(result.data.questions))
+      localStorage.setItem(STORAGE_KEYS.GAME_METADATA, JSON.stringify(result.data.metadata))
 
       // In a real implementation, navigate to the actual game screen
-      alert(
-        `Success! Generated ${result.questions.length} questions. (Would navigate to game screen in production)`
+      toast.success(
+        `Generated ${result.data.questions.length} questions successfully! Game screen coming soon.`
       )
     } catch (error) {
       console.error('Failed to generate quiz:', error)
@@ -89,14 +92,7 @@ export default function AdvancedGamePage() {
   }
 
   if (isLoading) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4">🔄</div>
-          <p className="text-white text-xl">Loading Advanced Game...</p>
-        </div>
-      </main>
-    )
+    return <LoadingOverlay label="Loading Advanced Game..." />
   }
 
   if (!gameConfig) {
@@ -106,11 +102,7 @@ export default function AdvancedGamePage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 animate-pulse opacity-60" />
-        <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-pink-400 animate-pulse opacity-60 animation-delay-1000" />
-        <div className="absolute top-1/2 left-1/6 w-2 h-2 bg-cyan-400 animate-pulse opacity-60 animation-delay-2000" />
-      </div>
+      <SparklesOverlay />
 
       {/* Main content container */}
       <div className="flex flex-col items-center space-y-8 z-10 max-w-4xl w-full">
@@ -192,7 +184,7 @@ export default function AdvancedGamePage() {
                 onClick={handleStartGame}
                 disabled={isGenerating}
                 className={`
-                  w-full py-4 px-6 text-xl font-bold text-white rounded-lg transition-all duration-150 
+                  w-full py-4 px-6 text-xl font-bold text-white rounded-lg transition-all duration-150
                   focus:outline-none focus:ring-4 focus:ring-opacity-50 pixel-border
                   ${
                     isGenerating
@@ -214,9 +206,12 @@ export default function AdvancedGamePage() {
         {/* Processing Info */}
         <footer className="text-center text-gray-400 text-sm">
           <p>💡 Tip: Questions will be generated based on the content of your uploaded documents</p>
-          <p className="text-xs mt-1 opacity-75">© 2025 PixelTrivia Advanced Mode</p>
+          <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia Advanced Mode</p>
         </footer>
       </div>
+
+      {/* Toast notifications */}
+      <ToastContainer messages={toasts} onDismiss={dismissToast} />
     </main>
   )
 }

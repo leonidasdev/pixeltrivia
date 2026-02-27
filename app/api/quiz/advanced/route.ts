@@ -1,5 +1,14 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { logger } from '@/lib/logger'
+import {
+  successResponse,
+  validationErrorResponse,
+  externalApiErrorResponse,
+  rateLimitResponse,
+  serverErrorResponse,
+  methodNotAllowedResponse,
+} from '@/lib/apiResponse'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 // Input validation and sanitization interfaces
 interface QuizRequest {
@@ -151,41 +160,45 @@ function parseAIResponse(response: string): QuizQuestion[] | null {
 
     return questions.length > 0 ? questions : null
   } catch (error) {
-    console.error('Failed to parse AI response:', error)
+    logger.error('Failed to parse AI response:', error)
     return null
   }
 }
 
 // Main API handler
 export async function POST(request: NextRequest) {
+  // Rate limit: AI routes use stricter limits
+  const rateLimited = rateLimit(request, RATE_LIMITS.aiGeneration)
+  if (rateLimited) return rateLimited
+
   try {
     // Check for API key
     const apiKey = process.env.OPENROUTER_API_KEY
     if (!apiKey) {
-      console.error('OPENROUTER_API_KEY not configured')
-      return NextResponse.json({ error: 'Service configuration error' }, { status: 500 })
+      logger.error('OPENROUTER_API_KEY not configured')
+      return serverErrorResponse('Service configuration error')
     }
 
     // Parse and validate request
     let body
     try {
       body = await request.json()
-    } catch (error) {
-      return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 })
+    } catch {
+      return validationErrorResponse('Invalid JSON in request body')
     }
 
     const validatedRequest = validateRequest(body)
     if (!validatedRequest) {
-      return NextResponse.json(
-        { error: 'Invalid request parameters. Required: filesSummary (string)' },
-        { status: 400 }
+      return validationErrorResponse(
+        'Invalid request parameters. Required: filesSummary (string)',
+        'filesSummary'
       )
     }
 
     if (validatedRequest.filesSummary.length === 0) {
-      return NextResponse.json(
-        { error: 'Files summary cannot be empty after sanitization' },
-        { status: 400 }
+      return validationErrorResponse(
+        'Files summary cannot be empty after sanitization',
+        'filesSummary'
       )
     }
 
@@ -221,43 +234,51 @@ export async function POST(request: NextRequest) {
 
     if (!openRouterResponse.ok) {
       const errorText = await openRouterResponse.text()
-      console.error('OpenRouter API error:', openRouterResponse.status, errorText)
+      logger.error(`OpenRouter API error: ${openRouterResponse.status}`, errorText)
 
       if (openRouterResponse.status === 401) {
-        return NextResponse.json({ error: 'API authentication failed' }, { status: 500 })
+        return serverErrorResponse('API authentication failed')
       } else if (openRouterResponse.status === 429) {
-        return NextResponse.json(
-          { error: 'API rate limit exceeded. Please try again later.' },
-          { status: 429 }
-        )
+        return rateLimitResponse(60)
       } else {
-        return NextResponse.json({ error: 'AI service temporarily unavailable' }, { status: 503 })
+        return externalApiErrorResponse('OpenRouter', 'AI service temporarily unavailable')
       }
     }
 
     const aiResponse = await openRouterResponse.json()
 
     if (!aiResponse.choices || !aiResponse.choices[0] || !aiResponse.choices[0].message) {
-      console.error('Invalid AI response structure:', aiResponse)
-      return NextResponse.json({ error: 'Invalid response from AI service' }, { status: 502 })
+      logger.error('Invalid AI response structure:', aiResponse)
+      return externalApiErrorResponse('OpenRouter', 'Invalid response from AI service')
     }
 
     const generatedContent = aiResponse.choices[0].message.content
     const questions = parseAIResponse(generatedContent)
 
     if (!questions || questions.length === 0) {
-      console.error('Failed to parse questions from AI response:', generatedContent)
-      return NextResponse.json(
-        { error: 'Failed to generate valid questions. Please try again.' },
-        { status: 502 }
+      logger.error('Failed to parse questions from AI response:', generatedContent)
+      return externalApiErrorResponse(
+        'OpenRouter',
+        'Failed to generate valid questions. Please try again.'
       )
     }
 
     logger.info(`Successfully generated ${questions.length} questions`)
 
+    // Convert letter-based answers to numeric indices for consistency with other quiz types
+    const answerMap: Record<string, number> = { A: 0, B: 1, C: 2, D: 3 }
+    const normalizedQuestions = questions.map((q, index) => ({
+      id: `advanced_${Date.now()}_${index}`,
+      question: q.question,
+      options: q.options,
+      correctAnswer: answerMap[q.answer] ?? 0,
+      category: 'advanced',
+      difficulty: 'medium',
+    }))
+
     // Return successful response
-    return NextResponse.json({
-      questions,
+    return successResponse({
+      questions: normalizedQuestions,
       metadata: {
         numQuestions: questions.length,
         format: validatedRequest.format,
@@ -265,20 +286,12 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Unexpected error in quiz generation:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    logger.error('Unexpected error in quiz generation:', error)
+    return serverErrorResponse(error instanceof Error ? error.message : 'Internal server error')
   }
 }
 
 // Handle unsupported methods
-export async function GET() {
-  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-}
-
-export async function PUT() {
-  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-}
-
-export async function DELETE() {
-  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-}
+export const GET = () => methodNotAllowedResponse('POST')
+export const PUT = () => methodNotAllowedResponse('POST')
+export const DELETE = () => methodNotAllowedResponse('POST')

@@ -49,11 +49,12 @@ Internal endpoints (like AI generation) use server-side API keys configured via 
 
 All endpoints are protected by rate limiting:
 
-| Endpoint Type | Rate Limit |
-|---------------|------------|
-| Standard API | 100 requests/minute |
-| AI Generation | 5 requests/minute |
-| Room Creation | 10 requests/5 minutes |
+| Endpoint Type | Rate Limit | Routes |
+|---------------|------------|--------|
+| Quiz | 30 requests/minute | `/api/quiz/quick`, `/api/game/questions` |
+| AI Generation | 5 requests/minute | `/api/quiz/custom`, `/api/quiz/advanced`, `/api/ai/generate-questions` |
+| Room Creation | 10 requests/5 minutes | `/api/room/create` |
+| Standard (default) | 100 requests/minute | All other endpoints |
 
 **Rate Limit Headers:**
 ```
@@ -66,9 +67,10 @@ X-RateLimit-Reset: 1706745600
 ```json
 {
   "success": false,
-  "error": "Rate limit exceeded",
-  "message": "Too many requests. Please wait before trying again.",
-  "retryAfter": 60
+  "error": "Rate limit exceeded. Try again in 60 seconds.",
+  "code": "RATE_LIMIT_EXCEEDED",
+  "statusCode": 429,
+  "meta": { "timestamp": "2026-02-03T12:00:00.000Z" }
 }
 ```
 **Status:** `429 Too Many Requests`
@@ -77,7 +79,7 @@ X-RateLimit-Reset: 1706745600
 
 ## Response Format
 
-All API responses follow a consistent structure:
+All API responses follow a consistent structure using `lib/apiResponse` helpers:
 
 ### Success Response
 
@@ -85,7 +87,8 @@ All API responses follow a consistent structure:
 {
   "success": true,
   "data": { ... },
-  "message": "Operation completed successfully"
+  "message": "Operation completed successfully",
+  "meta": { "timestamp": "2026-02-03T12:00:00.000Z" }
 }
 ```
 
@@ -94,8 +97,10 @@ All API responses follow a consistent structure:
 ```json
 {
   "success": false,
-  "error": "Error type or code",
-  "message": "Human-readable error description"
+  "error": "Human-readable error description",
+  "code": "ERROR_CODE",
+  "statusCode": 400,
+  "meta": { "timestamp": "2026-02-03T12:00:00.000Z" }
 }
 ```
 
@@ -165,17 +170,18 @@ Generates AI-powered custom quiz questions using DeepSeek.
 | `numQuestions` | number | Yes | Number of questions (1-50) |
 
 **Knowledge Levels:**
-- `beginner`
-- `intermediate`
-- `advanced`
-- `expert`
+- `classic` (default — general knowledge)
+- `college` (university level)
+- `high-school`
+- `middle-school`
+- `elementary`
 
 **Example Request:**
 ```bash
 curl -X POST http://localhost:3000/api/quiz/custom \
   -H "Content-Type: application/json" \
   -d '{
-    "knowledgeLevel": "intermediate",
+    "knowledgeLevel": "college",
     "context": "Space exploration and NASA missions",
     "numQuestions": 10
   }'
@@ -497,7 +503,7 @@ curl -X POST http://localhost:3000/api/quiz/quick \
 # Custom Quiz
 curl -X POST http://localhost:3000/api/quiz/custom \
   -H "Content-Type: application/json" \
-  -d '{"knowledgeLevel": "intermediate", "context": "Marvel movies", "numQuestions": 5}'
+  -d '{"knowledgeLevel": "college", "context": "Marvel movies", "numQuestions": 5}'
 
 # Create Room
 curl -X POST http://localhost:3000/api/room/create
@@ -522,7 +528,7 @@ const customQuiz = await fetch('/api/quiz/custom', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    knowledgeLevel: 'advanced',
+    knowledgeLevel: 'college',
     context: 'Quantum physics',
     numQuestions: 10
   })
@@ -556,4 +562,4 @@ console.log(`Room code: ${room.roomCode}`);
 
 ---
 
-*Last updated: January 31, 2026*
+*Last updated: February 27, 2026*

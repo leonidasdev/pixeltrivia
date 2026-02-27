@@ -25,7 +25,13 @@ describe('customQuizApi', () => {
     })
 
     it('should accept all valid knowledge levels', () => {
-      const validLevels = ['classic', 'college', 'high-school', 'middle-school', 'elementary']
+      const validLevels = [
+        'classic',
+        'college',
+        'high-school',
+        'middle-school',
+        'elementary',
+      ] as const
 
       validLevels.forEach(level => {
         const config: CustomQuizRequest = {
@@ -40,7 +46,7 @@ describe('customQuizApi', () => {
     })
 
     it('should reject invalid knowledge levels', () => {
-      const config: CustomQuizRequest = {
+      const config = {
         knowledgeLevel: 'invalid-level',
         context: '',
         numQuestions: 10,
@@ -54,7 +60,7 @@ describe('customQuizApi', () => {
     })
 
     it('should reject empty knowledge level', () => {
-      const config: CustomQuizRequest = {
+      const config = {
         knowledgeLevel: '',
         context: '',
         numQuestions: 10,
@@ -129,7 +135,7 @@ describe('customQuizApi', () => {
     })
 
     it('should collect multiple errors', () => {
-      const config: CustomQuizRequest = {
+      const config = {
         knowledgeLevel: 'invalid',
         context: 'a'.repeat(1001),
         numQuestions: 100,

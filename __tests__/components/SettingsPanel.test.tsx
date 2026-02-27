@@ -9,7 +9,7 @@ describe('SettingsPanel', () => {
   const defaultProps = {
     volume: 50,
     playerName: 'TestPlayer',
-    selectedAvatar: 'knight',
+    selectedAvatar: 'robot',
     onVolumeChange: jest.fn(),
     onPlayerNameChange: jest.fn(),
     onAvatarSelect: jest.fn(),
@@ -43,11 +43,11 @@ describe('SettingsPanel', () => {
     it('should display all avatar options', () => {
       render(<SettingsPanel {...defaultProps} />)
 
-      expect(screen.getByRole('button', { name: /knight/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /robot/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /alien/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /ghost/i })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: /wizard/i })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /archer/i })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /rogue/i })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /mage/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /ninja/i })).toBeInTheDocument()
     })
 
     it('should highlight the selected avatar', () => {
@@ -126,19 +126,16 @@ describe('SettingsPanel', () => {
     it('should call onAvatarSelect when an avatar is clicked', () => {
       render(<SettingsPanel {...defaultProps} />)
 
-      const wizardButton = screen.getByRole('button', { name: /wizard/i })
-      fireEvent.click(wizardButton)
+      const alienButton = screen.getByRole('button', { name: /alien/i })
+      fireEvent.click(alienButton)
 
-      expect(defaultProps.onAvatarSelect).toHaveBeenCalledWith('wizard')
+      expect(defaultProps.onAvatarSelect).toHaveBeenCalledWith('alien')
     })
 
     it('should update selection when different avatar is chosen', () => {
-      const { rerender } = render(<SettingsPanel {...defaultProps} selectedAvatar="knight" />)
+      const { rerender } = render(<SettingsPanel {...defaultProps} selectedAvatar="robot" />)
 
-      expect(screen.getByRole('button', { name: /knight/i })).toHaveAttribute(
-        'aria-pressed',
-        'true'
-      )
+      expect(screen.getByRole('button', { name: /robot/i })).toHaveAttribute('aria-pressed', 'true')
       expect(screen.getByRole('button', { name: /wizard/i })).toHaveAttribute(
         'aria-pressed',
         'false'
@@ -146,7 +143,7 @@ describe('SettingsPanel', () => {
 
       rerender(<SettingsPanel {...defaultProps} selectedAvatar="wizard" />)
 
-      expect(screen.getByRole('button', { name: /knight/i })).toHaveAttribute(
+      expect(screen.getByRole('button', { name: /robot/i })).toHaveAttribute(
         'aria-pressed',
         'false'
       )
@@ -159,11 +156,11 @@ describe('SettingsPanel', () => {
     it('should display avatar emojis', () => {
       render(<SettingsPanel {...defaultProps} />)
 
-      expect(screen.getByText('🛡️')).toBeInTheDocument()
+      expect(screen.getByText('🤖')).toBeInTheDocument()
+      expect(screen.getByText('👽')).toBeInTheDocument()
+      expect(screen.getByText('👻')).toBeInTheDocument()
       expect(screen.getByText('🧙')).toBeInTheDocument()
-      expect(screen.getByText('🏹')).toBeInTheDocument()
-      expect(screen.getByText('🗡️')).toBeInTheDocument()
-      expect(screen.getByText('✨')).toBeInTheDocument()
+      expect(screen.getByText('🥷')).toBeInTheDocument()
     })
   })
 

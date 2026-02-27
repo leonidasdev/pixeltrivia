@@ -137,7 +137,7 @@ export const customQuizSchema = z.object({
     .max(2000, 'Context must be 2000 characters or less')
     .transform(val => val.replace(/[<>]/g, '').slice(0, 2000))
     .optional(),
-  numberOfQuestions: rangedNumberSchema(1, 50).optional().default(10),
+  numQuestions: rangedNumberSchema(1, 50).optional().default(10),
 })
 
 /**
@@ -146,7 +146,7 @@ export const customQuizSchema = z.object({
 export const advancedQuizSchema = z.object({
   knowledgeLevel: knowledgeLevelSchema,
   categories: z.array(categorySchema).min(1).max(10),
-  numberOfQuestions: rangedNumberSchema(1, 100).optional().default(20),
+  numQuestions: rangedNumberSchema(1, 100).optional().default(20),
   timePerQuestion: rangedNumberSchema(5, 120).optional().default(30),
   enableHints: z.boolean().optional().default(false),
 })

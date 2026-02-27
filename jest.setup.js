@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom'
 
 // Mock Next.js router
+const mockSearchParams = new URLSearchParams()
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
@@ -10,24 +11,26 @@ jest.mock('next/navigation', () => ({
     back: jest.fn(),
     forward: jest.fn(),
   }),
-  useSearchParams: () => new URLSearchParams(),
+  useSearchParams: () => mockSearchParams,
   usePathname: () => '/',
 }))
 
-// Mock window.matchMedia for responsive components
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-})
+// Mock window.matchMedia for responsive components (browser environment only)
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  })
+}
 
 // Mock crypto.getRandomValues for room code generation
 Object.defineProperty(global, 'crypto', {

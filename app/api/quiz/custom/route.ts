@@ -1,5 +1,13 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { logger } from '@/lib/logger'
+import {
+  successResponse,
+  validationErrorResponse,
+  externalApiErrorResponse,
+  serverErrorResponse,
+  methodNotAllowedResponse,
+} from '@/lib/apiResponse'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 // Types for the API
 interface CustomQuizRequest {
@@ -26,6 +34,9 @@ interface OpenRouterResponse {
 }
 
 export async function POST(request: NextRequest) {
+  const rateLimited = rateLimit(request, RATE_LIMITS.aiGeneration)
+  if (rateLimited) return rateLimited
+
   try {
     // Validate environment variables
     const apiKey = process.env.OPENROUTER_API_KEY
@@ -39,25 +50,14 @@ export async function POST(request: NextRequest) {
 
     // Validate input parameters
     if (!knowledgeLevel || typeof knowledgeLevel !== 'string') {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Knowledge level is required and must be a string',
-          message: 'Invalid request parameters',
-        },
-        { status: 400 }
+      return validationErrorResponse(
+        'Knowledge level is required and must be a string',
+        'knowledgeLevel'
       )
     }
 
     if (typeof numQuestions !== 'number' || numQuestions < 1 || numQuestions > 50) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Number of questions must be between 1 and 50',
-          message: 'Invalid request parameters',
-        },
-        { status: 400 }
-      )
+      return validationErrorResponse('Number of questions must be between 1 and 50', 'numQuestions')
     }
 
     // Construct prompt for DeepSeek
@@ -151,8 +151,8 @@ Requirements:
     try {
       parsedResponse = JSON.parse(cleanContent)
     } catch (parseError) {
-      console.error('JSON parse error:', parseError)
-      console.error('Content that failed to parse:', cleanContent)
+      logger.error('JSON parse error:', parseError)
+      logger.error('Content that failed to parse:', cleanContent)
       throw new Error('Invalid JSON response from AI')
     }
 
@@ -202,93 +202,30 @@ Requirements:
     logger.info(`Successfully generated ${formattedQuestions.length} questions`)
 
     // Return success response
-    return NextResponse.json(
-      {
-        success: true,
-        data: formattedQuestions,
-        metadata: {
-          knowledgeLevel,
-          context: context || null,
-          requestedQuestions: numQuestions,
-          generatedQuestions: formattedQuestions.length,
-          generatedAt: new Date().toISOString(),
-        },
-        message: `Successfully generated ${formattedQuestions.length} custom questions`,
-      },
-      { status: 200 }
+    return successResponse(
+      formattedQuestions,
+      `Successfully generated ${formattedQuestions.length} custom questions`
     )
   } catch (error) {
-    console.error('Custom quiz generation error:', error)
-
-    // Determine error type and appropriate status code
-    let statusCode = 500
-    let errorMessage = 'Failed to generate custom quiz'
+    logger.error('Custom quiz generation error:', error)
 
     if (error instanceof Error) {
       if (error.message.includes('API key')) {
-        statusCode = 500 // Server configuration error
-        errorMessage = 'AI service configuration error'
+        return serverErrorResponse('AI service configuration error')
       } else if (error.message.includes('Invalid request')) {
-        statusCode = 400
-        errorMessage = error.message
+        return validationErrorResponse(error.message)
       } else if (error.message.includes('OpenRouter API error')) {
-        statusCode = 502 // Bad gateway
-        errorMessage = 'AI service temporarily unavailable'
-      } else {
-        errorMessage = error.message
+        return externalApiErrorResponse('OpenRouter', 'AI service temporarily unavailable')
       }
     }
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: errorMessage,
-        message: 'Failed to generate custom quiz questions',
-        details: process.env.NODE_ENV === 'development' ? error?.toString() : undefined,
-      },
-      { status: statusCode }
+    return serverErrorResponse(
+      error instanceof Error ? error.message : 'Failed to generate custom quiz'
     )
   }
 }
 
 // Handle unsupported HTTP methods
-export async function GET() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests',
-      usage: {
-        method: 'POST',
-        body: {
-          knowledgeLevel: 'string (classic|college|high-school|middle-school|elementary)',
-          context: 'string (optional context for questions)',
-          numQuestions: 'number (1-50)',
-        },
-      },
-    },
-    { status: 405 }
-  )
-}
-
-export async function PUT() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests',
-    },
-    { status: 405 }
-  )
-}
-
-export async function DELETE() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests',
-    },
-    { status: 405 }
-  )
-}
+export const GET = () => methodNotAllowedResponse('POST')
+export const PUT = () => methodNotAllowedResponse('POST')
+export const DELETE = () => methodNotAllowedResponse('POST')

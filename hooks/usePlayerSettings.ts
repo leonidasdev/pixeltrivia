@@ -14,6 +14,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useLocalStorage } from './useLocalStorage'
 import { getAvatarById, DEFAULT_AVATAR_ID, type AvatarOption } from '@/constants/avatars'
+import { STORAGE_KEYS } from '@/constants/game'
 
 // ============================================================================
 // Types
@@ -65,12 +66,6 @@ export interface UsePlayerSettingsReturn {
 // Constants
 // ============================================================================
 
-const STORAGE_KEYS = {
-  name: 'pixeltrivia_player_name',
-  avatar: 'pixeltrivia_player_avatar',
-  volume: 'pixeltrivia_player_volume',
-} as const
-
 const DEFAULT_SETTINGS: PlayerSettings = {
   name: 'Player',
   avatar: DEFAULT_AVATAR_ID,
@@ -106,15 +101,15 @@ export function usePlayerSettings(): UsePlayerSettingsReturn {
 
   // Use localStorage hooks for persistence
   const [storedName, setStoredName] = useLocalStorage<string>(
-    STORAGE_KEYS.name,
+    STORAGE_KEYS.PLAYER_NAME,
     DEFAULT_SETTINGS.name
   )
   const [storedAvatar, setStoredAvatar] = useLocalStorage<string>(
-    STORAGE_KEYS.avatar,
+    STORAGE_KEYS.PLAYER_AVATAR,
     DEFAULT_SETTINGS.avatar
   )
   const [storedVolume, setStoredVolume] = useLocalStorage<number>(
-    STORAGE_KEYS.volume,
+    STORAGE_KEYS.PLAYER_VOLUME,
     DEFAULT_SETTINGS.volume
   )
 

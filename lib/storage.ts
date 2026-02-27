@@ -79,7 +79,7 @@ export interface StorageSchema {
  */
 export const DEFAULT_PROFILE: PlayerProfile = {
   name: 'Player',
-  avatarId: 'knight',
+  avatarId: 'robot',
   createdAt: new Date().toISOString(),
   lastPlayedAt: new Date().toISOString(),
 }

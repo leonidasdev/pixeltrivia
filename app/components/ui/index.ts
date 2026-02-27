@@ -14,7 +14,7 @@
 export { PixelButton } from './PixelButton'
 export type { PixelButtonProps, PixelButtonVariant, PixelButtonSize } from './PixelButton'
 
-export { LoadingSpinner } from './LoadingSpinner'
+export { LoadingSpinner, LoadingOverlay, LoadingDots } from './LoadingSpinner'
 export type { LoadingSpinnerProps, LoadingSpinnerSize } from './LoadingSpinner'
 
 export { Modal } from './Modal'
@@ -74,3 +74,10 @@ export type {
   PlayerBadgeProps,
   PlayerListProps,
 } from './PlayerDisplay'
+
+// ============================================================================
+// Feedback Components
+// ============================================================================
+
+export { Toast, ToastContainer, useToast } from './Toast'
+export type { ToastProps, ToastContainerProps, ToastMessage, ToastVariant } from './Toast'

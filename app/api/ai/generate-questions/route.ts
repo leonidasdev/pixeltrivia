@@ -1,6 +1,11 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
+import { successResponse, serverErrorResponse, methodNotAllowedResponse } from '@/lib/apiResponse'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 export async function POST(request: NextRequest) {
+  const rateLimited = rateLimit(request, RATE_LIMITS.aiGeneration)
+  if (rateLimited) return rateLimited
+
   try {
     // Placeholder AI question generation endpoint
     // TODO: Implement actual AI integration
@@ -22,11 +27,13 @@ export async function POST(request: NextRequest) {
       difficulty: difficulty || 'medium',
     }))
 
-    return NextResponse.json({
-      success: true,
-      questions: mockQuestions,
-    })
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to generate questions' }, { status: 500 })
+    return successResponse(mockQuestions)
+  } catch {
+    return serverErrorResponse('Failed to generate questions')
   }
 }
+
+// Handle unsupported HTTP methods
+export const GET = () => methodNotAllowedResponse('POST')
+export const PUT = () => methodNotAllowedResponse('POST')
+export const DELETE = () => methodNotAllowedResponse('POST')

@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (236 tests) |
+| **Testing** | Jest + React Testing Library (488 tests, 29 suites) |
 
 ---
 
@@ -70,7 +70,12 @@ pixeltrivia/
 │   │   ├── MainMenuLogo.tsx
 │   │   ├── QuickGameSelector.tsx
 │   │   ├── SettingsPanel.tsx
-│   │   └── Help/             # Help system components
+│   │   ├── Help/             # Help system (HelpButton, HelpModal, HelpContext)
+│   │   └── ui/               # Reusable UI component library
+│   │       ├── Toast.tsx      # Toast notification system
+│   │       ├── Modal.tsx, LoadingSpinner.tsx
+│   │       ├── PixelButton, PixelCard, PixelInput, PixelBadge
+│   │       └── AnimatedBackground, GamePageLayout, PageHeader, PlayerDisplay
 │   ├── game/                 # Game pages
 │   │   ├── quick/            # Quick play mode
 │   │   ├── custom/           # Custom game mode
@@ -93,6 +98,8 @@ pixeltrivia/
 │   ├── security.ts           # Security middleware (Next.js dependent)
 │   ├── security.core.ts      # Pure security functions (testable)
 │   ├── apiResponse.ts        # Standardized API responses
+│   ├── logger.ts             # Structured logging utility
+│   ├── storage.ts            # Typed localStorage wrapper
 │   ├── supabase.ts           # Supabase client initialization
 │   ├── roomCode.ts           # Room code generation/validation
 │   ├── roomApi.ts            # Room API client
@@ -118,6 +125,7 @@ pixeltrivia/
 │   ├── index.ts              # Re-exports all hooks
 │   ├── useGameState.ts       # Game state management
 │   ├── useLocalStorage.ts    # Typed localStorage with React sync
+│   ├── usePlayerSettings.ts  # Player name, avatar, volume settings
 │   ├── useTimer.ts           # Countdown timer
 │   └── useQuizSession.ts     # Quiz session management
 │
@@ -125,20 +133,22 @@ pixeltrivia/
 │   └── schema.sql            # PostgreSQL schema for Supabase
 │
 ├── docs/                     # Documentation
-│   ├── ARCHITECTURE.md       # System architecture
-│   ├── DEVELOPMENT.md        # Development guide
-│   ├── DEPLOYMENT.md         # Deployment guide
-│   ├── API.md                # API reference
-│   ├── DATABASE.md           # Database schema
-│   ├── TESTING.md            # Testing guide
-│   ├── API_TESTING_GUIDE.md  # API testing examples
+│   ├── architecture.md       # System architecture
+│   ├── development-guide.md  # Development guide
+│   ├── deployment-guide.md   # Deployment guide
+│   ├── api-reference.md      # API reference
+│   ├── database-guide.md     # Database schema
+│   ├── testing-guide.md      # Testing guide
+│   ├── api-testing-guide.md  # API testing examples
 │   ├── CLAUDE.md             # AI assistant context (this file)
 │   └── TODO.md               # Project roadmap
 │
 ├── CONTRIBUTING.md           # Contribution guidelines
 │
 ├── __tests__/                # Test files
-│   ├── components/           # Component tests
+│   ├── components/           # Component tests (incl. pages/)
+│   ├── hooks/                # Hook tests
+│   ├── integration/api/      # API route integration tests
 │   └── unit/lib/             # Unit tests
 │
 ├── .github/workflows/
@@ -251,12 +261,25 @@ AIGenerationError(message, model?, prompt?)          // 500
 
 ### API Response Format
 
-```typescript
-// Success
-{ success: true, data: {...}, message: "..." }
+All API routes use `lib/apiResponse.ts` helpers for consistent response envelopes:
 
-// Error
-{ success: false, error: "ERROR_CODE", message: "..." }
+```typescript
+// Success (200/201)
+{
+  success: true,
+  data: { ... },
+  message?: "Optional message",
+  meta: { timestamp: "ISO string" }
+}
+
+// Error (4xx/5xx)
+{
+  success: false,
+  error: "Human-readable error message",
+  code: "ERROR_CODE",
+  statusCode: 400,
+  meta: { timestamp: "ISO string" }
+}
 ```
 
 ---
@@ -264,9 +287,9 @@ AIGenerationError(message, model?, prompt?)          // 500
 ## Testing Overview
 
 ### Test Statistics
-- **236 tests** across 11 test suites
+- **488 tests** across 29 test suites
 - **100% passing** on CI
-- **>20% coverage** threshold
+- **Coverage thresholds**: branches ≥12%, functions/lines/statements ≥15%
 
 ### Test Commands
 ```bash
@@ -278,6 +301,9 @@ npm run test:coverage # Coverage report
 ### Test Location
 - `__tests__/unit/lib/` - Library function tests
 - `__tests__/components/` - React component tests
+- `__tests__/components/pages/` - Page-level tests
+- `__tests__/hooks/` - Custom hook tests
+- `__tests__/integration/api/` - API route integration tests
 
 ---
 
@@ -337,8 +363,10 @@ OPENROUTER_API_KEY=sk-or-v1-...
 1. Create route file: `app/api/[path]/route.ts`
 2. Add Zod validation schema to `lib/validation.ts`
 3. Use `apiResponse` helpers from `lib/apiResponse.ts`
-4. Add rate limiting if needed
-5. Write tests in `__tests__/unit/lib/`
+4. Add rate limiting (required — all routes use `rateLimit()` from `lib/rateLimit`)
+5. Use `logger` from `lib/logger` (not console.error)
+6. Add method-not-allowed handlers for unsupported HTTP methods
+7. Write tests in `__tests__/unit/lib/`
 
 ### Adding a New Component
 
@@ -352,7 +380,7 @@ OPENROUTER_API_KEY=sk-or-v1-...
 1. Add SQL to `database/schema.sql`
 2. Run in Supabase SQL Editor
 3. Enable RLS and create policies
-4. Update `docs/DATABASE.md`
+4. Update `docs/database-guide.md`
 
 ---
 
@@ -361,37 +389,38 @@ OPENROUTER_API_KEY=sk-or-v1-...
 ### API Route Pattern
 
 ```typescript
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
-import { ValidationError } from '@/lib/errors'
-
-const requestSchema = z.object({
-  // ... schema
-})
+import { type NextRequest } from 'next/server'
+import { logger } from '@/lib/logger'
+import {
+  successResponse,
+  validationErrorResponse,
+  serverErrorResponse,
+  methodNotAllowedResponse,
+} from '@/lib/apiResponse'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
 export async function POST(request: NextRequest) {
+  const rateLimited = rateLimit(request, RATE_LIMITS.standard)
+  if (rateLimited) return rateLimited
+
   try {
     const body = await request.json()
-    const validated = requestSchema.parse(body)
-    
-    // ... logic
-    
-    return NextResponse.json({
-      success: true,
-      data: result,
-      message: 'Success'
-    })
+
+    // ... validate and process
+
+    return successResponse(result, 'Optional message')
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({
-        success: false,
-        error: 'VALIDATION_ERROR',
-        message: error.errors[0].message
-      }, { status: 400 })
-    }
-    // ... handle other errors
+    logger.error('Route error:', error)
+    return serverErrorResponse(
+      error instanceof Error ? error.message : 'Unknown error'
+    )
   }
 }
+
+// Handle unsupported HTTP methods
+export const GET = () => methodNotAllowedResponse('POST')
+export const PUT = () => methodNotAllowedResponse('POST')
+export const DELETE = () => methodNotAllowedResponse('POST')
 ```
 
 ### Component Pattern
@@ -407,7 +436,7 @@ interface Props {
 
 export function ComponentName({ prop1, prop2 }: Props) {
   const [state, setState] = useState(initialValue)
-  
+
   return (
     <div className="bg-gray-900 border-4 border-black shadow-[4px_4px_0_0_#000]">
       {/* Retro pixel styling */}
@@ -422,9 +451,22 @@ export function ComponentName({ prop1, prop2 }: Props) {
 
 ### Completed
 - Core game modes (Quick, Custom, Advanced)
-- Testing infrastructure (236 tests)
+- Testing infrastructure (488 tests, 29 suites)
 - CI/CD pipeline (GitHub Actions + Husky)
-- Security hardening (validation, rate limiting, middleware)
+- Security hardening (validation, rate limiting on all routes, middleware)
+- Standardized API responses via `lib/apiResponse` helpers
+- Structured logging via `lib/logger` (no raw console.error in routes)
+- Centralized storage keys (`constants/game.ts STORAGE_KEYS`)
+- Canonical avatar constants (`constants/avatars.ts AVATAR_OPTIONS`)
+- Toast notification system (replaces browser alerts)
+- Help modal deduplication via HelpContext
+- UI component library adoption across game pages
+- Skip navigation link for keyboard/screen reader accessibility
+- `prefers-reduced-motion` support for all animations
+- Component tests (ErrorBoundary, BackButton, Toast, Modal)
+- Page tests (HomePage, GameModePage, JoinGamePage)
+- Hook tests (useGameState, useLocalStorage, useTimer, useQuizSession)
+- API route integration tests (roomCreate, quizQuick, gameQuestions, aiGenerate)
 - Comprehensive documentation
 
 ### In Progress
@@ -499,4 +541,4 @@ When working on this codebase:
 
 ---
 
-*Last updated: January 31, 2026*
+*Last updated: February 27, 2026*

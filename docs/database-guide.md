@@ -59,14 +59,14 @@ PixelTrivia uses **Supabase** (PostgreSQL) as its database backend. The schema s
 Run this query to verify tables were created:
 
 ```sql
-SELECT table_name 
-FROM information_schema.tables 
+SELECT table_name
+FROM information_schema.tables
 WHERE table_schema = 'public';
 ```
 
 Expected output:
 ```
- table_name     
+ table_name
 ----------------
  rooms
  players
@@ -285,15 +285,15 @@ All tables have RLS enabled for security.
 
 ```sql
 -- Anyone can read rooms
-CREATE POLICY "Anyone can read rooms" ON rooms 
+CREATE POLICY "Anyone can read rooms" ON rooms
   FOR SELECT USING (true);
 
 -- Anyone can create rooms
-CREATE POLICY "Anyone can create rooms" ON rooms 
+CREATE POLICY "Anyone can create rooms" ON rooms
   FOR INSERT WITH CHECK (true);
 
 -- Only service role can update rooms
-CREATE POLICY "Only service role can update rooms" ON rooms 
+CREATE POLICY "Only service role can update rooms" ON rooms
   FOR UPDATE USING (auth.role() = 'service_role');
 ```
 
@@ -301,15 +301,15 @@ CREATE POLICY "Only service role can update rooms" ON rooms
 
 ```sql
 -- Anyone can read players
-CREATE POLICY "Anyone can read players" ON players 
+CREATE POLICY "Anyone can read players" ON players
   FOR SELECT USING (true);
 
 -- Anyone can create players
-CREATE POLICY "Anyone can create players" ON players 
+CREATE POLICY "Anyone can create players" ON players
   FOR INSERT WITH CHECK (true);
 
 -- Players can update their own data
-CREATE POLICY "Players can update their own data" ON players 
+CREATE POLICY "Players can update their own data" ON players
   FOR UPDATE USING (true);
 ```
 
@@ -317,11 +317,11 @@ CREATE POLICY "Players can update their own data" ON players
 
 ```sql
 -- Anyone can read questions
-CREATE POLICY "Anyone can read questions" ON questions 
+CREATE POLICY "Anyone can read questions" ON questions
   FOR SELECT USING (true);
 
 -- Only service role can manage questions
-CREATE POLICY "Only service role can manage questions" ON questions 
+CREATE POLICY "Only service role can manage questions" ON questions
   FOR ALL USING (auth.role() = 'service_role');
 ```
 
@@ -357,8 +357,8 @@ Removes abandoned rooms older than 24 hours.
 CREATE OR REPLACE FUNCTION cleanup_old_rooms()
 RETURNS void AS $$
 BEGIN
-  DELETE FROM rooms 
-  WHERE created_at < NOW() - INTERVAL '24 hours' 
+  DELETE FROM rooms
+  WHERE created_at < NOW() - INTERVAL '24 hours'
   AND status = 'waiting';
 END;
 $$ LANGUAGE plpgsql;
@@ -426,7 +426,7 @@ CREATE TABLE achievements (
 
 ALTER TABLE achievements ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Players can read their achievements" ON achievements 
+CREATE POLICY "Players can read their achievements" ON achievements
   FOR SELECT USING (true);
 ```
 
@@ -449,7 +449,7 @@ supabase db dump --file backup.sql
 ### Viewing Table Stats
 
 ```sql
-SELECT 
+SELECT
   schemaname,
   relname,
   n_tup_ins as inserts,
@@ -462,7 +462,7 @@ WHERE schemaname = 'public';
 ### Checking Index Usage
 
 ```sql
-SELECT 
+SELECT
   indexrelname,
   idx_scan,
   idx_tup_read,
@@ -475,13 +475,13 @@ WHERE schemaname = 'public';
 
 ```sql
 -- Delete old waiting rooms
-DELETE FROM rooms 
-WHERE created_at < NOW() - INTERVAL '24 hours' 
+DELETE FROM rooms
+WHERE created_at < NOW() - INTERVAL '24 hours'
 AND status = 'waiting';
 
 -- Delete finished rooms older than 7 days
-DELETE FROM rooms 
-WHERE created_at < NOW() - INTERVAL '7 days' 
+DELETE FROM rooms
+WHERE created_at < NOW() - INTERVAL '7 days'
 AND status = 'finished';
 ```
 
@@ -518,7 +518,7 @@ LIMIT 10;
 ### Get Room Statistics
 
 ```sql
-SELECT 
+SELECT
   r.code,
   r.status,
   COUNT(p.id) as player_count,
@@ -564,4 +564,4 @@ Add indexes for frequently filtered columns.
 
 ---
 
-*Last updated: January 31, 2026*
+*Last updated: February 27, 2026*

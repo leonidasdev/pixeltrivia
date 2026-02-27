@@ -2,27 +2,20 @@
  * Client-side utilities for quick quiz functionality
  */
 
-import { logger } from './logger'
+import type { QuickQuizQuestion as _QuickQuizQuestion } from '@/types/quiz'
 
-export interface QuickQuizQuestion {
-  id: number
-  question: string
-  options: string[]
-  correctAnswer: number
-  category: string
-  difficulty: string
-}
+// Re-export canonical type so existing imports from this module continue to work
+export type QuickQuizQuestion = _QuickQuizQuestion
 
 export interface QuickQuizResponse {
   success: boolean
   data?: QuickQuizQuestion[]
-  meta?: {
-    totalFound: number
-    returned: number
-    category: string
-  }
   error?: string
-  message: string
+  code?: string
+  message?: string
+  meta?: {
+    timestamp: string
+  }
 }
 
 /**
@@ -208,39 +201,5 @@ export function calculateQuizResults(session: QuickQuizSession): QuizResults {
     averageTime: Math.round(averageTime * 10) / 10,
     score: Math.round(score),
     grade,
-  }
-}
-
-/**
- * Example usage for testing the API
- */
-export async function testQuickQuizAPI() {
-  logger.debug('Testing Quick Quiz API...')
-
-  try {
-    // Test with a valid category
-    const result = await fetchQuickQuiz('Science')
-    logger.debug('API Response:', result)
-
-    if (result.success && result.data) {
-      logger.info(`✅ Success! Found ${result.data.length} questions for Science category`)
-
-      // Validate each question
-      const validQuestions = result.data.filter(validateQuizQuestion)
-      logger.debug(`📝 ${validQuestions.length} out of ${result.data.length} questions are valid`)
-
-      // Create a test session
-      if (validQuestions.length > 0) {
-        const session = createQuickQuizSession(validQuestions, 'Science')
-        logger.debug('🎮 Test session created:', session.sessionId)
-      }
-    } else {
-      logger.error('❌ API call failed:', result.error)
-    }
-
-    return result
-  } catch (error) {
-    console.error('❌ Test failed:', error)
-    return null
   }
 }

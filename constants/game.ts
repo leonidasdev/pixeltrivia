@@ -181,21 +181,22 @@ export const MAX_API_RETRIES = 3
 export const STORAGE_PREFIX = 'pixeltrivia_'
 
 /**
- * Storage keys used in the application
+ * Storage keys used in the application.
+ * All localStorage access MUST use these constants — never hardcode key strings.
  */
 export const STORAGE_KEYS = {
-  /** Player profile and preferences */
-  PLAYER_PROFILE: `${STORAGE_PREFIX}player_profile`,
-  /** Game settings */
-  SETTINGS: `${STORAGE_PREFIX}settings`,
-  /** Game history */
-  GAME_HISTORY: `${STORAGE_PREFIX}game_history`,
-  /** Current session */
-  CURRENT_SESSION: `${STORAGE_PREFIX}current_session`,
-  /** Volume settings */
-  VOLUME: `${STORAGE_PREFIX}volume`,
-  /** Theme preference */
-  THEME: `${STORAGE_PREFIX}theme`,
+  /** Player display name */
+  PLAYER_NAME: `${STORAGE_PREFIX}player_name`,
+  /** Player avatar ID */
+  PLAYER_AVATAR: `${STORAGE_PREFIX}player_avatar`,
+  /** Player volume level */
+  PLAYER_VOLUME: `${STORAGE_PREFIX}player_volume`,
+  /** Advanced game configuration (JSON) */
+  ADVANCED_CONFIG: `${STORAGE_PREFIX}advanced_config`,
+  /** AI-generated questions (JSON) */
+  GENERATED_QUESTIONS: `${STORAGE_PREFIX}generated_questions`,
+  /** Game metadata (JSON) */
+  GAME_METADATA: `${STORAGE_PREFIX}game_metadata`,
 } as const
 
 // ============================================================================

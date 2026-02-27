@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
+import { LoadingOverlay, ToastContainer, useToast } from '@/app/components/ui'
 
 function JoinGameContent() {
   const _router = useRouter()
@@ -13,6 +14,7 @@ function JoinGameContent() {
     mode: 'quick',
   })
   const [roomCode, setRoomCode] = useState('')
+  const { messages: toasts, dismissToast, toast } = useToast()
 
   useEffect(() => {
     const name = searchParams.get('name') || 'Player1234'
@@ -25,9 +27,9 @@ function JoinGameContent() {
 
   const handleJoinRoom = () => {
     if (roomCode.length === 6) {
-      alert(`Joining room ${roomCode} will be available once backend is configured!`)
+      toast.info(`Joining room ${roomCode} will be available once the backend is configured!`)
     } else {
-      alert('Please enter a valid 6-character room code')
+      toast.warning('Please enter a valid 6-character room code.')
     }
   }
 
@@ -95,20 +97,19 @@ function JoinGameContent() {
 
         <footer className="text-center text-gray-400 text-sm mt-8">
           <p>Enter a valid room code to join an existing game</p>
-          <p className="text-xs mt-1 opacity-75">© 2025 PixelTrivia</p>
+          <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia</p>
         </footer>
       </div>
+
+      {/* Toast notifications */}
+      <ToastContainer messages={toasts} onDismiss={dismissToast} />
     </main>
   )
 }
 
 export default function JoinGamePage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>
-      }
-    >
+    <Suspense fallback={<LoadingOverlay label="Loading join screen..." />}>
       <JoinGameContent />
     </Suspense>
   )

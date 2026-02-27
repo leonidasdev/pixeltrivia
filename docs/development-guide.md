@@ -75,7 +75,7 @@ This will:
 # Check that all scripts work
 npm run lint      # Should complete without errors
 npm run typecheck # Should complete without errors
-npm test          # Should run 236 tests
+npm test          # Should run 488 tests
 ```
 
 ---
@@ -193,7 +193,9 @@ pixeltrivia/
 │   └── pre-commit           # Runs lint-staged
 │
 ├── __tests__/               # Test files
-│   ├── components/          # Component tests
+│   ├── components/          # Component tests (incl. pages/)
+│   ├── hooks/               # Hook tests
+│   ├── integration/         # API route integration tests
 │   └── unit/               # Unit tests
 │       └── lib/            # Library function tests
 │
@@ -212,9 +214,11 @@ pixeltrivia/
 │   └── schema.sql         # Supabase schema
 │
 ├── docs/                   # Documentation
-│   ├── ARCHITECTURE.md    # System architecture
-│   ├── DEVELOPMENT.md     # This file
-│   ├── API.md             # API reference
+│   ├── api-reference.md   # API reference
+│   ├── architecture.md    # System architecture
+│   ├── database-guide.md  # Database schema
+│   ├── development-guide.md # This file
+│   ├── testing-guide.md   # Testing guide
 │   └── ...                # Other docs
 │
 ├── lib/                    # Shared libraries
@@ -516,11 +520,11 @@ import { withSecurity } from '@/lib/security';
 
 ## Next Steps
 
-- Read the [Architecture Overview](ARCHITECTURE.md)
-- Explore the [API Reference](API.md)
-- Check the [Testing Guide](TESTING.md)
+- Read the [Architecture Overview](architecture.md)
+- Explore the [API Reference](api-reference.md)
+- Check the [Testing Guide](testing-guide.md)
 - Review the [Contributing Guidelines](CONTRIBUTING.md)
 
 ---
 
-*Last updated: January 31, 2026*
+*Last updated: February 27, 2026*

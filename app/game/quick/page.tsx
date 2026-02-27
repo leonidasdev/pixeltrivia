@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation'
 import QuickGameSelector from '@/app/components/QuickGameSelector'
 import { fetchQuestions, createGameSession } from '@/lib/gameApi'
 import { logger } from '@/lib/logger'
+import { ToastContainer, useToast, SparklesOverlay, LoadingOverlay } from '@/app/components/ui'
 
 export default function QuickGamePage() {
   const router = useRouter()
   const [isStartingGame, setIsStartingGame] = useState(false)
+  const { messages: toasts, dismissToast, toast } = useToast()
   const handleCategorySelected = async (category: string, difficulty: string) => {
     setIsStartingGame(true)
 
@@ -32,14 +34,16 @@ export default function QuickGamePage() {
 
       // Navigate to game screen
       // TODO: Create game play screen at /game/play
-      alert(
-        `Game loaded successfully!\n\nCategory: ${category}\nDifficulty: ${difficulty}\nQuestions: ${questionsResult.data.questions.length}\n\nGame screen coming soon!`
+      toast.success(
+        `Game loaded! Category: ${category} • Difficulty: ${difficulty} • ${questionsResult.data.questions.length} questions. Game screen coming soon!`
       )
 
       // router.push('/game/play')
-    } catch (error) {
-      console.error('Error starting quick game:', error)
-      alert(`Failed to start the game: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    } catch (err) {
+      console.error('Error starting quick game:', err)
+      toast.error(
+        `Failed to start the game: ${err instanceof Error ? err.message : 'Unknown error'}`
+      )
     } finally {
       setIsStartingGame(false)
     }
@@ -50,43 +54,12 @@ export default function QuickGamePage() {
   }
 
   if (isStartingGame) {
-    return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 animate-pulse opacity-60" />
-          <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-pink-400 animate-pulse opacity-60" />
-          <div className="absolute top-1/2 left-1/6 w-2 h-2 bg-cyan-400 animate-pulse opacity-60" />
-        </div>
-
-        <div className="text-center z-10">
-          <div className="text-6xl mb-4 animate-spin">⚡</div>
-          <h1 className="text-4xl font-bold text-white pixel-text-shadow mb-2">LOADING GAME...</h1>
-          <p className="text-cyan-300 text-lg">Preparing your trivia questions</p>
-          <div className="mt-4 flex justify-center space-x-1">
-            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
-            <div
-              className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"
-              style={{ animationDelay: '0.2s' }}
-            />
-            <div
-              className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"
-              style={{ animationDelay: '0.4s' }}
-            />
-          </div>
-        </div>
-      </main>
-    )
+    return <LoadingOverlay label="Preparing your trivia questions" />
   }
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 animate-pulse opacity-60" />
-        <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-pink-400 animate-pulse opacity-60 animation-delay-1000" />
-        <div className="absolute top-1/2 left-1/6 w-2 h-2 bg-cyan-400 animate-pulse opacity-60 animation-delay-2000" />
-      </div>
+      <SparklesOverlay />
 
       {/* Main content */}
       <div className="z-10 w-full max-w-4xl">
@@ -102,6 +75,9 @@ export default function QuickGamePage() {
 
         {/* Game Selector */}
         <QuickGameSelector onCategorySelected={handleCategorySelected} onCancel={handleCancel} />
+
+        {/* Toast notifications */}
+        <ToastContainer messages={toasts} onDismiss={dismissToast} />
 
         {/* Instructions */}
         <section className="mt-8 text-center text-gray-400 text-sm max-w-lg mx-auto">

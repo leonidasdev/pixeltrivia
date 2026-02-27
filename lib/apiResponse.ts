@@ -258,6 +258,26 @@ export function serverErrorResponse(
   return NextResponse.json(response, { status: 500 })
 }
 
+/**
+ * Creates a 405 Method Not Allowed response
+ */
+export function methodNotAllowedResponse(allowed: string = 'POST'): NextResponse<ApiErrorResponse> {
+  const response: ApiErrorResponse = {
+    success: false,
+    error: 'Method not allowed',
+    code: 'METHOD_NOT_ALLOWED',
+    statusCode: 405,
+    meta: {
+      timestamp: new Date().toISOString(),
+    },
+  }
+
+  return NextResponse.json(response, {
+    status: 405,
+    headers: { Allow: allowed },
+  })
+}
+
 // ============================================================================
 // API Handler Wrapper
 // ============================================================================

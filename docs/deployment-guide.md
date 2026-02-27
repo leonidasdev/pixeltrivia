@@ -158,8 +158,8 @@ Configure variables for appropriate environments:
 The schema already includes RLS policies. Verify they're active:
 
 ```sql
-SELECT tablename, policyname, cmd 
-FROM pg_policies 
+SELECT tablename, policyname, cmd
+FROM pg_policies
 WHERE schemaname = 'public';
 ```
 
@@ -189,7 +189,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -199,8 +199,40 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run lint
-      - run: npm run typecheck
-      - run: npm test
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npx tsc --noEmit
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run test:ci
+      - uses: codecov/codecov-action@v4
+
+  build:
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
       - run: npm run build
 ```
 
@@ -439,4 +471,4 @@ Before going live:
 
 ---
 
-*Last updated: January 31, 2026*
+*Last updated: February 27, 2026*

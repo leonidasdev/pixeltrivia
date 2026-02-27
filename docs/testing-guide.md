@@ -24,11 +24,11 @@ Comprehensive guide to testing in PixelTrivia.
 
 PixelTrivia uses a comprehensive testing setup with:
 
-- **333 tests** total (305 Jest + 28 Playwright E2E)
+- **488 tests** total (488 Jest + Playwright E2E)
 - **Jest 30** as the unit/component test runner
 - **Playwright** for E2E testing (Chromium + Firefox)
 - **React Testing Library** for component tests
-- **>20% coverage** threshold (and growing)
+- **Coverage thresholds**: branches ≥12%, functions/lines/statements ≥15%
 
 Tests run automatically:
 - On every commit (via Husky pre-commit hooks)
@@ -108,7 +108,6 @@ __tests__/                         # Jest unit & component tests
 │   ├── CustomGameConfigurator.test.tsx
 │   ├── QuickGameSelector.test.tsx
 │   ├── SettingsPanel.test.tsx
-│   ├── ErrorBoundary.test.tsx
 │   └── Help/
 │       └── HelpModal.test.tsx
 ├── integration/                   # Integration tests
@@ -136,7 +135,9 @@ tests/                             # Playwright E2E tests
 |------|---------|---------|
 | Unit tests | `*.test.ts` | `roomCode.test.ts` |
 | Component tests | `*.test.tsx` | `QuickGameSelector.test.tsx` |
-| Integration tests | `*.integration.test.ts` | `api.integration.test.ts` |
+| Page tests | `*Page.test.tsx` | `HomePage.test.tsx` |
+| Hook tests | `use*.test.ts` | `useTimer.test.ts` |
+| Integration tests | `*.test.ts` | `roomCreate.test.ts` |
 
 ---
 
@@ -499,10 +500,10 @@ Coverage is configured in `jest.config.js`:
   ],
   coverageThreshold: {
     global: {
-      branches: 20,
-      functions: 20,
-      lines: 20,
-      statements: 20,
+      branches: 12,
+      functions: 15,
+      lines: 15,
+      statements: 15,
     },
   },
 }
@@ -520,14 +521,14 @@ start coverage/lcov-report/index.html # Windows
 
 ### Coverage Goals
 
-Current thresholds are set low (20%) to establish a baseline. Target coverage:
+Current thresholds are set conservatively to establish a baseline. Target coverage:
 
 | Metric | Current | Target |
 |--------|---------|--------|
-| Statements | 20% | 60% |
-| Branches | 20% | 50% |
-| Functions | 20% | 60% |
-| Lines | 20% | 60% |
+| Statements | 15% | 60% |
+| Branches | 12% | 50% |
+| Functions | 15% | 60% |
+| Lines | 15% | 60% |
 
 ---
 
@@ -699,8 +700,30 @@ jest.setTimeout(10000);
 Tests run automatically in GitHub Actions:
 
 ```yaml
-# .github/workflows/ci.yml
+# .github/workflows/ci.yml (4 parallel jobs)
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npx tsc --noEmit
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -708,8 +731,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
       - run: npm ci
-      - run: npm test -- --coverage
+      - run: npm run test:ci
+      - uses: codecov/codecov-action@v4
+
+  build:
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
 ```
 
 ### Pre-commit Hooks
@@ -727,4 +764,4 @@ Tests are also validated via lint-staged on commit:
 
 ---
 
-*Last updated: January 31, 2026*
+*Last updated: February 27, 2026*

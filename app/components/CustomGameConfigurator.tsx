@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
+import type { CustomGameConfig, KnowledgeLevel } from '@/types/game'
+
+// Re-export so existing imports from this module continue to work
+export type { CustomGameConfig }
 
 interface CustomGameConfiguratorProps {
   onStartCustomGame: (config: CustomGameConfig) => void
   onCancel?: () => void
   isLoading?: boolean
-}
-
-export interface CustomGameConfig {
-  knowledgeLevel: string
-  context: string
-  numberOfQuestions: number
 }
 
 const KNOWLEDGE_LEVELS = [
@@ -50,7 +48,7 @@ export default function CustomGameConfigurator({
   onCancel,
   isLoading = false,
 }: CustomGameConfiguratorProps) {
-  const [knowledgeLevel, setKnowledgeLevel] = useState('classic')
+  const [knowledgeLevel, setKnowledgeLevel] = useState<KnowledgeLevel>('classic')
   const [context, setContext] = useState('')
   const [numberOfQuestions, setNumberOfQuestions] = useState(10)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
@@ -122,7 +120,7 @@ export default function CustomGameConfigurator({
             <select
               id="knowledgeLevel"
               value={knowledgeLevel}
-              onChange={e => setKnowledgeLevel(e.target.value)}
+              onChange={e => setKnowledgeLevel(e.target.value as KnowledgeLevel)}
               className="w-full px-4 py-3 bg-gray-800 border-3 border-gray-600 text-white font-pixel
                        focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
                        appearance-none cursor-pointer text-lg pixel-border transition-colors duration-200"

@@ -1,12 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  fetchQuickQuiz,
-  testQuickQuizAPI,
-  type QuickQuizQuestion,
-  type QuickQuizResponse,
-} from '@/lib/quickQuizApi'
+import { fetchQuickQuiz, type QuickQuizQuestion, type QuickQuizResponse } from '@/lib/quickQuizApi'
 
 export default function QuizTestPage() {
   const [category, setCategory] = useState('')
@@ -47,7 +42,7 @@ export default function QuizTestPage() {
   const handleTestAPI = async () => {
     setLoading(true)
     try {
-      const testResult = await testQuickQuizAPI()
+      const testResult = await fetchQuickQuiz('Science')
       setResult(testResult)
       if (testResult?.success && testResult.data) {
         setQuestions(testResult.data)

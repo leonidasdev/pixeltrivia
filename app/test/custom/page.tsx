@@ -3,14 +3,14 @@
 import { useState } from 'react'
 import {
   generateCustomQuiz,
-  testCustomQuizAPI,
   type CustomQuizRequest,
   type CustomQuizQuestion,
   type CustomQuizResponse,
 } from '@/lib/customQuizApi'
 
 export default function CustomQuizTestPage() {
-  const [knowledgeLevel, setKnowledgeLevel] = useState('college')
+  const [knowledgeLevel, setKnowledgeLevel] =
+    useState<import('@/types/game').KnowledgeLevel>('college')
   const [context, setContext] = useState('')
   const [numQuestions, setNumQuestions] = useState(5)
   const [questions, setQuestions] = useState<CustomQuizQuestion[]>([])
@@ -56,7 +56,11 @@ export default function CustomQuizTestPage() {
   const handleTestAPI = async () => {
     setLoading(true)
     try {
-      const testResult = await testCustomQuizAPI()
+      const testResult = await generateCustomQuiz({
+        knowledgeLevel: 'college',
+        context: 'Ancient Greek mythology and gods',
+        numQuestions: 5,
+      })
       setResult(testResult)
       if (testResult?.success && testResult.data) {
         setQuestions(testResult.data)
@@ -106,7 +110,9 @@ export default function CustomQuizTestPage() {
               <select
                 id="knowledgeLevel"
                 value={knowledgeLevel}
-                onChange={e => setKnowledgeLevel(e.target.value)}
+                onChange={e =>
+                  setKnowledgeLevel(e.target.value as import('@/types/game').KnowledgeLevel)
+                }
                 className="w-full px-4 py-2 bg-gray-800 border-2 border-gray-600 text-white rounded-md
                          focus:border-cyan-400 focus:outline-none"
               >

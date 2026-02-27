@@ -1,8 +1,19 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { getSupabaseClient } from '@/lib/supabase'
 import { generateRoomCode, isValidRoomCode } from '@/lib/roomCode'
+import { logger } from '@/lib/logger'
+import {
+  createdResponse,
+  databaseErrorResponse,
+  serverErrorResponse,
+  methodNotAllowedResponse,
+} from '@/lib/apiResponse'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 
-export async function POST(_request: NextRequest) {
+export async function POST(request: NextRequest) {
+  const rateLimited = rateLimit(request, RATE_LIMITS.roomCreation)
+  if (rateLimited) return rateLimited
+
   try {
     const supabase = getSupabaseClient()
 
@@ -17,7 +28,6 @@ export async function POST(_request: NextRequest) {
       roomCode = generateRoomCode()
       attempts++
 
-      // Check if this room code already exists
       const { data: existingRoom, error: checkError } = await supabase
         .from('rooms')
         .select('code')
@@ -25,26 +35,21 @@ export async function POST(_request: NextRequest) {
         .single()
 
       if (checkError && checkError.code === 'PGRST116') {
-        // No rows found - this means the code is unique
         isUnique = true
       } else if (checkError) {
-        // Some other error occurred
-        console.error('Error checking room code uniqueness:', checkError)
-        throw new Error('Database error while checking room code')
+        logger.error('Error checking room code uniqueness:', checkError)
+        return databaseErrorResponse('Database error while checking room code')
       } else if (existingRoom) {
-        // Room code already exists, try again
         isUnique = false
       }
 
-      // Prevent infinite loops
       if (attempts >= maxAttempts) {
-        throw new Error('Unable to generate unique room code after multiple attempts')
+        return serverErrorResponse('Unable to generate unique room code after multiple attempts')
       }
     } while (!isUnique)
 
-    // Validate the generated room code format
     if (!isValidRoomCode(roomCode)) {
-      throw new Error('Generated room code is invalid')
+      return serverErrorResponse('Generated room code is invalid')
     }
 
     // Create the new room in Supabase
@@ -54,74 +59,31 @@ export async function POST(_request: NextRequest) {
         code: roomCode,
         created_at: new Date().toISOString(),
         status: 'waiting',
-        max_players: 8, // Default max players
+        max_players: 8,
       })
       .select()
       .single()
 
     if (insertError) {
-      console.error('Error creating room:', insertError)
-      throw new Error('Failed to create room in database')
+      logger.error('Error creating room:', insertError)
+      return databaseErrorResponse('Failed to create room in database')
     }
 
-    // Return the successful response
-    return NextResponse.json(
+    return createdResponse(
       {
-        success: true,
-        data: {
-          roomCode: newRoom.code,
-          createdAt: newRoom.created_at,
-          status: newRoom.status,
-        },
-        message: 'Room created successfully',
+        roomCode: newRoom.code,
+        createdAt: newRoom.created_at,
+        status: newRoom.status,
       },
-      { status: 201 }
+      'Room created successfully'
     )
   } catch (error) {
-    console.error('Room creation error:', error)
-
-    // Return error response
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-        message: 'Failed to create room',
-      },
-      { status: 500 }
-    )
+    logger.error('Room creation error:', error)
+    return serverErrorResponse(error instanceof Error ? error.message : 'Unknown error occurred')
   }
 }
 
 // Handle unsupported HTTP methods
-export async function GET() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests',
-    },
-    { status: 405 }
-  )
-}
-
-export async function PUT() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests',
-    },
-    { status: 405 }
-  )
-}
-
-export async function DELETE() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: 'Method not allowed',
-      message: 'This endpoint only supports POST requests',
-    },
-    { status: 405 }
-  )
-}
+export const GET = () => methodNotAllowedResponse('POST')
+export const PUT = () => methodNotAllowedResponse('POST')
+export const DELETE = () => methodNotAllowedResponse('POST')

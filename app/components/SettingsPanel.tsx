@@ -1,4 +1,5 @@
 import React from 'react'
+import { AVATAR_OPTIONS } from '@/constants/avatars'
 
 interface SettingsPanelProps {
   volume: number
@@ -8,14 +9,6 @@ interface SettingsPanelProps {
   onPlayerNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onAvatarSelect: (avatarId: string) => void
 }
-
-const AVATAR_OPTIONS = [
-  { id: 'knight', name: 'Knight', emoji: '🛡️', color: 'bg-red-600' },
-  { id: 'wizard', name: 'Wizard', emoji: '🧙', color: 'bg-purple-600' },
-  { id: 'archer', name: 'Archer', emoji: '🏹', color: 'bg-green-600' },
-  { id: 'rogue', name: 'Rogue', emoji: '🗡️', color: 'bg-gray-600' },
-  { id: 'mage', name: 'Mage', emoji: '✨', color: 'bg-blue-600' },
-]
 
 export default function SettingsPanel({
   volume,
@@ -27,11 +20,11 @@ export default function SettingsPanel({
 }: SettingsPanelProps) {
   return (
     <div className="w-full">
-      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+      <form className="space-y-6" onSubmit={e => e.preventDefault()}>
         {/* Player Name Input */}
         <div className="space-y-2">
-          <label 
-            htmlFor="playerName" 
+          <label
+            htmlFor="playerName"
             className="block text-sm font-bold text-cyan-300 uppercase tracking-wider"
           >
             Player Name
@@ -55,8 +48,8 @@ export default function SettingsPanel({
 
         {/* Volume Control */}
         <div className="space-y-3">
-          <label 
-            htmlFor="volumeSlider" 
+          <label
+            htmlFor="volumeSlider"
             className="flex justify-between items-center text-sm font-bold text-cyan-300 uppercase tracking-wider"
           >
             <span>Sound Volume</span>
@@ -73,7 +66,7 @@ export default function SettingsPanel({
               className="w-full h-3 bg-gray-700 rounded-lg appearance-none cursor-pointer
                        focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50"
               style={{
-                background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${volume}%, #374151 ${volume}%, #374151 100%)`
+                background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${volume}%, #374151 ${volume}%, #374151 100%)`,
               }}
               aria-label={`Volume level: ${volume} percent`}
             />
@@ -91,7 +84,7 @@ export default function SettingsPanel({
             Choose Avatar
           </label>
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
-            {AVATAR_OPTIONS.map((avatar) => (
+            {AVATAR_OPTIONS.map(avatar => (
               <button
                 key={avatar.id}
                 type="button"
@@ -99,9 +92,10 @@ export default function SettingsPanel({
                 className={`
                   relative p-3 border-3 rounded-lg transition-all duration-200
                   focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
-                  ${selectedAvatar === avatar.id
-                    ? `${avatar.color} border-white scale-105 pixel-shadow`
-                    : `${avatar.color} border-gray-600 hover:border-gray-400 hover:scale-105 opacity-70 hover:opacity-100`
+                  ${
+                    selectedAvatar === avatar.id
+                      ? `${avatar.color} border-white scale-105 pixel-shadow`
+                      : `${avatar.color} border-gray-600 hover:border-gray-400 hover:scale-105 opacity-70 hover:opacity-100`
                   }
                 `}
                 aria-label={`Select ${avatar.name} avatar`}
@@ -117,7 +111,9 @@ export default function SettingsPanel({
                 </div>
                 {selectedAvatar === avatar.id && (
                   <div className="absolute -top-2 -right-2 w-5 h-5 bg-yellow-400 border-2 border-yellow-600 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-black font-bold" aria-hidden="true">✓</span>
+                    <span className="text-xs text-black font-bold" aria-hidden="true">
+                      ✓
+                    </span>
                   </div>
                 )}
               </button>
@@ -125,7 +121,8 @@ export default function SettingsPanel({
           </div>
           <p className="text-xs text-gray-400 text-center">
             Your avatar represents you in multiplayer games
-          </p>        </div>
+          </p>{' '}
+        </div>
       </form>
     </div>
   )

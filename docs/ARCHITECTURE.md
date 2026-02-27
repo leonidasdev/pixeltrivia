@@ -117,10 +117,16 @@ app/
 │   ├── BackButton.tsx
 │   ├── MainMenuLogo.tsx
 │   ├── ErrorBoundary.tsx
-│   └── Help/
-│       ├── HelpButton.tsx
-│       ├── HelpModal.tsx
-│       └── HelpContext.tsx
+│   ├── Help/
+│   │   ├── HelpButton.tsx
+│   │   ├── HelpModal.tsx
+│   │   └── HelpContext.tsx
+│   └── ui/                  # Reusable UI library
+│       ├── Toast.tsx         # Toast notifications
+│       ├── Modal.tsx
+│       ├── LoadingSpinner.tsx
+│       ├── PixelButton.tsx, PixelCard.tsx, PixelInput.tsx, PixelBadge.tsx
+│       └── AnimatedBackground.tsx, GamePageLayout.tsx, PageHeader.tsx
 │
 └── game/                    # Game pages
     ├── mode/page.tsx        # Mode selection
@@ -142,7 +148,9 @@ lib/
 ├── security.ts        # Security middleware (Next.js)
 ├── security.core.ts   # Pure security functions
 ├── rateLimit.ts       # Rate limiting implementation
-├── supabase.ts        # Supabase client initialization
+├── logger.ts          # Structured logging utility
+├── storage.ts         # Typed localStorage wrapper
+├── supabase.ts        # Supabase client (DbRoom, DbPlayer types)
 ├── roomApi.ts         # Room management API
 ├── roomCode.ts        # Room code generation
 ├── gameApi.ts         # Game session management
@@ -179,6 +187,7 @@ hooks/
 ├── index.ts           # Re-exports all hooks
 ├── useGameState.ts    # Game state management
 ├── useLocalStorage.ts # Typed localStorage with React sync
+├── usePlayerSettings.ts # Player name, avatar, volume settings
 ├── useTimer.ts        # Countdown timer with callbacks
 └── useQuizSession.ts  # Complete quiz session management
 ```
@@ -191,40 +200,47 @@ hooks/
 
 ```
 RootLayout
+├── Skip Navigation Link
 ├── MainMenuLogo
-├── HelpProvider
+├── HelpProvider (HelpContext)
 │   └── HelpModal
 └── Pages
     ├── HomePage (Main Menu)
     │   ├── Quick Play Button
     │   ├── Custom Game Button
-    │   └── Multiplayer Button
+    │   ├── Multiplayer Button
+    │   └── Toast (notifications)
     │
     ├── QuickGameSelector
     │   ├── Category Grid
     │   ├── Difficulty Selector
-    │   └── Question Count Slider
+    │   ├── Question Count Slider
+    │   └── Toast (success/error)
     │
     ├── CustomGameConfigurator
     │   ├── Topic Input
     │   ├── Context Textarea
     │   ├── Knowledge Level Selector
-    │   └── Question Count Slider
+    │   ├── Question Count Slider
+    │   └── Toast (success/error)
     │
     └── AdvancedGameConfigurator
         ├── File Upload
         ├── Category Multi-select
         ├── Time Limit Slider
-        └── Hints Toggle
+        ├── Hints Toggle
+        └── Toast (success/error)
 ```
 
 ### Shared Component Patterns
 
 All interactive components follow these patterns:
 
-1. **Accessibility** - ARIA labels, keyboard navigation, focus management
-2. **Retro Styling** - Consistent pixel borders, retro fonts, color palette
-3. **State Management** - React hooks for local state
+1. **Accessibility** - ARIA labels, keyboard navigation, focus management, skip-nav
+2. **Toast Notifications** - Non-intrusive feedback via `ui/Toast.tsx` (replaces `alert()`)
+3. **Retro Styling** - Consistent pixel borders, retro fonts, color palette
+4. **State Management** - React hooks for local state
+5. **Reduced Motion** - Respects `prefers-reduced-motion` system preference
 4. **Error Boundaries** - Graceful error handling with retry options
 
 ---
@@ -304,6 +320,8 @@ Incoming   Security    Check limits  Zod schema  Business   JSON with
 
 ### Standardized Response Format
 
+All API routes use `lib/apiResponse.ts` helpers for consistent response envelopes.
+
 **Success Response:**
 ```json
 {
@@ -311,8 +329,7 @@ Incoming   Security    Check limits  Zod schema  Business   JSON with
   "data": { ... },
   "message": "Optional message",
   "meta": {
-    "timestamp": "2026-01-31T10:00:00.000Z",
-    "requestId": "req_abc123"
+    "timestamp": "2026-02-03T10:00:00.000Z"
   }
 }
 ```
@@ -321,25 +338,25 @@ Incoming   Security    Check limits  Zod schema  Business   JSON with
 ```json
 {
   "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Human-readable message",
-    "details": { ... }
-  },
+  "error": "Human-readable error message",
+  "code": "VALIDATION_ERROR",
+  "statusCode": 400,
   "meta": {
-    "timestamp": "2026-01-31T10:00:00.000Z"
+    "timestamp": "2026-02-03T10:00:00.000Z"
   }
 }
 ```
 
 ### Rate Limiting Configuration
 
+All API routes are rate-limited via `lib/rateLimit.ts`:
+
 | Endpoint Type | Limit | Window |
 |---------------|-------|--------|
-| Standard API | 100 requests | 1 minute |
+| Standard API (quiz) | 30 requests | 1 minute |
 | AI Generation | 5 requests | 1 minute |
 | Room Creation | 10 requests | 5 minutes |
-| Authentication | 5 attempts | 15 minutes |
+| Standard (default) | 100 requests | 1 minute |
 
 ---
 
@@ -450,4 +467,4 @@ Incoming   Security    Check limits  Zod schema  Business   JSON with
 
 ---
 
-*Last updated: January 31, 2026*
+*Last updated: February 27, 2026*

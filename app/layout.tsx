@@ -1,11 +1,11 @@
 /**
  * PixelTrivia Layout Component
- * 
+ *
  * Enhanced navigation layout featuring:
  * 🪧 PixelTrivia Logo: Always visible (except during gameplay), clickable to return to main menu
- * ↩️ Back Button: Context-aware navigation using router.back() 
+ * ↩️ Back Button: Context-aware navigation using router.back()
  * 🆘 Help Button: Smart context-sensitive help system with modal tabs
- * 
+ *
  * Navigation hides during active gameplay (/play routes) to avoid UI clutter.
  * Layout uses flexbox for responsive positioning and pixel-art theming.
  */
@@ -20,14 +20,18 @@ export const metadata: Metadata = {
   description: 'A pixel-perfect trivia game experience',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {  return (
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
     <html lang="en">
       <body className="font-pixel bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 min-h-screen">
         <HelpProvider>
+          {/* Skip navigation link for keyboard/screen-reader users */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-cyan-600 focus:text-white focus:rounded focus:text-sm focus:font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          >
+            Skip to main content
+          </a>
           <header className="p-4">
             <div className="flex items-center justify-between w-full">
               {/* Left side: Logo and Back Button */}
@@ -35,14 +39,14 @@ export default function RootLayout({
                 <MainMenuLogo />
                 <BackButton />
               </div>
-              
+
               {/* Right side: Help Button */}
               <div className="flex items-center">
                 <HelpButton />
               </div>
             </div>
           </header>
-          {children}
+          <div id="main-content">{children}</div>
         </HelpProvider>
       </body>
     </html>

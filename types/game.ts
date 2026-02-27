@@ -25,8 +25,8 @@ export interface Question {
   correctAnswer: number
   /** Category of the question (e.g., "Science", "History") */
   category: string
-  /** Difficulty level of the question */
-  difficulty: DifficultyLevel
+  /** Difficulty level of the question (e.g., 'easy', 'medium', 'hard' from DB) */
+  difficulty: string
   /** Optional time limit for this specific question (in seconds) */
   timeLimit?: number
 }

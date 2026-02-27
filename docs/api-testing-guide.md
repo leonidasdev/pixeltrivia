@@ -12,7 +12,7 @@
 
 ### Request
 ```bash
-curl -X POST http://localhost:3001/api/quiz/advanced \
+curl -X POST http://localhost:3000/api/quiz/advanced \
   -H "Content-Type: application/json" \
   -d '{
     "filesSummary": "This document covers the basics of JavaScript programming, including variables, functions, arrays, and objects. It explains how to declare variables using let, const, and var. Functions can be declared using function declarations or arrow functions. Arrays are ordered lists of items that can store multiple values.",
@@ -25,22 +25,25 @@ curl -X POST http://localhost:3001/api/quiz/advanced \
 ### Expected Response
 ```json
 {
-  "questions": [
-    {
-      "question": "Which keyword is recommended for declaring variables in modern JavaScript?",
-      "options": ["var", "let", "const", "function"],
-      "answer": "B"
-    },
-    {
-      "question": "What are arrays in JavaScript?",
-      "options": ["Single values only", "Ordered lists of items", "Only text strings", "Function declarations"],
-      "answer": "B"
+  "success": true,
+  "data": {
+    "questions": [
+      {
+        "question": "Which keyword is recommended for declaring variables in modern JavaScript?",
+        "options": ["var", "let", "const", "function"],
+        "answer": 2
+      },
+      {
+        "question": "What are arrays in JavaScript?",
+        "options": ["Single values only", "Ordered lists of items", "Only text strings", "Function declarations"],
+        "answer": 1
+      }
+    ],
+    "metadata": {
+      "numQuestions": 5,
+      "format": "short",
+      "timeLimit": 30
     }
-  ],
-  "metadata": {
-    "numQuestions": 5,
-    "format": "short",
-    "timeLimit": 30
   }
 }
 ```

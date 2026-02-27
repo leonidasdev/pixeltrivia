@@ -7,7 +7,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ecf8e?logo=supabase)
-![Tests](https://img.shields.io/badge/Tests-333%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-488%20passing-brightgreen)
 
 **A retro-styled trivia game with AI-powered question generation**
 
@@ -24,8 +24,10 @@
 - **Multiple Game Modes** - Quick Play, Custom Topics, Advanced Configuration
 - **Multiplayer Rooms** - Create and join rooms with friends
 - **Responsive Design** - Works on desktop, tablet, and mobile
+- **Toast Notifications** - Non-intrusive feedback replacing browser alerts
 - **Keyboard Navigation** - Full keyboard accessibility support
-- **WCAG Accessible** - Screen reader friendly with proper ARIA labels
+- **WCAG Accessible** - Screen reader friendly with proper ARIA labels, skip navigation
+- **Reduced Motion** - Respects `prefers-reduced-motion` system preference
 - **Security Hardened** - Rate limiting, input validation, XSS protection
 
 ## Quick Start
@@ -80,12 +82,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 | Document | Description |
 |----------|-------------|
-| [Architecture](docs/ARCHITECTURE.md) | System design and component overview |
-| [Development](docs/DEVELOPMENT.md) | Local setup and development guide |
-| [API Reference](docs/API.md) | Complete API documentation |
-| [Database](docs/DATABASE.md) | Schema and Supabase setup |
-| [Testing](docs/TESTING.md) | Testing guide and conventions |
-| [Deployment](docs/DEPLOYMENT.md) | Production deployment guide |
+| [Architecture](docs/architecture.md) | System design and component overview |
+| [Development](docs/development-guide.md) | Local setup and development guide |
+| [API Reference](docs/api-reference.md) | Complete API documentation |
+| [Database](docs/database-guide.md) | Schema and Supabase setup |
+| [Testing](docs/testing-guide.md) | Testing guide and conventions |
+| [Deployment](docs/deployment-guide.md) | Production deployment guide |
 | [Contributing](CONTRIBUTING.md) | How to contribute |
 
 ## Game Modes
@@ -128,12 +130,17 @@ pixeltrivia/
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Home page
+├── types/                 # Shared TypeScript type definitions
+├── constants/             # Application constants (avatars, categories, game config)
+├── hooks/                 # Custom React hooks
 ├── lib/                   # Utility libraries
 │   ├── errors.ts          # Custom error classes
 │   ├── validation.ts      # Zod schemas
 │   ├── security.ts        # Security middleware
 │   ├── rateLimit.ts       # Rate limiting
 │   ├── apiResponse.ts     # API response helpers
+│   ├── logger.ts          # Structured logging utility
+│   ├── storage.ts         # Typed localStorage wrapper
 │   └── *Api.ts            # API client functions
 ├── database/              # Database schema
 ├── docs/                  # Documentation
@@ -157,7 +164,7 @@ npm run test:coverage
 npm run typecheck
 ```
 
-**Test Coverage:** 236 tests across 11 test suites
+**Test Coverage:** 488 tests across 29 test suites (unit, component, page, hook, integration)
 
 ## Scripts
 

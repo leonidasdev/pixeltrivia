@@ -227,7 +227,7 @@ interface QuestionCardProps {
 
 export function QuestionCard({ question, onAnswer, timeLimit }: QuestionCardProps) {
   const [selected, setSelected] = useState<number | null>(null);
-  
+
   // ...
 }
 ```
@@ -320,7 +320,9 @@ BREAKING CHANGE: API now returns data in 'data' field instead of 'result'"
 |------|----------|---------|
 | Unit | `__tests__/unit/` | Test individual functions |
 | Component | `__tests__/components/` | Test React components |
-| Integration | `__tests__/integration/` | Test feature flows |
+| Page | `__tests__/components/pages/` | Test page-level rendering |
+| Hook | `__tests__/hooks/` | Test custom React hooks |
+| Integration | `__tests__/integration/` | Test API routes end-to-end |
 
 ### Writing Tests
 
@@ -330,10 +332,10 @@ describe('functionName', () => {
   it('should handle normal case', () => {
     // Arrange
     const input = 'test';
-    
+
     // Act
     const result = functionName(input);
-    
+
     // Assert
     expect(result).toBe('expected');
   });
@@ -351,21 +353,21 @@ describe('functionName', () => {
 ### When to Update Docs
 
 - Adding new features → Update relevant docs
-- Changing API → Update API.md
-- Changing database → Update DATABASE.md
-- Changing setup → Update DEVELOPMENT.md
+- Changing API → Update api-reference.md
+- Changing database → Update database-guide.md
+- Changing setup → Update development-guide.md
 
 ### Documentation Files
 
 | File | Purpose |
 |------|---------|
 | `README.md` | Project overview |
-| `docs/ARCHITECTURE.md` | System design |
-| `docs/DEVELOPMENT.md` | Setup guide |
-| `docs/API.md` | API reference |
-| `docs/DATABASE.md` | Database schema |
-| `docs/TESTING.md` | Testing guide |
-| `CLAUDE.md` | AI assistant context |
+| `docs/architecture.md` | System design |
+| `docs/development-guide.md` | Setup guide |
+| `docs/api-reference.md` | API reference |
+| `docs/database-guide.md` | Database schema |
+| `docs/testing-guide.md` | Testing guide |
+| `docs/CLAUDE.md` | AI assistant context |
 
 ---
 
@@ -410,4 +412,4 @@ Include:
 
 Thank you for contributing to PixelTrivia!
 
-*Last updated: January 31, 2026*
+*Last updated: February 27, 2026*

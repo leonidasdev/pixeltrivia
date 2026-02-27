@@ -16,16 +16,26 @@ const SECURITY_HEADERS = {
 }
 
 /**
- * Allowed origins for CORS (production domains)
- * Add your domains here in production
+ * Allowed origins for CORS.
+ * In production, set ALLOWED_ORIGINS env var as a comma-separated list.
+ * Example: ALLOWED_ORIGINS=https://pixeltrivia.com,https://www.pixeltrivia.com
  */
-const ALLOWED_ORIGINS = new Set([
-  'http://localhost:3000',
-  'http://localhost:3001',
-  // Add production domains:
-  // 'https://pixeltrivia.com',
-  // 'https://www.pixeltrivia.com',
-])
+function getAllowedOrigins(): Set<string> {
+  const envOrigins = process.env.ALLOWED_ORIGINS
+  const base = ['http://localhost:3000', 'http://localhost:3001']
+
+  if (envOrigins) {
+    const extras = envOrigins
+      .split(',')
+      .map(o => o.trim())
+      .filter(Boolean)
+    return new Set([...base, ...extras])
+  }
+
+  return new Set(base)
+}
+
+const ALLOWED_ORIGINS = getAllowedOrigins()
 
 /**
  * Check if the origin is allowed

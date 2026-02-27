@@ -39,11 +39,10 @@ export function getSupabaseClient(): SupabaseClient {
 }
 
 /**
- * @deprecated Use getSupabaseClient() instead for lazy initialization
- * This export is kept for backward compatibility but will fail at module load
- * if env vars are not set.
+ * @deprecated Use getSupabaseClient() instead for lazy initialization.
+ * Returns null if env vars are not set — callers must handle this.
  */
-export const supabase =
+export const supabase: SupabaseClient | null =
   supabaseUrl && supabaseServiceKey
     ? createClient(supabaseUrl, supabaseServiceKey, {
         auth: {
@@ -51,23 +50,30 @@ export const supabase =
           persistSession: false,
         },
       })
-    : (null as unknown as SupabaseClient)
+    : null
 
-// Type definitions for our database schema
-export interface Room {
-  id?: number
+// Type definitions for our database schema (DB row shapes)
+export interface DbRoom {
+  id: number
   code: string
-  created_at?: string
-  host_player_id?: string
-  status?: 'waiting' | 'active' | 'finished'
-  max_players?: number
+  created_at: string
+  host_player_id: string | null
+  status: 'waiting' | 'active' | 'finished'
+  max_players: number
 }
 
-export interface Player {
-  id?: number
+export interface DbPlayer {
+  id: number
   room_code: string
   name: string
   avatar: string
   is_host: boolean
-  joined_at?: string
+  joined_at: string
 }
+
+/** Insert shape — id and defaults are optional */
+export type DbRoomInsert = Omit<DbRoom, 'id' | 'created_at' | 'status' | 'max_players'> &
+  Partial<Pick<DbRoom, 'id' | 'created_at' | 'status' | 'max_players'>>
+
+export type DbPlayerInsert = Omit<DbPlayer, 'id' | 'joined_at'> &
+  Partial<Pick<DbPlayer, 'id' | 'joined_at'>>
