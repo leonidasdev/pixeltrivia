@@ -13,9 +13,16 @@
 import { use, useEffect, useState, useCallback, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { useRoom } from '@/hooks/useRoom'
+import { useSound } from '@/hooks/useSound'
 import { leaveRoom, startGame } from '@/lib/multiplayerApi'
 import { LobbyView } from '@/app/components/multiplayer'
-import { LoadingOverlay, ToastContainer, useToast, AnimatedBackground } from '@/app/components/ui'
+import {
+  LoadingOverlay,
+  ToastContainer,
+  useToast,
+  AnimatedBackground,
+  PageTransition,
+} from '@/app/components/ui'
 import { MULTIPLAYER_STORAGE_KEYS } from '@/constants/game'
 
 interface LobbyPageProps {
@@ -26,6 +33,8 @@ function LobbyContent({ params }: LobbyPageProps) {
   const { code: roomCode } = use(params)
   const router = useRouter()
   const { messages: toasts, dismissToast, toast } = useToast()
+  const { play: playSound } = useSound()
+  const [prevPlayerCount, setPrevPlayerCount] = useState(0)
 
   // Load player session from storage
   const [playerId, setPlayerId] = useState<number | null>(null)
@@ -54,9 +63,22 @@ function LobbyContent({ params }: LobbyPageProps) {
   // Redirect to game when status changes to active
   useEffect(() => {
     if (room?.status === 'active') {
+      playSound('gameStart')
       router.push(`/game/play/${roomCode}`)
     }
-  }, [room?.status, roomCode, router])
+  }, [room?.status, roomCode, router, playSound])
+
+  // Play sound when a player joins/leaves
+  useEffect(() => {
+    if (room && room.players.length !== prevPlayerCount) {
+      if (room.players.length > prevPlayerCount && prevPlayerCount > 0) {
+        playSound('lobbyJoin')
+      } else if (room.players.length < prevPlayerCount) {
+        playSound('lobbyLeave')
+      }
+      setPrevPlayerCount(room.players.length)
+    }
+  }, [room, prevPlayerCount, playSound])
 
   // Show errors
   useEffect(() => {
@@ -104,7 +126,7 @@ function LobbyContent({ params }: LobbyPageProps) {
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
       <AnimatedBackground />
 
-      <div className="z-10 w-full max-w-2xl">
+      <PageTransition style="slide-up" className="z-10 w-full max-w-2xl">
         {/* Header */}
         <header className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white pixel-text-shadow mb-2">GAME LOBBY</h1>
@@ -124,7 +146,7 @@ function LobbyContent({ params }: LobbyPageProps) {
           onStartGame={handleStartGame}
           onLeave={handleLeave}
         />
-      </div>
+      </PageTransition>
 
       <ToastContainer messages={toasts} onDismiss={dismissToast} />
     </main>

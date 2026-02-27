@@ -81,3 +81,26 @@ export type {
 
 export { Toast, ToastContainer, useToast } from './Toast'
 export type { ToastProps, ToastContainerProps, ToastMessage, ToastVariant } from './Toast'
+
+// ============================================================================
+// Effects & Animation Components
+// ============================================================================
+
+export { PixelConfetti } from './PixelConfetti'
+export type { PixelConfettiProps } from './PixelConfetti'
+
+export { ScorePopup, ScorePopupManager } from './ScorePopup'
+export type { ScorePopupProps, ScorePopupManagerProps } from './ScorePopup'
+
+export { AnswerFeedback, AnswerOptionHighlight } from './AnswerFeedback'
+export type {
+  AnswerFeedbackProps,
+  FeedbackType,
+  AnswerOptionHighlightProps,
+} from './AnswerFeedback'
+
+export { PixelTimer } from './PixelTimer'
+export type { PixelTimerProps } from './PixelTimer'
+
+export { PageTransition, StaggerChildren } from './PageTransition'
+export type { PageTransitionProps, TransitionStyle, StaggerChildrenProps } from './PageTransition'

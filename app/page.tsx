@@ -3,7 +3,15 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import SettingsPanel from './components/SettingsPanel'
-import { ToastContainer, useToast, SparklesOverlay, Modal } from './components/ui'
+import {
+  ToastContainer,
+  useToast,
+  SparklesOverlay,
+  Modal,
+  PageTransition,
+  StaggerChildren,
+} from './components/ui'
+import { useSound } from '@/hooks/useSound'
 
 // Generate random player name
 const generateRandomPlayerName = () => {
@@ -21,6 +29,7 @@ export default function HomePage() {
   const [showSettings, setShowSettings] = useState(false)
   const [nameError, setNameError] = useState('')
   const { messages: toasts, dismissToast, toast } = useToast()
+  const { play: playSound } = useSound(volume)
 
   // Auto-generate random player name on mount
   useEffect(() => {
@@ -30,9 +39,11 @@ export default function HomePage() {
     if (!playerName.trim()) {
       setNameError('Please enter your name before starting a game!')
       toast.warning('Please enter your name in Settings before starting.')
+      playSound('wrong')
       return
     }
     setNameError('')
+    playSound('gameStart')
 
     // Navigate to game mode selection screen with player settings
     const params = new URLSearchParams({
@@ -46,9 +57,11 @@ export default function HomePage() {
     if (!playerName.trim()) {
       setNameError('Please enter your name before joining a game!')
       toast.warning('Please enter your name in Settings before joining.')
+      playSound('wrong')
       return
     }
     setNameError('')
+    playSound('navigate')
 
     // TODO: Navigate to join game screen
     toast.info(
@@ -68,6 +81,7 @@ export default function HomePage() {
   }
 
   const handleSettingsToggle = () => {
+    playSound('select')
     setShowSettings(!showSettings)
   }
 
@@ -79,10 +93,13 @@ export default function HomePage() {
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Animated background elements */}
       <SparklesOverlay /> {/* Main content container */}
-      <div className="flex flex-col items-center space-y-8 z-10 max-w-lg w-full">
+      <PageTransition
+        style="fade"
+        className="flex flex-col items-center space-y-8 z-10 max-w-lg w-full"
+      >
         {/* Game title */}
         <header className="text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-2 pixel-text-shadow select-none">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-2 pixel-text-shadow select-none animate-pixel-float">
             PIXEL
           </h1>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-yellow-400 pixel-text-shadow select-none">
@@ -94,15 +111,19 @@ export default function HomePage() {
         </header>{' '}
         {/* Menu buttons */}
         <nav className="flex flex-col space-y-6 w-full" role="menu">
-          {/* Start New Game Button */}
-          <button
-            onClick={handleStartNewGame}
-            onMouseEnter={() => setHoveredButton('new')}
-            onMouseLeave={() => setHoveredButton(null)}
-            onFocus={() => setHoveredButton('new')}
-            onBlur={() => setHoveredButton(null)}
-            disabled={isCreatingRoom}
-            className={`
+          <StaggerChildren staggerDelay={120} style="slide-up">
+            {/* Start New Game Button */}
+            <button
+              onClick={handleStartNewGame}
+              onMouseEnter={() => {
+                setHoveredButton('new')
+                playSound('hover')
+              }}
+              onMouseLeave={() => setHoveredButton(null)}
+              onFocus={() => setHoveredButton('new')}
+              onBlur={() => setHoveredButton(null)}
+              disabled={isCreatingRoom}
+              className={`
               w-full py-4 px-8 text-2xl font-bold text-center
               ${
                 isCreatingRoom
@@ -122,23 +143,28 @@ export default function HomePage() {
               ${!isCreatingRoom ? 'active:scale-95 active:translate-x-0 active:translate-y-0' : ''}
               pixel-border
             `}
-            role="menuitem"
-            aria-label="Start a new trivia game"
-          >
-            <span className="block">{isCreatingRoom ? 'CREATING ROOM...' : 'START NEW GAME'}</span>
-            <span className="block text-sm text-green-200 mt-1 font-normal">
-              {isCreatingRoom ? 'Please wait' : 'Create a multiplayer room'}
-            </span>
-          </button>
+              role="menuitem"
+              aria-label="Start a new trivia game"
+            >
+              <span className="block">
+                {isCreatingRoom ? 'CREATING ROOM...' : 'START NEW GAME'}
+              </span>
+              <span className="block text-sm text-green-200 mt-1 font-normal">
+                {isCreatingRoom ? 'Please wait' : 'Create a multiplayer room'}
+              </span>
+            </button>
 
-          {/* Join Existing Game Button */}
-          <button
-            onClick={handleJoinExistingGame}
-            onMouseEnter={() => setHoveredButton('join')}
-            onMouseLeave={() => setHoveredButton(null)}
-            onFocus={() => setHoveredButton('join')}
-            onBlur={() => setHoveredButton(null)}
-            className={`
+            {/* Join Existing Game Button */}
+            <button
+              onClick={handleJoinExistingGame}
+              onMouseEnter={() => {
+                setHoveredButton('join')
+                playSound('hover')
+              }}
+              onMouseLeave={() => setHoveredButton(null)}
+              onFocus={() => setHoveredButton('join')}
+              onBlur={() => setHoveredButton(null)}
+              className={`
               w-full py-4 px-8 text-2xl font-bold text-center
               bg-blue-600 hover:bg-blue-500 active:bg-blue-700
               text-white border-4 border-blue-800 hover:border-blue-600
@@ -152,23 +178,26 @@ export default function HomePage() {
               active:scale-95 active:translate-x-0 active:translate-y-0
               pixel-border
             `}
-            role="menuitem"
-            aria-label="Join an existing trivia game session"
-          >
-            <span className="block">JOIN EXISTING GAME</span>
-            <span className="block text-sm text-blue-200 mt-1 font-normal">Enter game code</span>
-          </button>
+              role="menuitem"
+              aria-label="Join an existing trivia game session"
+            >
+              <span className="block">JOIN EXISTING GAME</span>
+              <span className="block text-sm text-blue-200 mt-1 font-normal">Enter game code</span>
+            </button>
 
-          {/* Settings Row */}
-          <div className="flex justify-center w-full">
-            {/* Settings Button */}
-            <button
-              onClick={handleSettingsToggle}
-              onMouseEnter={() => setHoveredButton('settings')}
-              onMouseLeave={() => setHoveredButton(null)}
-              onFocus={() => setHoveredButton('settings')}
-              onBlur={() => setHoveredButton(null)}
-              className={`
+            {/* Settings Row */}
+            <div className="flex justify-center w-full">
+              {/* Settings Button */}
+              <button
+                onClick={handleSettingsToggle}
+                onMouseEnter={() => {
+                  setHoveredButton('settings')
+                  playSound('hover')
+                }}
+                onMouseLeave={() => setHoveredButton(null)}
+                onFocus={() => setHoveredButton('settings')}
+                onBlur={() => setHoveredButton(null)}
+                className={`
                 w-full py-3 px-6 text-lg font-bold text-center
                 bg-gray-600 hover:bg-gray-500 active:bg-gray-700
                 text-white border-4 border-gray-800 hover:border-gray-600
@@ -182,22 +211,23 @@ export default function HomePage() {
                 active:scale-95 active:translate-x-0 active:translate-y-0
                 pixel-border
               `}
-              role="menuitem"
-              aria-label="Open player settings"
-            >
-              <span className="block">⚙️ SETTINGS</span>
-              <span className="block text-xs text-gray-200 mt-1 font-normal">
-                Player name, avatar & volume
-              </span>
-            </button>
-          </div>
+                role="menuitem"
+                aria-label="Open player settings"
+              >
+                <span className="block">⚙️ SETTINGS</span>
+                <span className="block text-xs text-gray-200 mt-1 font-normal">
+                  Player name, avatar & volume
+                </span>
+              </button>
+            </div>
+          </StaggerChildren>
         </nav>
         {/* Footer info */}
         <footer className="text-center text-gray-400 text-sm mt-8">
-          <p>Use arrow keys and Enter to navigate</p>
+          <p className="font-pixel-body text-base">Use arrow keys and Enter to navigate</p>
           <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia</p>
         </footer>
-      </div>{' '}
+      </PageTransition>{' '}
       {/* Settings Modal */}
       <Modal isOpen={showSettings} onClose={closeSettings} title="⚙️ PLAYER SETTINGS" size="lg">
         {nameError && (

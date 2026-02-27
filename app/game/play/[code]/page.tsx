@@ -14,8 +14,19 @@ import { use, useEffect, useState, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { useRoom } from '@/hooks/useRoom'
 import { useMultiplayerGame } from '@/hooks/useMultiplayerGame'
+import { useSound } from '@/hooks/useSound'
 import { GameQuestion, PlayerList, Scoreboard, HostControls } from '@/app/components/multiplayer'
-import { LoadingOverlay, ToastContainer, useToast, AnimatedBackground } from '@/app/components/ui'
+import {
+  LoadingOverlay,
+  ToastContainer,
+  useToast,
+  AnimatedBackground,
+  PixelConfetti,
+  ScorePopup,
+  AnswerFeedback,
+  PageTransition,
+  type FeedbackType,
+} from '@/app/components/ui'
 import { MULTIPLAYER_STORAGE_KEYS } from '@/constants/game'
 
 interface PlayPageProps {
@@ -26,6 +37,13 @@ function PlayContent({ params }: PlayPageProps) {
   const { code: roomCode } = use(params)
   const router = useRouter()
   const { messages: toasts, dismissToast, toast } = useToast()
+  const { play: playSound } = useSound()
+
+  // Sound + visual feedback state
+  const [showConfetti, setShowConfetti] = useState(false)
+  const [feedbackType, setFeedbackType] = useState<FeedbackType>(null)
+  const [showScorePopup, setShowScorePopup] = useState(false)
+  const [popupScore, setPopupScore] = useState(0)
 
   // Load player session
   const [playerId, setPlayerId] = useState<number | null>(null)
@@ -64,6 +82,43 @@ function PlayContent({ params }: PlayPageProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomError, game.error])
 
+  // Sound effects for answer feedback
+  useEffect(() => {
+    if (game.wasCorrect === true) {
+      playSound('correct')
+      setFeedbackType('correct')
+      setPopupScore(game.scoreGained ?? 0)
+      setShowScorePopup(true)
+    } else if (game.wasCorrect === false) {
+      playSound('wrong')
+      setFeedbackType('wrong')
+    }
+  }, [game.wasCorrect, game.scoreGained, playSound])
+
+  // Sound effects for question reveal
+  useEffect(() => {
+    if (game.currentQuestion) {
+      playSound('questionReveal')
+    }
+  }, [game.currentQuestion, playSound])
+
+  // Timer warning sounds
+  useEffect(() => {
+    if (game.timeRemaining === 5) {
+      playSound('timerWarning')
+    } else if (game.timeRemaining === 3) {
+      playSound('timerCritical')
+    }
+  }, [game.timeRemaining, playSound])
+
+  // Victory confetti + sound
+  useEffect(() => {
+    if (game.phase === 'finished') {
+      playSound('victory')
+      setShowConfetti(true)
+    }
+  }, [game.phase, playSound])
+
   const handleFinish = () => {
     localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.PLAYER_ID)
     localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.ROOM_CODE)
@@ -87,7 +142,8 @@ function PlayContent({ params }: PlayPageProps) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
         <AnimatedBackground />
-        <div className="z-10 w-full">
+        <PixelConfetti active={showConfetti} onComplete={() => setShowConfetti(false)} />
+        <PageTransition style="scale" className="z-10 w-full">
           <Scoreboard
             players={room.players}
             currentPlayerId={playerId}
@@ -95,7 +151,7 @@ function PlayContent({ params }: PlayPageProps) {
             onFinish={handleFinish}
             isHost={isHost}
           />
-        </div>
+        </PageTransition>
         <ToastContainer messages={toasts} onDismiss={dismissToast} />
       </main>
     )
@@ -106,21 +162,40 @@ function PlayContent({ params }: PlayPageProps) {
     <main className="min-h-screen flex flex-col lg:flex-row p-4 gap-4 relative overflow-hidden">
       <AnimatedBackground />
 
+      {/* Answer feedback overlay */}
+      <AnswerFeedback
+        type={feedbackType}
+        duration={1200}
+        onComplete={() => setFeedbackType(null)}
+      />
+
+      {/* Score popup */}
+      {showScorePopup && (
+        <ScorePopup
+          score={popupScore}
+          show={showScorePopup}
+          onComplete={() => setShowScorePopup(false)}
+          className="top-1/3 left-1/2 -translate-x-1/2"
+        />
+      )}
+
       {/* Main game area */}
       <div className="flex-1 flex flex-col items-center justify-center z-10">
         {game.currentQuestion ? (
-          <GameQuestion
-            question={game.currentQuestion}
-            questionNumber={(room.currentQuestion ?? 0) + 1}
-            totalQuestions={room.totalQuestions}
-            timeRemaining={game.timeRemaining}
-            hasAnswered={game.hasAnswered}
-            selectedAnswer={game.selectedAnswer}
-            wasCorrect={game.wasCorrect}
-            correctAnswer={game.correctAnswer}
-            isLoading={game.isLoading}
-            onAnswer={game.submitAnswer}
-          />
+          <PageTransition style="slide-up" key={room.currentQuestion ?? 0}>
+            <GameQuestion
+              question={game.currentQuestion}
+              questionNumber={(room.currentQuestion ?? 0) + 1}
+              totalQuestions={room.totalQuestions}
+              timeRemaining={game.timeRemaining}
+              hasAnswered={game.hasAnswered}
+              selectedAnswer={game.selectedAnswer}
+              wasCorrect={game.wasCorrect}
+              correctAnswer={game.correctAnswer}
+              isLoading={game.isLoading}
+              onAnswer={game.submitAnswer}
+            />
+          </PageTransition>
         ) : (
           <LoadingOverlay label="Loading question..." />
         )}

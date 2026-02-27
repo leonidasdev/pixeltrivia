@@ -5,14 +5,23 @@ import { useRouter } from 'next/navigation'
 import QuickGameSelector from '@/app/components/QuickGameSelector'
 import { fetchQuestions, createGameSession } from '@/lib/gameApi'
 import { logger } from '@/lib/logger'
-import { ToastContainer, useToast, SparklesOverlay, LoadingOverlay } from '@/app/components/ui'
+import {
+  ToastContainer,
+  useToast,
+  SparklesOverlay,
+  LoadingOverlay,
+  PageTransition,
+} from '@/app/components/ui'
+import { useSound } from '@/hooks/useSound'
 
 export default function QuickGamePage() {
   const router = useRouter()
   const [isStartingGame, setIsStartingGame] = useState(false)
   const { messages: toasts, dismissToast, toast } = useToast()
+  const { play: playSound } = useSound()
   const handleCategorySelected = async (category: string, difficulty: string) => {
     setIsStartingGame(true)
+    playSound('gameStart')
 
     try {
       logger.debug('Starting quick game:', { category, difficulty })
@@ -62,7 +71,7 @@ export default function QuickGamePage() {
       <SparklesOverlay />
 
       {/* Main content */}
-      <div className="z-10 w-full max-w-4xl">
+      <PageTransition style="slide-up" className="z-10 w-full max-w-4xl">
         {/* Page Header */}
         <header className="text-center mb-8">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-2 pixel-text-shadow">
@@ -89,7 +98,7 @@ export default function QuickGamePage() {
             <li>• Compete for the best time and score</li>
           </ul>
         </section>
-      </div>
+      </PageTransition>
     </main>
   )
 }

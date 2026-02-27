@@ -15,7 +15,7 @@ PixelTrivia is a mature, well-tested trivia game with excellent code quality and
 |------|-------|--------|
 | Architecture | 9/10 | ✅ types/, constants/, hooks/ directories |
 | Code Quality | 10/10 | ✅ ESLint zero errors/warnings, Logger utility |
-| Testing | 10/10 | ✅ 546 Jest + Playwright E2E tests |
+| Testing | 10/10 | ✅ 610 Jest + Playwright E2E tests |
 | CI/CD | 9/10 | ✅ GitHub Actions + Husky + Playwright |
 | Documentation | 9/10 | ✅ Comprehensive docs + JSDoc comments |
 | Security | 8/10 | ✅ Rate limiting, validation, middleware |
@@ -26,14 +26,14 @@ PixelTrivia is a mature, well-tested trivia game with excellent code quality and
 
 | Test Type | Count | Framework |
 |-----------|-------|-----------|
-| Unit Tests (lib/) | 175+ | Jest |
-| Component Tests | 160+ | Jest + RTL |
+| Unit Tests (lib/) | 195+ | Jest |
+| Component Tests | 190+ | Jest + RTL |
 | Page Tests | 27 | Jest + RTL |
-| Hook Tests | 60 | Jest + RTL |
+| Hook Tests | 70+ | Jest + RTL |
 | API Integration Tests | 55+ | Jest |
 | API Logic Tests | 32 | Jest |
 | E2E Tests | 28 | Playwright |
-| **Total** | **546+** | - |
+| **Total** | **610+** | - |
 
 ---
 
@@ -92,13 +92,22 @@ PixelTrivia is a mature, well-tested trivia game with excellent code quality and
 - [ ] Implement leaderboards
 - [ ] Add achievements system
 
-#### 2.3 Audio Features
-**Status:** Not started
-**Impact:** Low - User experience
+#### 2.3 Audio & Visual Features
+**Status:** ✅ Completed
+**Impact:** Medium - User experience
 
-- [ ] Implement volume control functionality
+- [x] Web Audio API sound engine (18 chiptune effects, zero audio files)
+- [x] useSound React hook with volume/mute control
+- [x] Pixel fonts (Press Start 2P + VT323 via next/font)
+- [x] 16 Tailwind pixel animations (bounce, shake, glow, float, etc.)
+- [x] PixelConfetti canvas particle system (PICO-8 palette)
+- [x] ScorePopup floating score indicator
+- [x] AnswerFeedback overlay (correct/wrong/timeout)
+- [x] PixelTimer with urgency states (normal/warning/critical)
+- [x] PageTransition entrance animations + StaggerChildren
+- [x] CRT scanline effect, retro selection highlight, glow hover
+- [x] Sound effects wired into 5 game pages
 - [ ] Add background music
-- [ ] Add sound effects
 
 ---
 

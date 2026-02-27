@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (546 tests, 33 suites) |
+| **Testing** | Jest + React Testing Library (610 tests, 36 suites) |
 
 ---
 
@@ -87,7 +87,12 @@ pixeltrivia/
 │   │       ├── Toast.tsx      # Toast notification system
 │   │       ├── Modal.tsx, LoadingSpinner.tsx
 │   │       ├── PixelButton, PixelCard, PixelInput, PixelBadge
-│   │       └── AnimatedBackground, GamePageLayout, PageHeader, PlayerDisplay
+│   │       ├── AnimatedBackground, GamePageLayout, PageHeader, PlayerDisplay
+│   │       ├── PixelConfetti.tsx   # Canvas-based pixel confetti particles
+│   │       ├── ScorePopup.tsx      # Floating score indicator (+100)
+│   │       ├── AnswerFeedback.tsx  # Correct/wrong/timeout overlay
+│   │       ├── PixelTimer.tsx      # Timer with urgency states
+│   │       └── PageTransition.tsx  # Entrance animations + StaggerChildren
 │   ├── game/                 # Game pages
 │   │   ├── quick/            # Quick play mode
 │   │   ├── custom/           # Custom game mode
@@ -114,6 +119,7 @@ pixeltrivia/
 │   ├── apiResponse.ts        # Standardized API responses
 │   ├── logger.ts             # Structured logging utility
 │   ├── storage.ts            # Typed localStorage wrapper
+│   ├── soundManager.ts       # Web Audio API chiptune sound engine (18 effects)
 │   ├── supabase.ts           # Supabase server-side client (service role key)
 │   ├── supabaseClient.ts     # Supabase client-side for Realtime
 │   ├── roomCode.ts           # Room code generation/validation
@@ -144,6 +150,7 @@ pixeltrivia/
 │   ├── usePlayerSettings.ts  # Player name, avatar, volume settings
 │   ├── useTimer.ts           # Countdown timer
 │   ├── useQuizSession.ts     # Quiz session management
+│   ├── useSound.ts           # Sound effects hook (wraps soundManager)
 │   ├── useRoom.ts            # Room state + Supabase Realtime subscription
 │   └── useMultiplayerGame.ts # Multiplayer game state machine
 │
@@ -221,7 +228,7 @@ pixeltrivia/
 - Input sanitization for security
 - API: `POST /api/quiz/advanced`
 
-### 4. Multiplayer (In Progress)
+### 4. Multiplayer
 - Room-based gameplay
 - Real-time with Supabase subscriptions
 - 2-16 players per room

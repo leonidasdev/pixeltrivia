@@ -21,3 +21,5 @@ export type {
   UseMultiplayerGameOptions,
   UseMultiplayerGameReturn,
 } from './useMultiplayerGame'
+export { useSound } from './useSound'
+export type { UseSoundReturn } from './useSound'
