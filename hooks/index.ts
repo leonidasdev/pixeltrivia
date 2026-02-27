@@ -13,3 +13,11 @@ export { useTimer } from './useTimer'
 export { useQuizSession } from './useQuizSession'
 export { usePlayerSettings, buildPlayerParams, buildPlayerUrl } from './usePlayerSettings'
 export type { PlayerSettings, PlayerInfo, UsePlayerSettingsReturn } from './usePlayerSettings'
+export { useRoom } from './useRoom'
+export type { UseRoomOptions, UseRoomReturn } from './useRoom'
+export { useMultiplayerGame } from './useMultiplayerGame'
+export type {
+  MultiplayerGamePhase,
+  UseMultiplayerGameOptions,
+  UseMultiplayerGameReturn,
+} from './useMultiplayerGame'

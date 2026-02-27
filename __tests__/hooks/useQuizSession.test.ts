@@ -249,7 +249,7 @@ describe('useQuizSession', () => {
         result.current.submitAnswer(2, 4000)
       }) // correct
 
-      let results: ReturnType<typeof result.current.completeQuiz>
+      let results = null as ReturnType<typeof result.current.completeQuiz>
       act(() => {
         results = result.current.completeQuiz()
       })

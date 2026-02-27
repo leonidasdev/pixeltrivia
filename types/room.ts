@@ -208,3 +208,89 @@ export interface JoinRoomResponse {
   /** Human-readable message */
   message: string
 }
+
+// ============================================================================
+// Multiplayer Game Types
+// ============================================================================
+
+/**
+ * A question as seen by players (no correct answer)
+ */
+export interface MultiplayerQuestion {
+  /** Question index within the game */
+  index: number
+  /** The question text */
+  questionText: string
+  /** Answer options */
+  options: string[]
+  /** Category if available */
+  category?: string
+  /** Difficulty if available */
+  difficulty?: string
+}
+
+/**
+ * Player state in a multiplayer game
+ */
+export interface MultiplayerPlayer {
+  /** Database player ID */
+  id: number
+  /** Player display name */
+  name: string
+  /** Avatar identifier */
+  avatar: string
+  /** Whether this player is the room host */
+  isHost: boolean
+  /** Total score */
+  score: number
+  /** Whether the player has answered the current question */
+  hasAnswered: boolean
+  /** When the player joined */
+  joinedAt: string
+}
+
+/**
+ * Full multiplayer room state
+ */
+export interface MultiplayerRoomState {
+  /** Room code */
+  code: string
+  /** Current room/game status */
+  status: 'waiting' | 'active' | 'finished'
+  /** Current question index (0-based) */
+  currentQuestion: number
+  /** Total questions in the game */
+  totalQuestions: number
+  /** When the current question started (ISO string) */
+  questionStartTime: string | null
+  /** Time limit per question in seconds */
+  timeLimit: number
+  /** Max players allowed */
+  maxPlayers: number
+  /** Game mode */
+  gameMode: string | null
+  /** Category filter */
+  category: string | null
+  /** When the room was created */
+  createdAt: string
+  /** Players in the room */
+  players: MultiplayerPlayer[]
+}
+
+/**
+ * Scores displayed after a question
+ */
+export interface QuestionResult {
+  /** The correct answer index */
+  correctAnswer: number
+  /** Player scores for this question */
+  playerResults: {
+    playerId: number
+    playerName: string
+    answer: number | null
+    correct: boolean
+    scoreGained: number
+    totalScore: number
+    timeMs: number
+  }[]
+}

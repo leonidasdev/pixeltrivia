@@ -4,6 +4,9 @@
 
 /**
  * Integration tests for /api/room/create
+ *
+ * Tests the multiplayer room creation flow: validates
+ * player name, generates unique code, creates room + host player.
  */
 
 // Mock dependencies before imports
@@ -24,8 +27,12 @@ jest.mock('@/lib/supabase', () => ({
 import { POST, GET, PUT, DELETE } from '@/app/api/room/create/route'
 import { NextRequest } from 'next/server'
 
-function createPostRequest(): NextRequest {
-  return new NextRequest('http://localhost/api/room/create', { method: 'POST' })
+function createPostRequest(body: Record<string, unknown> = {}): NextRequest {
+  return new NextRequest('http://localhost/api/room/create', {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json' },
+  })
 }
 
 describe('/api/room/create', () => {
@@ -36,7 +43,7 @@ describe('/api/room/create', () => {
   describe('POST - create room', () => {
     it('creates a room successfully', async () => {
       // Mock: uniqueness check returns "not found" (PGRST116 = no rows)
-      const mockSelect = jest.fn().mockReturnValue({
+      const mockSelectRooms = jest.fn().mockReturnValue({
         eq: jest.fn().mockReturnValue({
           single: jest.fn().mockResolvedValue({
             data: null,
@@ -45,8 +52,8 @@ describe('/api/room/create', () => {
         }),
       })
 
-      // Mock: insert returns new room
-      const mockInsert = jest.fn().mockReturnValue({
+      // Mock: insert room returns new room
+      const mockInsertRoom = jest.fn().mockReturnValue({
         select: jest.fn().mockReturnValue({
           single: jest.fn().mockResolvedValue({
             data: { code: 'ABC123', created_at: '2026-01-01T00:00:00Z', status: 'waiting' },
@@ -55,26 +62,56 @@ describe('/api/room/create', () => {
         }),
       })
 
+      // Mock: insert player returns host player
+      const mockInsertPlayer = jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: { id: 42, room_code: 'ABC123', name: 'TestHost', is_host: true },
+            error: null,
+          }),
+        }),
+      })
+
       mockSupabaseFrom.mockImplementation((table: string) => {
         if (table === 'rooms') {
-          return { select: mockSelect, insert: mockInsert }
+          return { select: mockSelectRooms, insert: mockInsertRoom }
+        }
+        if (table === 'players') {
+          return { insert: mockInsertPlayer }
         }
         return {}
       })
 
-      const response = await POST(createPostRequest())
+      const response = await POST(createPostRequest({ playerName: 'TestHost', avatar: 'knight' }))
       const body = await response.json()
 
       expect(response.status).toBe(201)
       expect(body.success).toBe(true)
       expect(body.data.roomCode).toBe('ABC123')
+      expect(body.data.playerId).toBe(42)
       expect(body.data.status).toBe('waiting')
       expect(body.message).toBe('Room created successfully')
     })
 
+    it('returns validation error when playerName is missing', async () => {
+      const response = await POST(createPostRequest({}))
+      const body = await response.json()
+
+      expect(response.status).toBe(400)
+      expect(body.success).toBe(false)
+    })
+
+    it('returns validation error when playerName is too short', async () => {
+      const response = await POST(createPostRequest({ playerName: '' }))
+      const body = await response.json()
+
+      expect(response.status).toBe(400)
+      expect(body.success).toBe(false)
+    })
+
     it('returns error when database insert fails', async () => {
       // Uniqueness check passes
-      const mockSelect = jest.fn().mockReturnValue({
+      const mockSelectRooms = jest.fn().mockReturnValue({
         eq: jest.fn().mockReturnValue({
           single: jest.fn().mockResolvedValue({
             data: null,
@@ -84,7 +121,7 @@ describe('/api/room/create', () => {
       })
 
       // Insert fails
-      const mockInsert = jest.fn().mockReturnValue({
+      const mockInsertRoom = jest.fn().mockReturnValue({
         select: jest.fn().mockReturnValue({
           single: jest.fn().mockResolvedValue({
             data: null,
@@ -93,9 +130,12 @@ describe('/api/room/create', () => {
         }),
       })
 
-      mockSupabaseFrom.mockReturnValue({ select: mockSelect, insert: mockInsert })
+      mockSupabaseFrom.mockReturnValue({
+        select: mockSelectRooms,
+        insert: mockInsertRoom,
+      })
 
-      const response = await POST(createPostRequest())
+      const response = await POST(createPostRequest({ playerName: 'TestHost', avatar: 'knight' }))
       const body = await response.json()
 
       expect(response.status).toBe(500)
@@ -103,7 +143,7 @@ describe('/api/room/create', () => {
     })
 
     it('returns error when uniqueness check fails with DB error', async () => {
-      const mockSelect = jest.fn().mockReturnValue({
+      const mockSelectRooms = jest.fn().mockReturnValue({
         eq: jest.fn().mockReturnValue({
           single: jest.fn().mockResolvedValue({
             data: null,
@@ -112,9 +152,9 @@ describe('/api/room/create', () => {
         }),
       })
 
-      mockSupabaseFrom.mockReturnValue({ select: mockSelect })
+      mockSupabaseFrom.mockReturnValue({ select: mockSelectRooms })
 
-      const response = await POST(createPostRequest())
+      const response = await POST(createPostRequest({ playerName: 'TestHost', avatar: 'knight' }))
       const body = await response.json()
 
       expect(response.status).toBe(500)

@@ -60,6 +60,12 @@ export interface DbRoom {
   host_player_id: string | null
   status: 'waiting' | 'active' | 'finished'
   max_players: number
+  current_question: number
+  total_questions: number
+  question_start_time: string | null
+  game_mode: string | null
+  category: string | null
+  time_limit: number
 }
 
 export interface DbPlayer {
@@ -69,11 +75,63 @@ export interface DbPlayer {
   avatar: string
   is_host: boolean
   joined_at: string
+  score: number
+  current_answer: string | null
+  answer_time: string | null
+  answers: PlayerAnswerRecord[]
+}
+
+export interface PlayerAnswerRecord {
+  questionIndex: number
+  answer: number
+  timeMs: number
+  correct: boolean
+  score: number
+}
+
+export interface DbGameQuestion {
+  id: number
+  room_code: string
+  question_index: number
+  question_text: string
+  options: string[]
+  correct_answer: number
+  category: string | null
+  difficulty: string | null
 }
 
 /** Insert shape — id and defaults are optional */
-export type DbRoomInsert = Omit<DbRoom, 'id' | 'created_at' | 'status' | 'max_players'> &
-  Partial<Pick<DbRoom, 'id' | 'created_at' | 'status' | 'max_players'>>
+export type DbRoomInsert = Omit<
+  DbRoom,
+  | 'id'
+  | 'created_at'
+  | 'status'
+  | 'max_players'
+  | 'current_question'
+  | 'total_questions'
+  | 'question_start_time'
+  | 'time_limit'
+> &
+  Partial<
+    Pick<
+      DbRoom,
+      | 'id'
+      | 'created_at'
+      | 'status'
+      | 'max_players'
+      | 'current_question'
+      | 'total_questions'
+      | 'question_start_time'
+      | 'time_limit'
+    >
+  >
 
-export type DbPlayerInsert = Omit<DbPlayer, 'id' | 'joined_at'> &
-  Partial<Pick<DbPlayer, 'id' | 'joined_at'>>
+export type DbPlayerInsert = Omit<
+  DbPlayer,
+  'id' | 'joined_at' | 'score' | 'current_answer' | 'answer_time' | 'answers'
+> &
+  Partial<
+    Pick<DbPlayer, 'id' | 'joined_at' | 'score' | 'current_answer' | 'answer_time' | 'answers'>
+  >
+
+export type DbGameQuestionInsert = Omit<DbGameQuestion, 'id'>

@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (488 tests, 29 suites) |
+| **Testing** | Jest + React Testing Library (546 tests, 33 suites) |
 
 ---
 
@@ -62,6 +62,12 @@ pixeltrivia/
 │   │   ├── quiz/custom/             # Custom quiz (AI-powered)
 │   │   ├── quiz/advanced/           # Advanced quiz (file-based)
 │   │   └── room/create/             # Room creation
+│   │       ├── room/join/           # Room joining API
+│   │       ├── room/[code]/         # Room state + leave/close
+│   │       ├── room/[code]/start/   # Start game (host)
+│   │       ├── room/[code]/answer/  # Submit answer
+│   │       ├── room/[code]/next/    # Next question (host)
+│   │       └── room/[code]/question/ # Get current question
 │   ├── components/           # React components
 │   │   ├── AdvancedGameConfigurator.tsx
 │   │   ├── BackButton.tsx
@@ -71,6 +77,12 @@ pixeltrivia/
 │   │   ├── QuickGameSelector.tsx
 │   │   ├── SettingsPanel.tsx
 │   │   ├── Help/             # Help system (HelpButton, HelpModal, HelpContext)
+│   │   ├── multiplayer/      # Multiplayer components
+│   │   │   ├── PlayerList.tsx     # Player list with avatars & scores
+│   │   │   ├── LobbyView.tsx     # Waiting room before game
+│   │   │   ├── GameQuestion.tsx   # Question with colored options & timer
+│   │   │   ├── Scoreboard.tsx     # Final scores podium
+│   │   │   └── HostControls.tsx   # Host-only game controls
 │   │   └── ui/               # Reusable UI component library
 │   │       ├── Toast.tsx      # Toast notification system
 │   │       ├── Modal.tsx, LoadingSpinner.tsx
@@ -82,6 +94,8 @@ pixeltrivia/
 │   │   ├── advanced/         # Advanced game mode
 │   │   ├── create/           # Room creation
 │   │   ├── join/             # Room joining
+│   │   ├── lobby/[code]/     # Multiplayer lobby (realtime)
+│   │   ├── play/[code]/      # Multiplayer gameplay
 │   │   ├── mode/             # Mode selection
 │   │   └── select/           # Game selection
 │   ├── globals.css           # Global styles + Tailwind
@@ -100,9 +114,11 @@ pixeltrivia/
 │   ├── apiResponse.ts        # Standardized API responses
 │   ├── logger.ts             # Structured logging utility
 │   ├── storage.ts            # Typed localStorage wrapper
-│   ├── supabase.ts           # Supabase client initialization
+│   ├── supabase.ts           # Supabase server-side client (service role key)
+│   ├── supabaseClient.ts     # Supabase client-side for Realtime
 │   ├── roomCode.ts           # Room code generation/validation
 │   ├── roomApi.ts            # Room API client
+│   ├── multiplayerApi.ts     # Multiplayer API client (all room/game operations)
 │   ├── gameApi.ts            # Game API client
 │   ├── quickQuizApi.ts       # Quick quiz API client
 │   └── customQuizApi.ts      # Custom quiz API client
@@ -127,10 +143,13 @@ pixeltrivia/
 │   ├── useLocalStorage.ts    # Typed localStorage with React sync
 │   ├── usePlayerSettings.ts  # Player name, avatar, volume settings
 │   ├── useTimer.ts           # Countdown timer
-│   └── useQuizSession.ts     # Quiz session management
+│   ├── useQuizSession.ts     # Quiz session management
+│   ├── useRoom.ts            # Room state + Supabase Realtime subscription
+│   └── useMultiplayerGame.ts # Multiplayer game state machine
 │
 ├── database/
-│   └── schema.sql            # PostgreSQL schema for Supabase
+│   ├── schema.sql            # PostgreSQL schema for Supabase
+│   └── migration-multiplayer.sql  # Multiplayer schema additions
 │
 ├── docs/                     # Documentation
 │   ├── architecture.md       # System architecture
@@ -465,7 +484,7 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - `prefers-reduced-motion` support for all animations
 - Component tests (ErrorBoundary, BackButton, Toast, Modal)
 - Page tests (HomePage, GameModePage, JoinGamePage)
-- Hook tests (useGameState, useLocalStorage, useTimer, useQuizSession)
+- Hook tests (useGameState, useLocalStorage, useTimer, useQuizSession, useRoom, useMultiplayerGame)
 - API route integration tests (roomCreate, quizQuick, gameQuestions, aiGenerate)
 - Comprehensive documentation
 

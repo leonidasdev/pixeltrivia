@@ -7,7 +7,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ecf8e?logo=supabase)
-![Tests](https://img.shields.io/badge/Tests-488%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-546%20passing-brightgreen)
 
 **A retro-styled trivia game with AI-powered question generation**
 
@@ -22,7 +22,9 @@
 - **Pixel-Perfect Retro UI** - Nostalgic 8-bit inspired design
 - **AI-Powered Questions** - Generate custom trivia using DeepSeek AI via OpenRouter
 - **Multiple Game Modes** - Quick Play, Custom Topics, Advanced Configuration
-- **Multiplayer Rooms** - Create and join rooms with friends
+- **Multiplayer Rooms** - Create and join rooms, real-time gameplay with Supabase Realtime
+- **Host-Driven Flow** - Host controls game start and question progression
+- **Time-Based Scoring** - Speed matters — faster answers earn more points
 - **Responsive Design** - Works on desktop, tablet, and mobile
 - **Toast Notifications** - Non-intrusive feedback replacing browser alerts
 - **Keyboard Navigation** - Full keyboard accessibility support

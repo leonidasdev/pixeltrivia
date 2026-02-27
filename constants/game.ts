@@ -200,6 +200,56 @@ export const STORAGE_KEYS = {
 } as const
 
 // ============================================================================
+// Multiplayer Configuration
+// ============================================================================
+
+/**
+ * Minimum players required to start a multiplayer game
+ */
+export const MIN_PLAYERS_TO_START = 2
+
+/**
+ * Duration to show answer results before next question (ms)
+ */
+export const ANSWER_REVEAL_DURATION = 3000
+
+/**
+ * Delay between questions in multiplayer (ms)
+ */
+export const QUESTION_TRANSITION_DELAY = 2000
+
+/**
+ * Polling interval for room state (fallback when realtime unavailable) (ms)
+ */
+export const ROOM_POLL_INTERVAL = 3000
+
+/**
+ * Maximum reconnection attempts for realtime
+ */
+export const MAX_RECONNECT_ATTEMPTS = 5
+
+/**
+ * Delay between reconnection attempts (ms)
+ */
+export const RECONNECT_INTERVAL = 3000
+
+/**
+ * Time bonus multiplier — faster answers get more points
+ * Score = BASE_SCORE * (1 + timeBonus)
+ * timeBonus = (timeRemaining / timeLimit) * TIME_BONUS_MULTIPLIER
+ */
+export const TIME_BONUS_MULTIPLIER = 0.5
+
+/**
+ * Storage keys for multiplayer session data
+ */
+export const MULTIPLAYER_STORAGE_KEYS = {
+  PLAYER_ID: `${STORAGE_PREFIX}mp_player_id`,
+  ROOM_CODE: `${STORAGE_PREFIX}mp_room_code`,
+  IS_HOST: `${STORAGE_PREFIX}mp_is_host`,
+} as const
+
+// ============================================================================
 // Animation Durations (milliseconds)
 // ============================================================================
 

@@ -1,64 +1,217 @@
+/**
+ * Create Game Page — /game/create
+ *
+ * Room creation page where the host configures and creates
+ * a multiplayer game room, then is redirected to the lobby.
+ *
+ * @module game/create
+ * @since 1.1.0
+ */
+
 'use client'
 
 import { useSearchParams, useRouter } from 'next/navigation'
-import { Suspense, useEffect, useState } from 'react'
-import { LoadingOverlay } from '@/app/components/ui'
+import { Suspense, useEffect, useState, useCallback } from 'react'
+import { LoadingOverlay, ToastContainer, useToast, AnimatedBackground } from '@/app/components/ui'
+import { createRoom } from '@/lib/multiplayerApi'
+import {
+  MULTIPLAYER_STORAGE_KEYS,
+  DEFAULT_MAX_PLAYERS,
+  DEFAULT_TIME_LIMIT,
+  DEFAULT_QUESTION_COUNT,
+} from '@/constants/game'
 
 function CreateGameContent() {
-  const _router = useRouter()
+  const router = useRouter()
   const searchParams = useSearchParams()
-  const [playerSettings, setPlayerSettings] = useState({
-    name: '',
-    avatar: 'knight',
-    volume: 50,
-    mode: 'quick',
-  })
+  const { messages: toasts, dismissToast, toast } = useToast()
+
+  const [playerName, setPlayerName] = useState('')
+  const [avatar, setAvatar] = useState('knight')
+  const [gameMode, setGameMode] = useState('quick')
+  const [maxPlayers, setMaxPlayers] = useState(DEFAULT_MAX_PLAYERS)
+  const [timeLimit, setTimeLimit] = useState(DEFAULT_TIME_LIMIT)
+  const [questionCount, setQuestionCount] = useState(DEFAULT_QUESTION_COUNT)
+  const [isCreating, setIsCreating] = useState(false)
 
   useEffect(() => {
-    const name = searchParams.get('name') || 'Player1234'
-    const avatar = searchParams.get('avatar') || 'knight'
-    const volume = parseInt(searchParams.get('volume') || '50')
+    const name = searchParams.get('name') || localStorage.getItem('pixeltrivia_player_name') || ''
+    const avatarParam = searchParams.get('avatar') || 'knight'
     const mode = searchParams.get('mode') || 'quick'
 
-    setPlayerSettings({ name, avatar, volume, mode })
+    setPlayerName(name)
+    setAvatar(avatarParam)
+    setGameMode(mode)
   }, [searchParams])
 
+  const handleCreateRoom = useCallback(async () => {
+    if (!playerName.trim()) {
+      toast.warning('Please enter your name')
+      return
+    }
+
+    setIsCreating(true)
+
+    const result = await createRoom({
+      playerName: playerName.trim(),
+      avatar,
+      gameMode,
+      maxPlayers,
+      timeLimit,
+      questionCount,
+    })
+
+    setIsCreating(false)
+
+    if (result.success && result.data) {
+      // Store session info
+      localStorage.setItem(MULTIPLAYER_STORAGE_KEYS.PLAYER_ID, String(result.data.playerId))
+      localStorage.setItem(MULTIPLAYER_STORAGE_KEYS.ROOM_CODE, result.data.roomCode)
+      localStorage.setItem(MULTIPLAYER_STORAGE_KEYS.IS_HOST, 'true')
+
+      toast.success(`Room ${result.data.roomCode} created!`)
+
+      // Navigate to lobby
+      setTimeout(() => {
+        router.push(`/game/lobby/${result.data?.roomCode}`)
+      }, 500)
+    } else {
+      toast.error(result.error ?? 'Failed to create room')
+    }
+  }, [playerName, avatar, gameMode, maxPlayers, timeLimit, questionCount, router, toast])
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="max-w-lg w-full text-center">
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      <AnimatedBackground />
+
+      <div className="max-w-lg w-full text-center z-10">
         <h1 className="text-4xl font-bold text-white mb-8 pixel-text-shadow">CREATE GAME ROOM</h1>
 
-        <div className="bg-gray-900 border-4 border-gray-600 rounded-lg p-8 pixel-border">
-          <div className="text-6xl mb-4">🚧</div>
-          <h2 className="text-xl font-bold text-yellow-400 mb-4">COMING SOON</h2>
-          <p className="text-gray-300 mb-6 leading-relaxed">
-            Room creation for{' '}
-            <strong>{playerSettings.mode === 'quick' ? 'Quick Game' : 'Custom Game'}</strong> is
-            being developed. This will allow you to host multiplayer games with up to 8 players.
-          </p>
+        <div className="bg-gray-900 border-4 border-gray-600 rounded-lg p-8 pixel-border space-y-6">
+          <div className="text-5xl mb-2">🎮</div>
 
-          <div className="space-y-4">
-            <div className="text-left bg-gray-800 p-4 rounded border-2 border-gray-700">
-              <h3 className="font-bold text-cyan-300 mb-2">Features Coming:</h3>
-              <ul className="text-sm text-gray-400 space-y-1">
-                <li>• Auto-generated 6-character room codes</li>
-                <li>• Real-time player joining</li>
-                <li>• Game host controls</li>
-                <li>• Customizable wait time</li>
-                <li>• Live player list with avatars</li>
-              </ul>
-            </div>
-            <div className="text-sm text-gray-500">
-              Player: {playerSettings.name} | Mode: {playerSettings.mode}
-            </div>{' '}
+          {/* Player Name */}
+          <div>
+            <label
+              htmlFor="playerName"
+              className="block text-sm font-bold text-cyan-300 mb-2 uppercase tracking-wider text-left"
+            >
+              Your Name
+            </label>
+            <input
+              id="playerName"
+              type="text"
+              value={playerName}
+              onChange={e => setPlayerName(e.target.value)}
+              placeholder="Enter your name"
+              maxLength={20}
+              className="w-full px-4 py-3 bg-gray-800 border-3 border-gray-600 text-white font-semibold
+                       focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
+                       placeholder-gray-400 rounded transition-colors"
+            />
           </div>
+
+          {/* Settings */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="maxPlayers"
+                className="block text-xs font-bold text-gray-400 mb-1 uppercase"
+              >
+                Max Players
+              </label>
+              <select
+                id="maxPlayers"
+                value={maxPlayers}
+                onChange={e => setMaxPlayers(parseInt(e.target.value))}
+                className="w-full px-3 py-2 bg-gray-800 border-2 border-gray-600 text-white rounded focus:border-cyan-400 focus:outline-none"
+              >
+                {[2, 4, 6, 8, 10, 12, 16].map(n => (
+                  <option key={n} value={n}>
+                    {n} players
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="timeLimit"
+                className="block text-xs font-bold text-gray-400 mb-1 uppercase"
+              >
+                Time per Question
+              </label>
+              <select
+                id="timeLimit"
+                value={timeLimit}
+                onChange={e => setTimeLimit(parseInt(e.target.value))}
+                className="w-full px-3 py-2 bg-gray-800 border-2 border-gray-600 text-white rounded focus:border-cyan-400 focus:outline-none"
+              >
+                {[10, 15, 20, 30, 45, 60].map(s => (
+                  <option key={s} value={s}>
+                    {s} seconds
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="col-span-2">
+              <label
+                htmlFor="questionCount"
+                className="block text-xs font-bold text-gray-400 mb-1 uppercase"
+              >
+                Number of Questions
+              </label>
+              <select
+                id="questionCount"
+                value={questionCount}
+                onChange={e => setQuestionCount(parseInt(e.target.value))}
+                className="w-full px-3 py-2 bg-gray-800 border-2 border-gray-600 text-white rounded focus:border-cyan-400 focus:outline-none"
+              >
+                {[5, 10, 15, 20, 25].map(n => (
+                  <option key={n} value={n}>
+                    {n} questions
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Game mode badge */}
+          <div className="text-sm text-gray-500">
+            Mode: <span className="text-white font-semibold capitalize">{gameMode}</span>
+          </div>
+
+          {/* Create button */}
+          <button
+            onClick={handleCreateRoom}
+            disabled={isCreating || !playerName.trim()}
+            className={`
+              w-full py-4 text-xl font-bold border-4 rounded-lg transition-all duration-200
+              focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50
+              ${
+                !isCreating && playerName.trim()
+                  ? 'bg-green-600 hover:bg-green-500 border-green-800 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98]'
+                  : 'bg-gray-600 border-gray-800 text-gray-400 cursor-not-allowed'
+              }
+            `}
+          >
+            {isCreating ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="animate-spin">⏳</span> CREATING ROOM...
+              </span>
+            ) : (
+              '🚀 CREATE ROOM'
+            )}
+          </button>
         </div>
 
         <footer className="text-center text-gray-400 text-sm mt-8">
-          <p>Room will be created when you&apos;re ready to play</p>
-          <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia</p>
+          <p>Create a room and share the code with friends</p>
         </footer>
       </div>
+
+      <ToastContainer messages={toasts} onDismiss={dismissToast} />
     </main>
   )
 }
