@@ -208,7 +208,7 @@ function GameSelectContent() {
                     Jump into instant trivia with predefined categories. Perfect for quick brain
                     challenges with 10 random questions!
                   </p>
-                  <div className="mt-4 font-pixel text-[8px] text-orange-300">
+                  <div className="mt-4 font-pixel text-[10px] text-orange-300">
                     • 10 Questions • Mixed Categories • Instant Start
                   </div>
                 </button>{' '}
@@ -233,7 +233,7 @@ function GameSelectContent() {
                     Create AI-powered questions on any topic you choose. Specify difficulty,
                     question count, and educational level!
                   </p>
-                  <div className="mt-4 font-pixel text-[8px] text-purple-300">
+                  <div className="mt-4 font-pixel text-[10px] text-purple-300">
                     • AI Generated • Your Topics • Custom Settings
                   </div>
                 </button>
@@ -258,7 +258,7 @@ function GameSelectContent() {
                     Upload your own documents for AI-powered trivia generation. Perfect for studying
                     or testing knowledge of specific materials!
                   </p>
-                  <div className="mt-4 font-pixel text-[8px] text-blue-300">
+                  <div className="mt-4 font-pixel text-[10px] text-blue-300">
                     • Document Upload • Custom Timing • Contextual AI
                   </div>
                 </button>

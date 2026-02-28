@@ -147,7 +147,7 @@ export function PixelCard({
         >
           <div>
             {title && (
-              <h3 className="text-lg font-pixel font-bold text-white uppercase tracking-wider">
+              <h3 className="text-base sm:text-lg font-pixel font-bold text-white uppercase tracking-wider truncate">
                 {title}
               </h3>
             )}

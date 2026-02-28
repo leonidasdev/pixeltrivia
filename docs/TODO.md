@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026 (Phase 19 — Documentation, PWA & CI Enhancements)
+> **Last Updated:** February 28, 2026 (Phase 20 — Content Expansion, Responsive Fixes, Lighthouse & Sentry)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -112,12 +112,12 @@
 - [ ] Challenge a friend mode
 
 #### 5.3 Content
-- [ ] Expand seed data beyond 90 questions
+- [x] Expand seed data beyond 90 questions — 150+ questions across all 40 categories and 3 difficulty levels
 - [ ] Add question difficulty ratings based on player performance
 - [ ] Support for image-based questions
 
 #### 5.4 Mobile
-- [ ] Responsive design audit and fixes
+- [x] Responsive design audit and fixes — touch targets raised to 44px minimum (WCAG), illegible text-[8px] bumped to text-[10px]+, responsive breakpoints added to titles/subtitles, grid columns made progressive
 - [x] PWA support — added `public/manifest.json`, `Viewport` export, `appleWebApp` metadata in `layout.tsx`
 - [ ] Touch gesture support for game interactions
 
@@ -126,12 +126,12 @@
 ### Priority 6: DevOps & Operations
 
 #### 6.1 CI/CD Enhancements
-- [ ] Add Lighthouse CI checks for performance regression
+- [x] Add Lighthouse CI checks for performance regression — `lighthouserc.json` config with accessibility (error ≥0.9), performance (warn ≥0.7), best-practices (warn ≥0.8), SEO (warn ≥0.8); runs on PRs via `treosh/lighthouse-ci-action@v12`
 - [x] Add bundle size tracking in PR checks — CI workflow now reports bundle size and uploads build artifacts
 - [ ] Implement staging environment deployment
 
 #### 6.2 Monitoring
-- [ ] Configure Sentry release tracking and source maps
+- [x] Configure Sentry release tracking and source maps — release property in all 3 Sentry configs, `next.config.js` source map upload when `SENTRY_AUTH_TOKEN` is set, CI creates and finalises releases on main pushes
 - [ ] Add performance monitoring dashboards
 - [ ] Set up alerting for error rate spikes
 
@@ -139,6 +139,33 @@
 - [x] Add API versioning strategy documentation — `docs/api-versioning.md` with URL-based strategy, migration guidelines, and implementation checklist
 - [x] Create runbook for common operational tasks — `docs/runbook.md` covering dev, testing, deployment, database, monitoring, and common issues
 - [x] Add changelog — `CHANGELOG.md` with version history from Phase 0 through Phase 18
+
+---
+
+## Phase 20 Completed (Content Expansion, Responsive Fixes, Lighthouse & Sentry)
+
+### Content Expansion
+- Expanded `database/schema.sql` from 25 to 150+ seed questions covering all 40 categories across elementary, middle-school, high-school, college, and classic difficulty levels
+- Categories now covered: Colors & Shapes, Animals, Food, Numbers, Weather, Transportation, Body Parts, Basic Science, World Geography, Math Fundamentals, Literature, American History, Sports, Technology, Art & Music, Advanced Science, World History, Mathematics, English Literature, Chemistry, Physics, Biology, Government & Politics, Advanced Mathematics, Philosophy, Computer Science, Economics, Psychology, Engineering, Law & Ethics, General Knowledge, Pop Culture, History, Science, Geography, Entertainment, Nature
+
+### Responsive Design Audit & Fixes
+- **Touch targets**: Raised all button/input minimum heights to 44px (WCAG AA) — `PixelButton` sm/md sizes, `PixelInput` sm/md sizes, `QuickGameSelector` category/cancel buttons, `AdvancedGameConfigurator` file delete button, `PageHeader` back button, leaderboard filter/sort/mode buttons
+- **Illegible text**: Bumped all `text-[8px]` instances to `text-[10px]` minimum (select page cards, QuickGameSelector footer)
+- **Responsive text**: Added responsive breakpoints to `CustomGameConfigurator` title (`text-xl sm:text-3xl`), `PixelCard` title (`text-base sm:text-lg` + `truncate`), leaderboard heading (`text-lg sm:text-xl`)
+- **Grid layouts**: Leaderboard personal records grid now uses progressive `grid-cols-2 sm:grid-cols-3 lg:grid-cols-5` (was jumping 2→5)
+- **Bug fix**: `QuickGameSelector` section title had conflicting `text-lg text-xs` — fixed to `text-xs sm:text-sm`
+- **Leaderboard filter/sort buttons**: Raised from ~22px to 44px minimum with `text-xs` (was `text-[10px]`)
+
+### Lighthouse CI
+- Created `lighthouserc.json` with desktop preset, auditing `/` and `/game/select`
+- Score thresholds: accessibility ≥0.9 (error), performance ≥0.7 (warn), best-practices ≥0.8 (warn), SEO ≥0.8 (warn)
+- Added `lighthouse` job to `.github/workflows/ci.yml` using `treosh/lighthouse-ci-action@v12` on pull requests
+
+### Sentry Release Tracking
+- Added `release` property to all 3 Sentry configs (`sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`) using `SENTRY_RELEASE` / `NEXT_PUBLIC_SENTRY_RELEASE` env vars
+- Enhanced `next.config.js` `withSentryConfig` with `release.setCommits.auto`, source map upload, and `VERCEL_GIT_COMMIT_SHA` fallback
+- Added CI step to create/finalise Sentry releases on main pushes when `SENTRY_AUTH_TOKEN` is configured
+- Build step now passes `SENTRY_RELEASE`, `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT` env vars
 
 ---
 

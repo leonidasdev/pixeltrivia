@@ -137,7 +137,7 @@ export function PageHeader({
       {showBackButton && (
         <button
           onClick={handleBack}
-          className="absolute left-0 top-0 p-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+          className="absolute left-0 top-0 p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
           aria-label={backLabel}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -65,17 +65,17 @@ export interface PixelInputProps extends Omit<React.InputHTMLAttributes<HTMLInpu
 
 const sizeStyles = {
   sm: {
-    input: 'px-3 py-1.5 text-sm',
+    input: 'px-3 py-2 text-sm min-h-[44px]',
     label: 'text-sm',
     icon: 'w-4 h-4',
   },
   md: {
-    input: 'px-4 py-2 text-base',
+    input: 'px-4 py-2.5 text-base min-h-[44px]',
     label: 'text-sm',
     icon: 'w-5 h-5',
   },
   lg: {
-    input: 'px-4 py-3 text-lg',
+    input: 'px-4 py-3 text-lg min-h-[48px]',
     label: 'text-base',
     icon: 'w-6 h-6',
   },

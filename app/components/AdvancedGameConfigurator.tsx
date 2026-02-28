@@ -240,7 +240,7 @@ export default function AdvancedGameConfigurator({
                   </div>
                   <button
                     onClick={() => removeFile(file.id)}
-                    className="text-red-400 hover:text-red-300 font-bold text-xl p-1 hover:bg-red-900 hover:bg-opacity-30 rounded transition-colors"
+                    className="text-red-400 hover:text-red-300 font-bold text-xl p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-red-900 hover:bg-opacity-30 rounded transition-colors"
                     aria-label={`Remove ${file.name}`}
                   >
                     ✕

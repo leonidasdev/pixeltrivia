@@ -85,6 +85,18 @@ module.exports = sentryEnabled
   ? withSentryConfig(finalConfig, {
       // Suppress source map upload warnings when auth token is missing
       silent: true,
+      // Automatically associate commits with releases
+      release: {
+        name: process.env.SENTRY_RELEASE || process.env.VERCEL_GIT_COMMIT_SHA,
+        setCommits: {
+          auto: true,
+          ignoreMissing: true,
+        },
+      },
+      // Upload source maps when auth token is available
+      sourcemaps: {
+        disable: !process.env.SENTRY_AUTH_TOKEN,
+      },
       // Don't widen the Next.js server-side build tracing
       disableServerWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
       disableClientWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,

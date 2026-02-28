@@ -71,7 +71,7 @@ export default function CustomGameConfigurator({
   return (
     <div className="w-full max-w-2xl mx-auto bg-gray-900 bg-opacity-90 border-4 border-gray-600 p-6 backdrop-blur-sm pixel-border">
       <header className="text-center mb-6">
-        <h2 className="text-3xl font-pixel font-bold text-white pixel-text-shadow mb-2">
+        <h2 className="text-xl sm:text-3xl font-pixel font-bold text-white pixel-text-shadow mb-2">
           🎯 CUSTOM GAME
         </h2>
         <p className="text-cyan-300 text-sm">AI-generated questions tailored to your needs</p>

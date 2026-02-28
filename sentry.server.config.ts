@@ -17,6 +17,9 @@ if (SENTRY_DSN) {
   Sentry.init({
     dsn: SENTRY_DSN,
 
+    // Associate errors with the deployed release (set at build time)
+    release: process.env.SENTRY_RELEASE || process.env.NEXT_PUBLIC_SENTRY_RELEASE || undefined,
+
     // Performance monitoring sample rate
     tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
 

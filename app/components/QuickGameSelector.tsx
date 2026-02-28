@@ -67,7 +67,7 @@ export default function QuickGameSelector({
                   {section.emoji}
                 </span>
                 <div className="text-left">
-                  <div className="text-lg font-pixel text-xs">{section.title}</div>
+                  <div className="font-pixel text-xs sm:text-sm">{section.title}</div>
                   <div className="font-pixel-body text-sm opacity-90">{section.description}</div>
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default function QuickGameSelector({
                         onBlur={() => setHoveredButton(null)}
                         onKeyDown={e => handleKeyDown(e, () => handleCategorySelect(category, key))}
                         className={`
-                          px-3 py-2 font-pixel-body text-sm font-bold text-center
+                          px-3 py-2 min-h-[44px] font-pixel-body text-sm font-bold text-center
                           border-4 pixel-border transition-all duration-150 ease-in-out
                           focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
                           ${
@@ -141,7 +141,7 @@ export default function QuickGameSelector({
         {onCancel && (
           <button
             onClick={onCancel}
-            className="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white font-pixel text-xs
+            className="px-6 py-3 min-h-[44px] bg-gray-600 hover:bg-gray-500 text-white font-pixel text-xs
                      border-4 border-gray-700 hover:border-gray-600 pixel-border transition-all duration-150
                      focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50
                      hover:scale-105 active:scale-95 pixel-glow-hover"
@@ -151,7 +151,7 @@ export default function QuickGameSelector({
         )}
         <div className="text-center text-gray-400 font-pixel-body text-sm">
           <p>🎮 Use keyboard arrows and Enter to navigate</p>
-          <p className="opacity-75 font-pixel text-[8px]">
+          <p className="opacity-75 font-pixel text-[10px]">
             10 questions per category • Instant start
           </p>
         </div>

@@ -7,6 +7,35 @@ Version numbers follow the project's internal phase numbering (not semver) until
 
 ---
 
+## [Phase 20] - 2026-02-28
+
+### Added
+- 125+ new seed questions in `database/schema.sql` (total now 150+), covering all 40 categories across elementary, middle-school, high-school, college, and classic difficulty levels
+- `lighthouserc.json` — Lighthouse CI configuration with desktop preset, threshold assertions (accessibility ≥0.9 error, performance ≥0.7 warn, best-practices ≥0.8 warn, SEO ≥0.8 warn)
+- Lighthouse CI job in `.github/workflows/ci.yml` using `treosh/lighthouse-ci-action@v12` on pull requests
+- Sentry release creation step in CI — creates and finalises releases on main pushes when `SENTRY_AUTH_TOKEN` is configured
+- `release` property in all 3 Sentry configs for commit association
+
+### Changed
+- **PixelButton**: `sm` min-height raised from 32px to 44px, `md` from 40px to 44px (WCAG AA touch targets)
+- **PixelInput**: `sm`/`md` sizes now include `min-h-[44px]` for accessible touch targets
+- **PixelCard**: title now uses responsive `text-base sm:text-lg` with `truncate` for overflow protection
+- **PageHeader**: back button padding increased to `p-3` with `min-w-[44px] min-h-[44px]`
+- **QuickGameSelector**: fixed conflicting `text-lg text-xs` bug on section titles; category buttons and cancel button now have `min-h-[44px]`; footer text bumped from `text-[8px]` to `text-[10px]`
+- **CustomGameConfigurator**: title now responsive `text-xl sm:text-3xl`
+- **AdvancedGameConfigurator**: file delete button enlarged to `min-w-[44px] min-h-[44px]`
+- **Leaderboard page**: filter/sort buttons raised from ~22px to 44px with `text-xs`; mode select dropdown to 44px; personal records grid uses progressive `grid-cols-2 sm:grid-cols-3 lg:grid-cols-5`; heading now responsive
+- **Select page**: all `text-[8px]` card details bumped to `text-[10px]`
+- `next.config.js`: enhanced `withSentryConfig` with `release.setCommits.auto`, source map upload gating, `VERCEL_GIT_COMMIT_SHA` fallback
+- CI build step now passes Sentry environment variables (`SENTRY_RELEASE`, `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`)
+
+### Fixed
+- Touch targets across 10+ components now meet WCAG AA minimum of 44×44px
+- Illegible `text-[8px]` text replaced in 4 locations
+- QuickGameSelector section title CSS conflict (`text-lg` overriding `text-xs`)
+
+---
+
 ## [Phase 18] - 2026-02-28
 
 ### Added

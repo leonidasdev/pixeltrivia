@@ -99,6 +99,23 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_key
           SUPABASE_SERVICE_ROLE_KEY: placeholder_key
           OPENROUTER_API_KEY: placeholder_key
+          # Sentry release tracking via git SHA
+          SENTRY_RELEASE: ${{ github.sha }}
+          NEXT_PUBLIC_SENTRY_RELEASE: ${{ github.sha }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
+      - name: Create Sentry release
+        if: github.ref == 'refs/heads/main' && env.SENTRY_AUTH_TOKEN != ''
+        run: |
+          npx @sentry/cli releases new "${{ github.sha }}"
+          npx @sentry/cli releases set-commits "${{ github.sha }}" --auto --ignore-missing
+          npx @sentry/cli releases finalize "${{ github.sha }}"
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
       - name: Report bundle size
         if: github.event_name == 'pull_request'
@@ -122,3 +139,36 @@ jobs:
           name: nextjs-build
           path: .next/
           retention-days: 7
+
+  lighthouse:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_key
+          SUPABASE_SERVICE_ROLE_KEY: placeholder_key
+          OPENROUTER_API_KEY: placeholder_key
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: ./lighthouserc.json
