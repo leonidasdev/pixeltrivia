@@ -87,11 +87,6 @@ export interface ActiveGameSession {
 }
 
 /**
- * @deprecated Use {@link ActiveGameSession} instead. Kept for backward compatibility.
- */
-export type GameSession = ActiveGameSession
-
-/**
  * Creates a new game session
  */
 export function createGameSession(

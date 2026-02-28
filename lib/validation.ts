@@ -180,12 +180,6 @@ export const questionSchema = z.object({
   explanation: z.string().optional(),
 })
 
-/** Validated question shape (Zod-inferred). Intentionally differs from
- *  the canonical `Question` in `types/game.ts` — AI responses use string
- *  IDs and string answers which are parsed post-validation. */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type ValidatedQuestion = z.infer<typeof questionSchema>
-
 // ============================================================================
 // AI Generation Schemas
 // ============================================================================

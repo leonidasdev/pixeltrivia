@@ -97,7 +97,6 @@ export async function POST(request: NextRequest) {
       return serverErrorResponse('Questions found but they contain invalid data')
     }
 
-    // Return the successful response
     return successResponse(
       validQuestions,
       `Found ${validQuestions.length} questions for category "${trimmedCategory}"`

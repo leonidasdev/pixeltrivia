@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { AdvancedGameConfig } from '../../components/AdvancedGameConfigurator'
 import { STORAGE_KEYS } from '@/constants/game'
+import { logger } from '@/lib/logger'
 import {
   ToastContainer,
   useToast,
@@ -29,7 +30,7 @@ export default function AdvancedGamePage() {
         const config = JSON.parse(savedConfig)
         setGameConfig(config)
       } catch (error) {
-        console.error('Failed to parse advanced game config:', error)
+        logger.error('Failed to parse advanced game config', error)
         router.push('/game/mode')
         return
       }

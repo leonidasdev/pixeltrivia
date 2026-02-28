@@ -44,21 +44,14 @@ test.describe('Navigation', () => {
     await expect(page).toHaveURL(/\/game\/mode/)
   })
 
-  test('should show alert for join game coming soon', async ({ page }) => {
+  test('should navigate to join game page', async ({ page }) => {
     await page.goto('/')
 
-    // Set up dialog handler
-    let dialogMessage = ''
-    page.on('dialog', async dialog => {
-      dialogMessage = dialog.message()
-      await dialog.accept()
-    })
-
-    // Click join existing game
+    // Click join existing game (player name is auto-generated)
     await page.getByText('JOIN EXISTING GAME').click()
 
-    // Should show "coming soon" alert
-    expect(dialogMessage).toContain('Coming soon')
+    // Should navigate to join game page
+    await expect(page).toHaveURL(/\/game\/join/)
   })
 })
 

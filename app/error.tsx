@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { logger } from '@/lib/logger'
 
 /**
  * Error page for route segments
@@ -14,10 +15,7 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Route Error:', error)
-    }
+    logger.error('Route error', error)
   }, [error])
 
   return (

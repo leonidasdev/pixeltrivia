@@ -7,7 +7,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ecf8e?logo=supabase)
-![Tests](https://img.shields.io/badge/Tests-546%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-1405%20passing-brightgreen)
 
 **A retro-styled trivia game with AI-powered question generation**
 
@@ -127,8 +127,11 @@ pixeltrivia/
 │   │   ├── quick/         # Quick play mode
 │   │   ├── custom/        # Custom game mode
 │   │   ├── advanced/      # Advanced configuration
+│   │   ├── play/          # Single-player gameplay
 │   │   ├── create/        # Create multiplayer room
-│   │   └── join/          # Join multiplayer room
+│   │   ├── join/          # Join multiplayer room
+│   │   ├── mode/          # Game mode selection
+│   │   └── select/        # Category & difficulty selection
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Home page
@@ -166,7 +169,7 @@ npm run test:coverage
 npm run typecheck
 ```
 
-**Test Coverage:** 488 tests across 29 test suites (unit, component, page, hook, integration)
+**Test Coverage:** 1405+ tests across 75 test suites (unit, component, page, hook, integration)
 
 ## Scripts
 

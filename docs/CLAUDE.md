@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (1236+ tests, 66 suites) |
+| **Testing** | Jest + React Testing Library (1405+ tests, 75 suites) |
 
 ---
 
@@ -102,6 +102,7 @@ pixeltrivia/
 │   │   ├── quick/            # Quick play mode
 │   │   ├── custom/           # Custom game mode
 │   │   ├── advanced/         # Advanced game mode
+│   │   ├── play/             # Single-player gameplay
 │   │   ├── create/           # Room creation
 │   │   ├── join/             # Room joining
 │   │   ├── lobby/[code]/     # Multiplayer lobby (realtime)
@@ -328,7 +329,7 @@ All API routes use `lib/apiResponse.ts` helpers for consistent response envelope
 ## Testing Overview
 
 ### Test Statistics
-- **1236+ tests** across 66+ test suites
+- **1405+ tests** across 75+ test suites
 - **100% passing** on CI
 - **Coverage thresholds**: branches ≥55%, functions ≥64%, lines ≥61%, statements ≥60%
 
@@ -387,7 +388,7 @@ OPENROUTER_API_KEY=sk-or-v1-...
 |-------|---------|-------------|
 | `rooms` | Multiplayer rooms | code, status, max_players |
 | `players` | Room participants | room_code, name, score |
-| `questions` | Trivia questions | question_text, options, correct_answer |
+| `questions` | Trivia questions | question_text, options, correct_answer, image_url |
 | `game_sessions` | Active games | room_code, current_question_id |
 
 ### Key Features
@@ -494,7 +495,7 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - Core game modes (Quick, Custom, Advanced)
 - Multiplayer system (room creation, joining, real-time sync, host controls)
 - Sound system (Web Audio API engine with 18 chiptune effects + procedural music loops)
-- Testing infrastructure (1236+ tests, 66+ suites)
+- Testing infrastructure (1405+ tests, 75+ suites)
 - CI/CD pipeline (GitHub Actions + Husky)
 - Security hardening (validation, rate limiting on all routes, middleware, CSP)
 - Structured logging via `lib/logger` with request ID tracing
@@ -515,12 +516,17 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - Database migration tooling (Supabase migrations, seed data)
 - Sentry error tracking (gated on DSN env var)
 - Bundle analyzer configured
+- Single-player play page with timer, scoring, keyboard shortcuts
+- Image-based question support (`image_url` column)
+- Adaptive difficulty engine
+- Share game results
+- Touch gesture support (swipe navigation)
+- Multiplayer invite links
 - Comprehensive documentation
 
 ### Planned
 - User authentication
 - Remote leaderboard persistence
-- Mobile responsiveness improvements
 
 ---
 
@@ -583,4 +589,4 @@ When working on this codebase:
 
 ---
 
-*Last updated: February 28, 2026 (Phase 16 — Code Quality & Architecture)*
+*Last updated: Phase 24 — Code Cleanup & Professionalization*

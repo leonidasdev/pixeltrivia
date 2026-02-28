@@ -16,19 +16,14 @@ export { logger } from './logger'
 export { calculateGameScore, getGrade } from './scoring'
 
 // Error handling
-export { AppError, isAppError, createAppError, NetworkError, ValidationError } from './errors'
+export { AppError, isAppError, ValidationError } from './errors'
 
 // API helpers
 export { apiFetch } from './apiFetch'
 export type { ApiClientResponse, ApiFetchOptions } from './apiFetch'
 export { fetchQuestions, createGameSession } from './gameApi'
-export type {
-  GameQuestion,
-  FetchQuestionsResponse,
-  ActiveGameSession,
-  GameSession,
-} from './gameApi'
-export { fetchQuickQuiz, validateQuizQuestion, shuffleQuestions } from './quickQuizApi'
+export type { GameQuestion, FetchQuestionsResponse, ActiveGameSession } from './gameApi'
+export { fetchQuickQuiz, validateQuizQuestion } from './quickQuizApi'
 export type { QuickQuizResponse, QuickQuizSession, QuizResults } from './quickQuizApi'
 export { generateCustomQuiz, validateCustomQuizConfig, formatKnowledgeLevel } from './customQuizApi'
 export type { CustomQuizResponse } from './customQuizApi'
@@ -46,7 +41,7 @@ export {
 } from './apiResponse'
 
 // API caching
-export { useApiCache, invalidateCache, primeCache, CACHE_CONFIGS } from './apiCache'
+export { useApiCache, invalidateCache, primeCache } from './apiCache'
 
 // Storage
 export {
@@ -62,11 +57,11 @@ export type { GameHistoryEntry, DetailedStats, GameSettings, PlayerProfile } fro
 
 // Room / multiplayer
 export { generateRoomCode, isValidRoomCode } from './roomCode'
-export type { RoomApiResponse } from './roomApi'
+export type { CreateRoomResponse } from './roomApi'
 
 // Leaderboard & achievements
 export { getLeaderboard, getPersonalRecords } from './leaderboard'
-export { getAchievements, getNewlyUnlockedAchievements, ALL_ACHIEVEMENTS } from './achievements'
+export { getAchievements, checkNewAchievements, TOTAL_ACHIEVEMENTS } from './achievements'
 
 // Validation
 export { validate, formatZodErrors, getFirstError } from './validation'

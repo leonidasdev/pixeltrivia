@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import type { CustomGameConfig } from '@/app/components/CustomGameConfigurator'
 import { generateCustomQuiz, type CustomQuizRequest } from '@/lib/customQuizApi'
+import { logger } from '@/lib/logger'
 
 const CustomGameConfigurator = dynamic(() => import('@/app/components/CustomGameConfigurator'), {
   loading: () => (
@@ -15,7 +16,6 @@ const CustomGameConfigurator = dynamic(() => import('@/app/components/CustomGame
     </div>
   ),
 })
-import { logger } from '@/lib/logger'
 import { ToastContainer, useToast, SparklesOverlay, PageTransition } from '@/app/components/ui'
 
 export default function CustomGamePage() {
@@ -50,14 +50,13 @@ export default function CustomGamePage() {
         sessionStorage.setItem('customGameConfig', JSON.stringify(config))
       }
 
-      // Show success message with details
       toast.success(
         `Custom quiz generated! Level: ${config.knowledgeLevel} • ${response.data?.length || 0} questions • Context: ${config.context || 'General knowledge'}. Ready to play!`
       )
 
-      // router.push('/game/play')
+      router.push('/game/play')
     } catch (err) {
-      console.error('Error generating custom game:', err)
+      logger.error('Failed to generate custom game', err)
       toast.error(
         `Failed to generate custom game: ${err instanceof Error ? err.message : 'Unknown error'}. Please try again.`
       )

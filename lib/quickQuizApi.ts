@@ -82,14 +82,6 @@ export function validateQuizQuestion(question: unknown): question is QuickQuizQu
 }
 
 /**
- * Shuffles the questions array and returns a new array
- * @deprecated Use `shuffleArray` from `lib/utils` directly for new code.
- */
-export function shuffleQuestions(questions: QuickQuizQuestion[]): QuickQuizQuestion[] {
-  return shuffleArray(questions)
-}
-
-/**
  * Creates a quiz session with timing and scoring
  */
 export interface QuickQuizSession {
@@ -113,7 +105,7 @@ export function createQuickQuizSession(
   category: string
 ): QuickQuizSession {
   return {
-    ...createBaseSession('quick', shuffleQuestions(questions)),
+    ...createBaseSession('quick', shuffleArray(questions)),
     answers: [],
     category,
     isComplete: false,

@@ -9,6 +9,8 @@
  * @since 1.1.0
  */
 
+import { logger } from './logger'
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -205,7 +207,7 @@ class SoundManager {
         this.musicGain.gain.value = this._musicMuted ? 0 : this._musicVolume
         this.musicGain.connect(this.ctx.destination)
       } catch {
-        console.warn('[SoundManager] Web Audio API not available')
+        logger.warn('Web Audio API not available')
         return null
       }
     }

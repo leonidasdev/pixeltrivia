@@ -26,7 +26,6 @@ export default function HomePage() {
   const [volume, setVolume] = useState(50)
   const [playerName, setPlayerName] = useState('')
   const [selectedAvatar, setSelectedAvatar] = useState('knight')
-  const [isCreatingRoom, _setIsCreatingRoom] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [nameError, setNameError] = useState('')
   const { messages: toasts, dismissToast, toast } = useToast()
@@ -64,9 +63,12 @@ export default function HomePage() {
     setNameError('')
     playSound('navigate')
 
-    toast.info(
-      'Coming soon! Join game functionality will be available once the backend is configured.'
-    )
+    const params = new URLSearchParams({
+      name: playerName,
+      avatar: selectedAvatar,
+      volume: volume.toString(),
+    })
+    router.push(`/game/join?${params.toString()}`)
   }
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,35 +124,26 @@ export default function HomePage() {
               onMouseLeave={() => setHoveredButton(null)}
               onFocus={() => setHoveredButton('new')}
               onBlur={() => setHoveredButton(null)}
-              disabled={isCreatingRoom}
               className={`
               w-full py-4 px-8 text-2xl font-bold text-center
-              ${
-                isCreatingRoom
-                  ? 'bg-green-400 border-green-600 cursor-not-allowed'
-                  : 'bg-green-600 hover:bg-green-500 active:bg-green-700 border-green-800 hover:border-green-600'
-              }
+              bg-green-600 hover:bg-green-500 active:bg-green-700 border-green-800 hover:border-green-600
               text-white border-4
               transform transition-all duration-150 ease-in-out
               focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50
               ${
-                !isCreatingRoom && hoveredButton === 'new'
+                hoveredButton === 'new'
                   ? 'scale-105 pixel-shadow translate-x-1 translate-y-1'
-                  : !isCreatingRoom
-                    ? 'hover:scale-105 hover:pixel-shadow hover:translate-x-1 hover:translate-y-1'
-                    : ''
+                  : 'hover:scale-105 hover:pixel-shadow hover:translate-x-1 hover:translate-y-1'
               }
-              ${!isCreatingRoom ? 'active:scale-95 active:translate-x-0 active:translate-y-0' : ''}
+              active:scale-95 active:translate-x-0 active:translate-y-0
               pixel-border
             `}
               role="menuitem"
               aria-label="Start a new trivia game"
             >
-              <span className="block">
-                {isCreatingRoom ? 'CREATING ROOM...' : 'START NEW GAME'}
-              </span>
+              <span className="block">START NEW GAME</span>
               <span className="block text-sm text-green-200 mt-1 font-normal">
-                {isCreatingRoom ? 'Please wait' : 'Create a multiplayer room'}
+                Choose a game mode
               </span>
             </button>
 

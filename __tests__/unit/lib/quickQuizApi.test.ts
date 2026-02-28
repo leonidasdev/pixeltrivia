@@ -5,7 +5,6 @@
 
 import {
   validateQuizQuestion,
-  shuffleQuestions,
   createQuickQuizSession,
   recordAnswer,
   calculateQuizResults,
@@ -87,52 +86,6 @@ describe('quickQuizApi', () => {
     it('should return false if category or difficulty is not a string', () => {
       expect(validateQuizQuestion({ ...sampleQuestions[0], category: 123 })).toBe(false)
       expect(validateQuizQuestion({ ...sampleQuestions[0], difficulty: null })).toBe(false)
-    })
-  })
-
-  describe('shuffleQuestions', () => {
-    it('should return an array of the same length', () => {
-      const shuffled = shuffleQuestions(sampleQuestions)
-      expect(shuffled).toHaveLength(sampleQuestions.length)
-    })
-
-    it('should return a new array, not mutate the original', () => {
-      const original = [...sampleQuestions]
-      const shuffled = shuffleQuestions(sampleQuestions)
-
-      expect(shuffled).not.toBe(sampleQuestions)
-      expect(sampleQuestions).toEqual(original)
-    })
-
-    it('should contain all original questions', () => {
-      const shuffled = shuffleQuestions(sampleQuestions)
-
-      sampleQuestions.forEach(q => {
-        expect(shuffled).toContainEqual(q)
-      })
-    })
-
-    it('should handle empty array', () => {
-      const shuffled = shuffleQuestions([])
-      expect(shuffled).toEqual([])
-    })
-
-    it('should handle single-element array', () => {
-      const single = [sampleQuestions[0]]
-      const shuffled = shuffleQuestions(single)
-      expect(shuffled).toEqual(single)
-    })
-
-    it('should eventually produce different orderings', () => {
-      // Run multiple shuffles and check if at least one differs
-      const orderings = new Set<string>()
-      for (let i = 0; i < 50; i++) {
-        const shuffled = shuffleQuestions(sampleQuestions)
-        orderings.add(shuffled.map(q => q.id).join(','))
-      }
-      // With 3 questions, there are 6 possible orderings
-      // After 50 shuffles, we should see multiple orderings
-      expect(orderings.size).toBeGreaterThan(1)
     })
   })
 
