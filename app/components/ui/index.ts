@@ -14,7 +14,7 @@
 export { PixelButton } from './PixelButton'
 export type { PixelButtonProps, PixelButtonVariant, PixelButtonSize } from './PixelButton'
 
-export { LoadingSpinner, LoadingOverlay, LoadingDots } from './LoadingSpinner'
+export { LoadingSpinner, LoadingOverlay } from './LoadingSpinner'
 export type { LoadingSpinnerProps, LoadingSpinnerSize } from './LoadingSpinner'
 
 export { Modal } from './Modal'
@@ -45,23 +45,11 @@ export type {
 // Layout Components
 // ============================================================================
 
-export { PageHeader, SectionHeader } from './PageHeader'
-export type { PageHeaderProps, SectionHeaderProps } from './PageHeader'
+export { PageHeader } from './PageHeader'
+export type { PageHeaderProps } from './PageHeader'
 
-export {
-  GamePageLayout,
-  MenuPageLayout,
-  ConfigPageLayout,
-  ContentCard,
-  ActionGroup,
-} from './GamePageLayout'
-export type {
-  GamePageLayoutProps,
-  MenuPageLayoutProps,
-  ConfigPageLayoutProps,
-  ContentCardProps,
-  ActionGroupProps,
-} from './GamePageLayout'
+export { GamePageLayout } from './GamePageLayout'
+export type { GamePageLayoutProps } from './GamePageLayout'
 
 // ============================================================================
 // Player Components
@@ -89,8 +77,8 @@ export type { ToastProps, ToastContainerProps, ToastMessage, ToastVariant } from
 export { PixelConfetti } from './PixelConfetti'
 export type { PixelConfettiProps } from './PixelConfetti'
 
-export { ScorePopup, ScorePopupManager } from './ScorePopup'
-export type { ScorePopupProps, ScorePopupManagerProps } from './ScorePopup'
+export { ScorePopup } from './ScorePopup'
+export type { ScorePopupProps } from './ScorePopup'
 
 export { AnswerFeedback, AnswerOptionHighlight } from './AnswerFeedback'
 export type {

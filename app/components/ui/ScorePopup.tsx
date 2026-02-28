@@ -68,37 +68,3 @@ export function ScorePopup({ score, show, onComplete, className = '' }: ScorePop
     </div>
   )
 }
-
-// ============================================================================
-// Multi Score Popup Manager
-// ============================================================================
-
-interface PopupEntry {
-  id: number
-  score: number
-  x: number
-  y: number
-}
-
-export interface ScorePopupManagerProps {
-  /** Array of score events to trigger popups */
-  events: PopupEntry[]
-  /** Callback when a popup completes */
-  onPopupComplete?: (id: number) => void
-}
-
-export function ScorePopupManager({ events, onPopupComplete }: ScorePopupManagerProps) {
-  return (
-    <div className="fixed inset-0 pointer-events-none z-40" aria-hidden="true">
-      {events.map(event => (
-        <ScorePopup
-          key={event.id}
-          score={event.score}
-          show={true}
-          onComplete={() => onPopupComplete?.(event.id)}
-          className={`left-[${event.x}px] top-[${event.y}px]`}
-        />
-      ))}
-    </div>
-  )
-}

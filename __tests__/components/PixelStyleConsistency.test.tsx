@@ -74,7 +74,7 @@ jest.mock('@/app/components/Help/HelpContext', () => ({
 // ─── Imports ───────────────────────────────────────────────────────────────
 import QuickGameSelector from '@/app/components/QuickGameSelector'
 import ErrorBoundary from '@/app/components/ErrorBoundary'
-import HelpModal from '@/app/components/Help/HelpModal'
+import { HelpModal } from '@/app/components/Help/HelpModal'
 import NotFound from '@/app/not-found'
 import ErrorPage from '@/app/error'
 

@@ -1,3 +1,13 @@
+/**
+ * Help Context Provider
+ *
+ * Tracks visited routes and provides available help tabs
+ * based on navigation history.
+ *
+ * @module app/components/Help/HelpContext
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'

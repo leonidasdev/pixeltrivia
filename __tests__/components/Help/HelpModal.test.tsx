@@ -3,7 +3,7 @@
  */
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import HelpModal from '@/app/components/Help/HelpModal'
+import { HelpModal } from '@/app/components/Help/HelpModal'
 import { useHelpContext } from '@/app/components/Help/HelpContext'
 
 // Mock the HelpContext

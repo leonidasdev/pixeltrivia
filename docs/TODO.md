@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026 (Phase 14)
+> **Last Updated:** February 28, 2026 (Phase 15 — Codebase Audit & Cleanup)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,12 +10,12 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 65 |
-| Tests | 1222 |
-| Coverage (Statements) | 62.65% |
-| Coverage (Branches) | 57.12% |
-| Coverage (Functions) | 66.42% |
-| Coverage (Lines) | 63.42% |
+| Test Suites | 64+ |
+| Tests | 1222+ |
+| Coverage (Statements) | ~62.65% |
+| Coverage (Branches) | ~57.12% |
+| Coverage (Functions) | ~66.42% |
+| Coverage (Lines) | ~63.42% |
 | TypeScript Errors | 0 |
 | ESLint Errors | 0 |
 
@@ -23,63 +23,146 @@
 
 ## Remaining Tasks
 
-### Priority 1: Testing
+### Priority 1: Code Quality & Consistency (from Phase 15 Audit)
 
-#### 1.1 Expand Test Coverage
-- [x] Page tests: `select/page.tsx`, `quick/page.tsx`, `custom/page.tsx`, `advanced/page.tsx`
-- [x] Component tests: `HelpButton.tsx`, `HelpContext.tsx`, UI components (`PixelButton`, `PixelCard`, `PixelInput`, `PixelBadge`)
-- [x] API route tests: `/api/quiz/custom`, `/api/quiz/advanced`
+#### 1.1 Type Consolidation
+- [ ] Merge `DifficultyLevel` and `KnowledgeLevel` in `types/game.ts` — identical unions with different member order
+- [ ] Resolve `Question` type conflict between `types/game.ts` (id: `number | string`, correctAnswer: `number`) and `lib/validation.ts` (id: `string`, correctAnswer: `string`)
+- [ ] Align `QuickQuizResponse` / `CustomQuizResponse` shapes between `lib/quickQuizApi.ts` and `types/quiz.ts`
+- [ ] Consolidate `GameSession` type between `lib/gameApi.ts` and `types/game.ts`
 
-#### 1.2 Raise Coverage Thresholds
-- [x] Raised thresholds from 12-15% to 55-64% (branches 55%, functions 64%, lines 61%, statements 60%)
-- [x] All thresholds now within 2-3% of actual coverage
+#### 1.2 Deduplication
+- [ ] Extract shared Fisher-Yates shuffle from `lib/quickQuizApi.ts` and `hooks/useQuizSession.ts` into `lib/utils.ts` as `shuffleArray<T>()`
+- [ ] Create shared `createSession()` factory in `lib/gameApi.ts` to replace near-identical session constructors in `quickQuizApi`, `customQuizApi`, and `gameApi`
+- [ ] Abstract common API fetch/error-handling boilerplate into a generic `apiFetch<TReq, TRes>()` utility
+- [ ] Fix `createCustomGameSession()` to use `generateId('custom')` instead of `custom_${Date.now()}`
 
----
+#### 1.3 Validation Alignment
+- [ ] Fix context max-length mismatch: `lib/customQuizApi.ts` allows 1000 chars vs `lib/validation.ts` allows 2000 chars
+- [ ] Replace hardcoded valid levels in `lib/customQuizApi.ts` with import from `constants/difficulties.ts`
+- [ ] Remove shadowed `KnowledgeLevel` re-declaration in `lib/validation.ts` (use canonical from `types/game.ts`)
 
-### Priority 2: Infrastructure
+#### 1.4 Logging Consistency
+- [ ] Replace raw `console.warn()` in `hooks/useLocalStorage.ts` with structured `logger` (3 occurrences)
 
-#### 2.1 Production Logging
-- [x] Enhanced logger with structured JSON output for production (parseable by CloudWatch, Datadog, Vercel Logs)
-- [x] Added request ID tracking: `getRequestId()`, `logger.child(requestId)` for per-request tracing
-- [x] Middleware assigns `x-request-id` header to all responses
-
-#### 2.2 Rate Limiting
-- [x] Added `RateLimitStore` provider interface for swappable backends
-- [x] Added Upstash Redis store (`UpstashRateLimitStore`) — auto-enabled when `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set
-- [x] Falls back to in-memory store with production warning when Redis is not configured
-
-#### 2.3 CSP Hardening
-- [x] Made `CSP_DIRECTIVES` environment-aware: production removes `unsafe-eval` and `unsafe-inline` from `script-src`
-- [x] Added `upgrade-insecure-requests` directive in production
-- [x] Updated `buildCSP()` to handle value-less directives
-
-#### 2.4 Enable ESLint During Builds
-- [x] Set `ignoreDuringBuilds: false` in `next.config.js`
-- [x] ESLint verified clean (0 warnings, 0 errors)
+#### 1.5 Response Type Alignment
+- [ ] Align `FetchQuestionsResponse` in `lib/gameApi.ts` with canonical `ApiResponse` from `types/api.ts`
+- [ ] Align `GameHistoryEntry` in `lib/storage.ts` with session types from `types/game.ts`
 
 ---
 
-### Priority 3: Feature Backlog
+### Priority 2: Architecture & Modularity
 
-#### 3.1 Game Features
-- [x] Complete Advanced Game file upload processing (PDF, DOCX, TXT, MD parsing via `/api/upload`)
-- [x] Implement leaderboards (`lib/leaderboard.ts`, `app/game/leaderboard/page.tsx`)
-- [x] Add achievements system (`lib/achievements.ts`, `app/game/achievements/page.tsx` — 20 achievements across 4 tiers)
-- [x] Add background music (procedural chiptune loops for menu, gameplay, results via Web Audio API)
+#### 2.1 Module Organization
+- [ ] Create `lib/index.ts` barrel export for consistency with `types/`, `constants/`, `hooks/`
+- [ ] Rename `app/components/Help/` to `app/components/help/` (PascalCase is inconsistent with `multiplayer/`, `stats/`, `ui/`)
+- [ ] Move `useHelpContext` hook from `app/components/Help/HelpContext.tsx` into `hooks/` (or document the co-location pattern)
 
-#### 3.2 Performance
-- [x] Add API response caching with SWR (`lib/apiCache.ts` — typed hooks, 3 config presets, cache management)
-- [x] Analyze bundle with `@next/bundle-analyzer` (installed and configured, `npm run analyze`)
-- [x] Implement dynamic imports for game mode pages (select, quick, custom)
+#### 2.2 Storage Architecture
+- [ ] Evaluate moving `createStorage<T>()` from `hooks/useLocalStorage.ts` into its own `lib/createStorage.ts` file (different paradigm from React hook)
 
-#### 3.3 Monitoring
-- [x] Integrate error tracking (Sentry — client, server, edge configs; gated on DSN env var)
-- [x] Add usage analytics (`lib/analytics.ts` — 13 event types, session detection, privacy-first localStorage)
+#### 2.3 API Consistency
+- [ ] Add missing `noContentResponse`, `unauthorizedResponse`, `forbiddenResponse` usage or mark as intentionally unused public API
+- [ ] Consider splitting `lib/apiResponse.ts` into response builders vs request parsers
 
-#### 3.4 Database
-- [x] Add migration tooling (Supabase migrations — `database/migrations/001_initial_schema.sql`)
-- [x] Generate Supabase types (`npm run db:types`)
-- [x] Add seed data scripts (`database/seed.sql` — 90+ questions across 12 categories)
+---
+
+### Priority 3: Testing & Coverage
+
+#### 3.1 Coverage Gaps
+- [ ] Add tests for `lib/leaderboard.ts` functions used only in production (currently tested but room for coverage growth)
+- [ ] Add tests for `lib/storage.ts` `createStorage()` utility
+- [ ] Test error boundaries with actual error scenarios (component integration tests)
+- [ ] Add E2E tests for leaderboard and achievements pages
+
+#### 3.2 Test Organization
+- [ ] Review test file locations: some component tests are in `__tests__/components/` while others are at root
+
+---
+
+### Priority 4: Performance & Scalability
+
+#### 4.1 Rendering Optimization
+- [ ] Memoize `getAvailableHelpTabs()` in `HelpModal.tsx` (called on every render, used in `useEffect` deps)
+- [ ] Add `useMemo`/`useCallback` to expensive computations in game state hooks
+- [ ] Consider React Server Components for static game pages (mode, select)
+
+#### 4.2 Bundle Size
+- [ ] Audit `pdf-parse` and `mammoth` bundle sizes — consider lazy loading for upload page only
+- [ ] Evaluate tree-shaking effectiveness of barrel exports
+
+#### 4.3 Data Layer
+- [ ] Move leaderboard/achievements from localStorage to Supabase for persistence across devices
+- [ ] Implement server-side analytics aggregation
+- [ ] Add Redis caching for frequently accessed question pools
+
+---
+
+### Priority 5: Features
+
+#### 5.1 Authentication
+- [ ] Add user authentication (Supabase Auth)
+- [ ] Persist game history and achievements per user
+- [ ] Add user profiles with avatar customization
+
+#### 5.2 Social Features
+- [ ] Global leaderboards (server-side)
+- [ ] Share game results
+- [ ] Challenge a friend mode
+
+#### 5.3 Content
+- [ ] Expand seed data beyond 90 questions
+- [ ] Add question difficulty ratings based on player performance
+- [ ] Support for image-based questions
+
+#### 5.4 Mobile
+- [ ] Responsive design audit and fixes
+- [ ] PWA support (service worker, manifest)
+- [ ] Touch gesture support for game interactions
+
+---
+
+### Priority 6: DevOps & Operations
+
+#### 6.1 CI/CD Enhancements
+- [ ] Add Lighthouse CI checks for performance regression
+- [ ] Add bundle size tracking in PR checks
+- [ ] Implement staging environment deployment
+
+#### 6.2 Monitoring
+- [ ] Configure Sentry release tracking and source maps
+- [ ] Add performance monitoring dashboards
+- [ ] Set up alerting for error rate spikes
+
+#### 6.3 Documentation
+- [ ] Add API versioning strategy documentation
+- [ ] Create runbook for common operational tasks
+- [ ] Add changelog (CHANGELOG.md) with version history
+
+---
+
+## Phase 15 Completed (Codebase Audit & Cleanup)
+
+### Dead Code Removal
+- Deleted orphaned `app/test/` directory (debug pages for CustomQuizApi and QuickQuizApi — security concern)
+- Deleted empty `__tests__/api/quiz/` and `__tests__/api/` directories
+- Removed unused `MenuPageLayout`, `ConfigPageLayout`, `ContentCard`, `ActionGroup` from `ui/GamePageLayout.tsx`
+- Removed unused `SectionHeader` from `ui/PageHeader.tsx`
+- Removed unused `LoadingDots` from `ui/LoadingSpinner.tsx`
+- Removed unused `ScorePopupManager` from `ui/ScorePopup.tsx`
+- Cleaned up `ui/index.ts` barrel exports to remove references to deleted components
+
+### Consistency Fixes
+- Converted `HelpButton.tsx` and `HelpModal.tsx` from default exports to named exports (matching project convention)
+- Added JSDoc module headers to all 4 Help/ files (`HelpButton`, `HelpModal`, `HelpContext`, `index.ts`)
+- Exported `HelpModalProps` type from barrel
+- Updated all test imports from default to named imports (`HelpButton`, `HelpModal`)
+- Updated test mocks from `default:` to named function mocks
+
+### Documentation Updates
+- Updated CLAUDE.md: test counts, directory tree, project status, feature list
+- Updated TODO.md: comprehensive improvement roadmap from audit findings
+- Updated architecture.md: current file listings, stats components, removed outdated references
 
 ---
 
@@ -150,7 +233,7 @@ All items below have been completed and verified. See git history for details.
 - Home page navigation updated with Ranks and Badges buttons
 
 ### Testing and CI
-- 1222 tests across 65 suites (unit, component, hook, integration, E2E)
+- 1222+ tests across 64+ suites (unit, component, hook, integration, E2E)
 - Coverage thresholds enforced: branches 55%, functions 64%, lines 61%, statements 60%
 - CI/CD pipeline: GitHub Actions, Husky pre-commit, lint-staged
 - ESLint enforced during Next.js builds (`ignoreDuringBuilds: false`)
@@ -174,4 +257,4 @@ All items below have been completed and verified. See git history for details.
 
 ---
 
-*Last reviewed: February 28, 2026*
+*Last reviewed: February 28, 2026 (Phase 15)*

@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (1222 tests, 65 suites) |
+| **Testing** | Jest + React Testing Library (1222+ tests, 64 suites) |
 
 ---
 
@@ -84,6 +84,10 @@ pixeltrivia/
 │   │   │   ├── GameQuestion.tsx   # Question with colored options & timer
 │   │   │   ├── Scoreboard.tsx     # Final scores podium
 │   │   │   └── HostControls.tsx   # Host-only game controls
+│   │   ├── stats/            # Statistics components
+│   │   │   ├── StatsOverview.tsx  # Stats summary dashboard
+│   │   │   ├── GameHistoryList.tsx # Game history entries
+│   │   │   └── charts/           # Chart visualizations
 │   │   └── ui/               # Reusable UI component library
 │   │       ├── Toast.tsx      # Toast notification system
 │   │       ├── Modal.tsx, LoadingSpinner.tsx
@@ -324,9 +328,9 @@ All API routes use `lib/apiResponse.ts` helpers for consistent response envelope
 ## Testing Overview
 
 ### Test Statistics
-- **899 tests** across 48 test suites
+- **1222+ tests** across 64+ test suites
 - **100% passing** on CI
-- **Coverage thresholds**: branches ≥12%, functions/lines/statements ≥15%
+- **Coverage thresholds**: branches ≥55%, functions ≥64%, lines ≥61%, statements ≥60%
 
 ### Test Commands
 ```bash
@@ -488,11 +492,13 @@ export function ComponentName({ prop1, prop2 }: Props) {
 
 ### Completed
 - Core game modes (Quick, Custom, Advanced)
-- Testing infrastructure (899 tests, 48 suites)
+- Multiplayer system (room creation, joining, real-time sync, host controls)
+- Sound system (Web Audio API engine with 18 chiptune effects + procedural music loops)
+- Testing infrastructure (1222+ tests, 64+ suites)
 - CI/CD pipeline (GitHub Actions + Husky)
-- Security hardening (validation, rate limiting on all routes, middleware)
+- Security hardening (validation, rate limiting on all routes, middleware, CSP)
+- Structured logging via `lib/logger` with request ID tracing
 - Standardized API responses via `lib/apiResponse` helpers
-- Structured logging via `lib/logger` (no raw console.error in routes)
 - Centralized storage keys (`constants/game.ts STORAGE_KEYS`)
 - Canonical avatar constants (`constants/avatars.ts AVATAR_OPTIONS`)
 - Toast notification system (replaces browser alerts)
@@ -500,19 +506,20 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - UI component library adoption across game pages
 - Skip navigation link for keyboard/screen reader accessibility
 - `prefers-reduced-motion` support for all animations
-- Component tests (ErrorBoundary, BackButton, Toast, Modal)
-- Page tests (HomePage, GameModePage, JoinGamePage)
-- Hook tests (useGameState, useLocalStorage, useTimer, useQuizSession, useRoom, useMultiplayerGame)
-- API route integration tests (roomCreate, quizQuick, gameQuestions, upload)
+- File upload processing (PDF, DOCX, TXT, MD parsing)
+- Leaderboard system (local, ranked entries, period/mode/category filtering)
+- Achievement system (20 achievements across 4 tiers)
+- API response caching with SWR
+- Usage analytics (privacy-first, localStorage)
+- Stats dashboard (history, charts, overview)
+- Database migration tooling (Supabase migrations, seed data)
+- Sentry error tracking (gated on DSN env var)
+- Bundle analyzer configured
 - Comprehensive documentation
-
-### In Progress
-- Leaderboards
-- Score persistence
 
 ### Planned
 - User authentication
-- Analytics dashboard
+- Remote leaderboard persistence
 - Mobile responsiveness improvements
 
 ---
@@ -576,4 +583,4 @@ When working on this codebase:
 
 ---
 
-*Last updated: February 28, 2026*
+*Last updated: February 28, 2026 (Phase 15 — Codebase Audit & Cleanup)*

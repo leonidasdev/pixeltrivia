@@ -1,9 +1,22 @@
+/**
+ * Help Button Component
+ *
+ * Floating help button that opens the HelpModal.
+ *
+ * @module app/components/Help/HelpButton
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useState } from 'react'
-import HelpModal from './HelpModal'
+import { HelpModal } from './HelpModal'
 
-export default function HelpButton() {
+/**
+ * Floating help button with hover/focus states.
+ * Opens the HelpModal when clicked.
+ */
+export function HelpButton() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 

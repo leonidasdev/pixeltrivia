@@ -1,17 +1,34 @@
+/**
+ * Help Modal Component
+ *
+ * Tabbed modal displaying help content for each game mode.
+ * Tabs are dynamically shown based on visited routes.
+ *
+ * @module app/components/Help/HelpModal
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useEffect, useState } from 'react'
 import { useHelpContext } from './HelpContext'
 import { Modal } from '../ui/Modal'
 
-interface HelpModalProps {
+export interface HelpModalProps {
+  /** Whether the modal is open */
   isOpen: boolean
+  /** Callback when the modal is closed */
   onClose: () => void
 }
 
 type HelpTab = 'general' | 'quick' | 'custom' | 'advanced'
 
-export default function HelpModal({ isOpen, onClose }: HelpModalProps) {
+/**
+ * Tabbed help modal with dynamic content based on visited routes.
+ *
+ * @param props - Modal visibility and close handler
+ */
+export function HelpModal({ isOpen, onClose }: HelpModalProps) {
   const [activeTab, setActiveTab] = useState<HelpTab>('general')
   const { currentRoute, getAvailableHelpTabs } = useHelpContext()
 

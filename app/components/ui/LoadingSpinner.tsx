@@ -203,10 +203,3 @@ export function LoadingOverlay({
     </div>
   )
 }
-
-/**
- * Inline loading indicator for buttons/text
- */
-export function LoadingDots({ className = '' }: { className?: string }) {
-  return <DotsSpinner className={className} />
-}

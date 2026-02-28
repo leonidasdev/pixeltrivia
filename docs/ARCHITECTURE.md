@@ -95,11 +95,10 @@ app/
 ├── layout.tsx               # Root layout with providers
 ├── globals.css              # Global styles (Tailwind)
 ├── error.tsx                # Error boundary
+├── global-error.tsx         # Global error handler
 ├── not-found.tsx            # 404 page
 │
 ├── api/                     # API Routes (serverless functions)
-│   ├── ai/
-│   │   └── generate-questions/route.ts
 │   ├── game/
 │   │   └── questions/route.ts
 │   ├── quiz/
@@ -107,7 +106,8 @@ app/
 │   │   ├── custom/route.ts
 │   │   └── advanced/route.ts
 │   └── room/
-│       └── create/route.ts
+│       ├── create/route.ts
+│       └── [code]/route.ts (+start, answer, next, question)
 │
 ├── components/              # Shared components
 │   ├── AdvancedGameConfigurator.tsx
@@ -117,16 +117,27 @@ app/
 │   ├── BackButton.tsx
 │   ├── MainMenuLogo.tsx
 │   ├── ErrorBoundary.tsx
-│   ├── Help/
+│   ├── Help/                # Help system (context-aware)
 │   │   ├── HelpButton.tsx
 │   │   ├── HelpModal.tsx
 │   │   └── HelpContext.tsx
+│   ├── multiplayer/         # Multiplayer components
+│   │   ├── PlayerList.tsx
+│   │   ├── LobbyView.tsx
+│   │   ├── GameQuestion.tsx
+│   │   ├── Scoreboard.tsx
+│   │   └── HostControls.tsx
+│   ├── stats/               # Statistics components
+│   │   ├── StatsOverview.tsx
+│   │   ├── GameHistoryList.tsx
+│   │   └── charts/
 │   └── ui/                  # Reusable UI library
-│       ├── Toast.tsx         # Toast notifications
-│       ├── Modal.tsx
-│       ├── LoadingSpinner.tsx
+│       ├── Toast.tsx, Modal.tsx, LoadingSpinner.tsx
 │       ├── PixelButton.tsx, PixelCard.tsx, PixelInput.tsx, PixelBadge.tsx
-│       └── AnimatedBackground.tsx, GamePageLayout.tsx, PageHeader.tsx
+│       ├── AnimatedBackground.tsx, GamePageLayout.tsx, PageHeader.tsx
+│       ├── PlayerDisplay.tsx, PixelConfetti.tsx, ScorePopup.tsx
+│       ├── AnswerFeedback.tsx, PixelTimer.tsx
+│       └── PageTransition.tsx
 │
 └── game/                    # Game pages
     ├── mode/page.tsx        # Mode selection
@@ -135,7 +146,9 @@ app/
     ├── custom/page.tsx      # Custom game
     ├── advanced/page.tsx    # Advanced settings
     ├── create/page.tsx      # Create room
-    └── join/page.tsx        # Join room
+    ├── join/page.tsx        # Join room
+    ├── leaderboard/page.tsx # Rankings
+    └── achievements/page.tsx # Achievements
 ```
 
 ### Library Structure
@@ -147,7 +160,7 @@ lib/
 ├── validation.ts      # Zod schemas for all inputs
 ├── security.ts        # Security middleware (Next.js)
 ├── security.core.ts   # Pure security functions
-├── rateLimit.ts       # Rate limiting implementation
+├── rateLimit.ts       # Rate limiting (in-memory + Redis)
 ├── logger.ts          # Structured logging utility
 ├── storage.ts         # Typed localStorage wrapper
 ├── supabase.ts        # Supabase client (DbRoom, DbPlayer types)
@@ -155,7 +168,16 @@ lib/
 ├── roomCode.ts        # Room code generation
 ├── gameApi.ts         # Game session management
 ├── quickQuizApi.ts    # Quick quiz API client
-└── customQuizApi.ts   # Custom quiz API client
+├── customQuizApi.ts   # Custom quiz API client
+├── multiplayerApi.ts  # Multiplayer API client
+├── scoring.ts         # Unified scoring logic
+├── soundManager.ts    # Web Audio API sound engine
+├── fileParser.ts      # File upload parsing (PDF, DOCX, TXT, MD)
+├── leaderboard.ts     # Local leaderboard system
+├── achievements.ts    # Achievement system (20 achievements, 4 tiers)
+├── apiCache.ts        # SWR-based API response caching
+├── analytics.ts       # Client-side usage analytics
+└── utils.ts           # Shared utilities (generateId, formatDuration)
 ```
 
 ### Types Structure
@@ -189,7 +211,11 @@ hooks/
 ├── useLocalStorage.ts # Typed localStorage with React sync
 ├── usePlayerSettings.ts # Player name, avatar, volume settings
 ├── useTimer.ts        # Countdown timer with callbacks
-└── useQuizSession.ts  # Complete quiz session management
+├── useQuizSession.ts  # Complete quiz session management
+├── useSound.ts        # Sound effects hook
+├── useRoom.ts         # Room state + Supabase Realtime
+├── useMultiplayerGame.ts # Multiplayer game state machine
+└── useGameHistory.ts  # Game history storage and stats
 ```
 
 ---
@@ -458,13 +484,13 @@ All API routes are rate-limited via `lib/rateLimit.ts`:
 3. **Edge Functions** - Move AI generation to Supabase Edge Functions
 4. **CDN Caching** - Cache static question pools at edge
 
-### Monitoring (Planned)
+### Monitoring (Implemented)
 
-- Application Performance Monitoring (APM)
-- Error tracking (Sentry)
-- Analytics (Vercel Analytics)
-- Structured logging
+- Error tracking (Sentry — client, server, edge; gated on DSN env var)
+- Structured logging (JSON in production, request ID tracing)
+- Usage analytics (client-side, localStorage, privacy-first)
+- Bundle analyzer (`@next/bundle-analyzer`, `npm run analyze`)
 
 ---
 
-*Last updated: February 27, 2026*
+*Last updated: February 28, 2026 (Phase 15)*
