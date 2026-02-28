@@ -49,16 +49,19 @@ export default function AdvancedGamePage() {
     setError(null)
 
     try {
-      // Create a summary of uploaded files (mock implementation)
+      // Build file summary from extracted content
       const filesSummary =
         gameConfig.files.length > 0
           ? gameConfig.files
-              .map(
-                file =>
-                  `Document: ${file.name}\nContent: ${file.content || 'Sample content for demonstration'}`
-              )
+              .map(file => file.content || '')
+              .filter(Boolean)
               .join('\n\n')
-          : 'No documents uploaded. Generate general trivia questions.'
+          : ''
+
+      if (!filesSummary) {
+        setError('No document content available. Please upload files with readable text content.')
+        return
+      }
 
       const response = await fetch('/api/quiz/advanced', {
         method: 'POST',
@@ -80,16 +83,11 @@ export default function AdvancedGamePage() {
 
       const result = await response.json()
 
-      // Store the generated questions and navigate to game
       localStorage.setItem(STORAGE_KEYS.GENERATED_QUESTIONS, JSON.stringify(result.data.questions))
       localStorage.setItem(STORAGE_KEYS.GAME_METADATA, JSON.stringify(result.data.metadata))
 
-      // In a real implementation, navigate to the actual game screen
-      toast.success(
-        `Generated ${result.data.questions.length} questions successfully! Game screen coming soon.`
-      )
+      toast.success(`Generated ${result.data.questions.length} questions from your documents!`)
     } catch (error) {
-      console.error('Failed to generate quiz:', error)
       setError(
         error instanceof Error ? error.message : 'Failed to generate quiz. Please try again.'
       )
@@ -187,14 +185,14 @@ export default function AdvancedGamePage() {
               </h3>
               <p className="text-blue-200 font-pixel-body text-base mb-6">
                 {gameConfig.files.length > 0
-                  ? 'Your documents will be processed by our AI to generate personalized trivia questions. This may take a moment for large files.'
-                  : "Since no documents were uploaded, we'll generate general trivia questions based on your preferences."}
+                  ? 'Your documents have been processed. AI will generate personalized trivia questions based on the content.'
+                  : 'No documents uploaded. Please go back and upload at least one document.'}
               </p>
 
               <div className="space-y-4">
                 <button
                   onClick={handleStartGame}
-                  disabled={isGenerating}
+                  disabled={isGenerating || gameConfig.files.length === 0}
                   className={`
                   w-full py-4 px-6 font-pixel text-sm text-white transition-all duration-150
                   focus:outline-none focus:ring-4 focus:ring-opacity-50 pixel-border pixel-glow-hover

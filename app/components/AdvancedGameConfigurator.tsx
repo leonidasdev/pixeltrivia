@@ -7,7 +7,7 @@ export interface UploadedFile {
   name: string
   size: number
   type: string
-  content?: string // For now, we'll mock the content
+  content?: string
 }
 
 export interface AdvancedGameConfig {
@@ -26,14 +26,14 @@ export default function AdvancedGameConfigurator({
   onConfigChange,
 }: AdvancedGameConfiguratorProps) {
   const [dragActive, setDragActive] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
-  // Handle file selection via input
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     addFiles(files)
   }
 
-  // Handle drag and drop
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -53,27 +53,79 @@ export default function AdvancedGameConfigurator({
     addFiles(files)
   }
 
-  // Add files to config
-  const addFiles = (files: File[]) => {
+  const addFiles = async (files: File[]) => {
     const validTypes = ['.txt', '.pdf', '.docx', '.md']
     const validFiles = files.filter(file => {
       const extension = '.' + file.name.split('.').pop()?.toLowerCase()
       return validTypes.includes(extension)
     })
 
-    const newUploadedFiles: UploadedFile[] = validFiles.map(file => ({
-      id: Math.random().toString(36).substring(2, 11),
-      name: file.name,
-      size: file.size,
-      type: file.type || 'text/plain',
-      content: `Mock content for ${file.name}`, // Mock content for now
-    }))
+    if (validFiles.length === 0) {
+      setUploadError('No supported files selected. Accepted: .txt, .pdf, .docx, .md')
+      return
+    }
 
-    const updatedFiles = [...config.files, ...newUploadedFiles]
-    onConfigChange({
-      ...config,
-      files: updatedFiles,
-    })
+    const totalFiles = config.files.length + validFiles.length
+    if (totalFiles > 5) {
+      setUploadError('Maximum 5 files allowed')
+      return
+    }
+
+    setUploadError(null)
+    setIsUploading(true)
+
+    try {
+      const formData = new FormData()
+      validFiles.forEach(file => formData.append('files', file))
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Upload failed')
+      }
+
+      const newUploadedFiles: UploadedFile[] = result.data.files.map(
+        (f: { name: string; type: string; size: number; textLength: number }, i: number) => ({
+          id: Math.random().toString(36).substring(2, 11),
+          name: f.name,
+          size: f.size,
+          type: f.type,
+          content:
+            result.data.summary
+              .split(`--- ${f.name} ---`)
+              .slice(1)
+              .join('')
+              .split('---')
+              .shift()
+              ?.trim() || '',
+        })
+      )
+
+      // Store the full summary on the first file for convenience
+      if (newUploadedFiles.length > 0) {
+        newUploadedFiles[0].content = result.data.summary
+      }
+
+      const updatedFiles = [...config.files, ...newUploadedFiles]
+      onConfigChange({ ...config, files: updatedFiles })
+
+      if (result.data.errors?.length > 0) {
+        setUploadError(
+          `Some files had issues: ${result.data.errors.map((e: { file: string; reason: string }) => `${e.file}: ${e.reason}`).join('; ')}`
+        )
+      }
+    } catch (err) {
+      setUploadError(
+        err instanceof Error ? err.message : 'Failed to upload files. Please try again.'
+      )
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   // Remove file
@@ -139,17 +191,35 @@ export default function AdvancedGameConfigurator({
             multiple
             accept=".txt,.pdf,.docx,.md"
             onChange={handleFileSelect}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+            disabled={isUploading}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
             aria-label="Upload document files"
           />
 
           <div className="pointer-events-none">
-            <div className="text-4xl mb-3">📄</div>
-            <p className="text-white font-bold mb-2">Drop files here or click to browse</p>
-            <p className="text-gray-400 text-sm">Supports: .txt, .pdf, .docx, .md files</p>
-            <p className="text-gray-500 text-xs mt-1">Max 10MB per file • Up to 5 files</p>
+            {isUploading ? (
+              <>
+                <div className="text-4xl mb-3 animate-pulse">⏳</div>
+                <p className="text-cyan-300 font-bold mb-2">Processing files...</p>
+                <p className="text-gray-400 text-sm">Extracting text from your documents</p>
+              </>
+            ) : (
+              <>
+                <div className="text-4xl mb-3">📄</div>
+                <p className="text-white font-bold mb-2">Drop files here or click to browse</p>
+                <p className="text-gray-400 text-sm">Supports: .txt, .pdf, .docx, .md files</p>
+                <p className="text-gray-500 text-xs mt-1">Max 10MB per file • Up to 5 files</p>
+              </>
+            )}
           </div>
         </div>
+
+        {/* Upload Error */}
+        {uploadError && (
+          <div className="p-3 bg-red-900 bg-opacity-30 border-2 border-red-600 pixel-border">
+            <p className="text-red-300 text-sm">{uploadError}</p>
+          </div>
+        )}
 
         {/* Uploaded Files List */}
         {config.files.length > 0 && (

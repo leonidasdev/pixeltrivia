@@ -16,8 +16,8 @@ Complete reference documentation for all PixelTrivia API endpoints.
   - [GET /api/game/questions](#get-apigamequestions)
 - [Room Endpoints](#room-endpoints)
   - [POST /api/room/create](#post-apiroomcreate)
-- [AI Endpoints](#ai-endpoints)
-  - [POST /api/ai/generate-questions](#post-apiaigenerate-questions)
+- [Upload Endpoints](#upload-endpoints)
+  - [POST /api/upload](#post-apiupload)
 - [Error Handling](#error-handling)
 
 ---
@@ -52,7 +52,7 @@ All endpoints are protected by rate limiting:
 | Endpoint Type | Rate Limit | Routes |
 |---------------|------------|--------|
 | Quiz | 30 requests/minute | `/api/quiz/quick`, `/api/game/questions` |
-| AI Generation | 5 requests/minute | `/api/quiz/custom`, `/api/quiz/advanced`, `/api/ai/generate-questions` |
+| AI Generation | 5 requests/minute | `/api/quiz/custom`, `/api/quiz/advanced`, `/api/upload` |
 | Room Creation | 10 requests/5 minutes | `/api/room/create` |
 | Standard (default) | 100 requests/minute | All other endpoints |
 
@@ -392,48 +392,66 @@ curl -X POST http://localhost:3000/api/room/create
 
 ---
 
-## AI Endpoints
+## Upload Endpoints
 
-### POST /api/ai/generate-questions
+### POST /api/upload
 
-Low-level AI question generation endpoint (internal use).
+Upload documents for text extraction (used by Advanced Game mode).
 
-**Request Body:**
+**Content-Type:** `multipart/form-data`
+
+**Form Fields:**
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `topic` | string | Yes | Topic for questions |
-| `difficulty` | string | No | Difficulty level |
-| `questionCount` | number | No | Number of questions |
+| `files` | File[] | Yes | One or more document files |
+
+**Supported File Types:** `.txt`, `.pdf`, `.docx`, `.md`
+
+**Limits:**
+- Max file size: 10 MB per file
+- Max files per upload: 5
+- Max extracted text: 50,000 characters per file
 
 **Example Request:**
 ```bash
-curl -X POST http://localhost:3000/api/ai/generate-questions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "topic": "World History",
-    "difficulty": "medium",
-    "questionCount": 5
-  }'
+curl -X POST http://localhost:3000/api/upload \
+  -F "files=@notes.txt" \
+  -F "files=@document.pdf"
 ```
 
 **Success Response (200):**
 ```json
 {
   "success": true,
-  "questions": [
-    {
-      "id": 1,
-      "question": "Sample question about World History",
-      "options": ["Option A", "Option B", "Option C", "Option D"],
-      "correctAnswer": 0,
-      "difficulty": "medium"
-    }
-  ]
+  "data": {
+    "files": [
+      { "name": "notes.txt", "type": "text/plain", "size": 1024, "textLength": 856 },
+      { "name": "document.pdf", "type": "application/pdf", "size": 45000, "textLength": 12340 }
+    ],
+    "summary": "--- notes.txt ---\nExtracted text...\n\n--- document.pdf ---\nExtracted text...",
+    "errors": []
+  }
 }
 ```
 
-> **Note:** This is a placeholder endpoint. Full AI integration uses the `/api/quiz/custom` and `/api/quiz/advanced` endpoints.
+**Partial Success Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "files": [
+      { "name": "notes.txt", "type": "text/plain", "size": 1024, "textLength": 856 }
+    ],
+    "summary": "--- notes.txt ---\nExtracted text...",
+    "errors": [
+      { "file": "broken.pdf", "reason": "Failed to parse PDF content" }
+    ]
+  }
+}
+```
+
+> **Note:** This endpoint extracts raw text from uploaded files. The extracted summary is then passed to `/api/quiz/advanced` for AI question generation.
 
 ---
 

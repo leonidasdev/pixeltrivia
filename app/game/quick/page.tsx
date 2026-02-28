@@ -50,7 +50,6 @@ export default function QuickGamePage() {
       localStorage.setItem('currentGameSession', JSON.stringify(gameSession))
 
       // Navigate to game screen
-      // TODO: Create game play screen at /game/play
       toast.success(
         `Game loaded! Category: ${category} • Difficulty: ${difficulty} • ${questionsResult.data.questions.length} questions. Game screen coming soon!`
       )

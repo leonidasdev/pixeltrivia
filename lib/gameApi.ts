@@ -8,7 +8,6 @@
  */
 
 import { logger } from './logger'
-import { calculateGameScore, type ScoreResult } from './scoring'
 import { generateId } from './utils'
 import type { Question } from '@/types'
 
@@ -110,30 +109,5 @@ export function createGameSession(
     answers: [],
     category,
     difficulty,
-  }
-}
-
-/**
- * Calculates the final score based on correct answers and time
- */
-export function calculateScore(session: GameSession): {
-  correctAnswers: number
-  totalQuestions: number
-  accuracy: number
-  totalTime: number
-  averageTime: number
-  finalScore: number
-} {
-  const result: ScoreResult = calculateGameScore(session.answers, session.questions.length, {
-    maxTimeBonus: 50,
-  })
-
-  return {
-    correctAnswers: result.correctAnswers,
-    totalQuestions: result.totalQuestions,
-    accuracy: result.accuracy,
-    totalTime: result.totalTime,
-    averageTime: result.averageTime,
-    finalScore: result.score,
   }
 }

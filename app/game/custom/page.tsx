@@ -45,7 +45,6 @@ export default function CustomGamePage() {
 
       logger.debug('Generated questions:', response.data)
 
-      // TODO: Store questions in session storage or pass to game screen
       if (response.data) {
         sessionStorage.setItem('customGameQuestions', JSON.stringify(response.data))
         sessionStorage.setItem('customGameConfig', JSON.stringify(config))
@@ -56,7 +55,6 @@ export default function CustomGamePage() {
         `Custom quiz generated! Level: ${config.knowledgeLevel} • ${response.data?.length || 0} questions • Context: ${config.context || 'General knowledge'}. Ready to play!`
       )
 
-      // TODO: Navigate to game screen with generated questions
       // router.push('/game/play')
     } catch (err) {
       console.error('Error generating custom game:', err)

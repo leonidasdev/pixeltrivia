@@ -64,7 +64,6 @@ export default function HomePage() {
     setNameError('')
     playSound('navigate')
 
-    // TODO: Navigate to join game screen
     toast.info(
       'Coming soon! Join game functionality will be available once the backend is configured.'
     )

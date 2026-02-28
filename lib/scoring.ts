@@ -76,7 +76,7 @@ const DEFAULT_CONFIG: Required<ScoringConfig> = {
  * @param config - Scoring configuration
  * @returns Bonus points (clamped to [0, maxTimeBonus])
  */
-export function calculateTimeBonus(timeSpent: number, config: ScoringConfig = {}): number {
+function calculateTimeBonus(timeSpent: number, config: ScoringConfig = {}): number {
   const { maxTimeBonus, referenceTime } = { ...DEFAULT_CONFIG, ...config }
   const raw = (referenceTime - timeSpent) * (maxTimeBonus / referenceTime)
   return Math.max(0, Math.min(maxTimeBonus, raw))

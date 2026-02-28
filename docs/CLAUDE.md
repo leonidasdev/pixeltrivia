@@ -38,7 +38,7 @@
                       │
 ┌─────────────────────▼───────────────────────────────────────┐
 │                   API ROUTES                                │
-│  /api/quiz/* │ /api/room/* │ /api/game/* │ /api/ai/*       │
+│  /api/quiz/* │ /api/room/* │ /api/game/* │ /api/upload     │
 └──────┬──────────────────┬───────────────────────────────────┘
        │                  │
        ▼                  ▼
@@ -56,7 +56,7 @@
 pixeltrivia/
 ├── app/                      # Next.js App Router
 │   ├── api/                  # API routes (serverless functions)
-│   │   ├── ai/generate-questions/   # AI question generation
+│   │   ├── upload/                   # File upload & text extraction
 │   │   ├── game/questions/          # Game question retrieval
 │   │   ├── quiz/quick/              # Quick play quiz API
 │   │   ├── quiz/custom/             # Custom quiz (AI-powered)
@@ -497,7 +497,7 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - Component tests (ErrorBoundary, BackButton, Toast, Modal)
 - Page tests (HomePage, GameModePage, JoinGamePage)
 - Hook tests (useGameState, useLocalStorage, useTimer, useQuizSession, useRoom, useMultiplayerGame)
-- API route integration tests (roomCreate, quizQuick, gameQuestions, aiGenerate)
+- API route integration tests (roomCreate, quizQuick, gameQuestions, upload)
 - Comprehensive documentation
 
 ### In Progress

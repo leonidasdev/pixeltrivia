@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 60 |
-| Tests | 1122 |
+| Test Suites | 61 |
+| Tests | 1139 |
 | Coverage (Statements) | 62.65% |
 | Coverage (Branches) | 57.12% |
 | Coverage (Functions) | 66.42% |
@@ -62,7 +62,7 @@
 ### Priority 3: Feature Backlog
 
 #### 3.1 Game Features
-- [ ] Complete Advanced Game file upload processing
+- [x] Complete Advanced Game file upload processing (PDF, DOCX, TXT, MD parsing via `/api/upload`)
 - [ ] Implement leaderboards
 - [ ] Add achievements system
 - [x] Add background music (procedural chiptune loops for menu, gameplay, results via Web Audio API)
@@ -95,6 +95,9 @@ All items below have been completed and verified. See git history for details.
 - Replaced deprecated `substr()` with `substring()` across codebase
 - Replaced `console.error` with structured `logger` in production files
 - Added `@module` / `@since` JSDoc headers to lib and hook files
+- Dead code cleanup: removed unused exports from `gameApi`, `categories`, `difficulties`, `supabase`, `scoring`
+- Removed obsolete TODO comments from page files
+- Deleted redundant mock AI endpoint (`/api/ai/generate-questions`)
 
 ### Code Deduplication
 - Unified `STORAGE_KEYS` into single source (`constants/game.ts`)
@@ -136,9 +139,12 @@ All items below have been completed and verified. See git history for details.
 - Background music: procedural chiptune loops for menu, gameplay, and results screens
 - Stats dashboard with history, charts, and overview tabs
 - Applied rate limiting to all API routes
+- File upload processing: `lib/fileParser.ts` with PDF (pdf-parse), DOCX (mammoth), TXT, MD support
+- Upload API: `/api/upload` endpoint with multipart/form-data handling and text extraction
+- Advanced Game wired to real file upload (replaces mock content)
 
 ### Testing and CI
-- 1122 tests across 60 suites (unit, component, hook, integration, E2E)
+- 1139 tests across 61 suites (unit, component, hook, integration, E2E)
 - Coverage thresholds enforced: branches 55%, functions 64%, lines 61%, statements 60%
 - CI/CD pipeline: GitHub Actions, Husky pre-commit, lint-staged
 - ESLint enforced during Next.js builds (`ignoreDuringBuilds: false`)

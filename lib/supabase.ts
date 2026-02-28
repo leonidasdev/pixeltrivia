@@ -47,20 +47,6 @@ export function getSupabaseClient(): SupabaseClient {
   return _supabase
 }
 
-/**
- * @deprecated Use getSupabaseClient() instead for lazy initialization.
- * Returns null if env vars are not set — callers must handle this.
- */
-export const supabase: SupabaseClient | null =
-  supabaseUrl && supabaseServiceKey
-    ? createClient(supabaseUrl, supabaseServiceKey, {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      })
-    : null
-
 // Type definitions for our database schema (DB row shapes)
 export interface DbRoom {
   id: number

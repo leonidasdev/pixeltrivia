@@ -8,10 +8,44 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import AdvancedGameConfigurator, {
   type AdvancedGameConfig,
 } from '@/app/components/AdvancedGameConfigurator'
+
+/**
+ * Create a mock fetch that intercepts /api/upload and returns a successful
+ * upload response built from the FormData files.
+ */
+function setupUploadMock(): jest.Mock {
+  const mockFetch = jest.fn().mockImplementation(async (url: string, options?: RequestInit) => {
+    if (url === '/api/upload') {
+      const formData = options?.body as FormData
+      const files = formData.getAll('files') as File[]
+
+      const fileData = files.map(f => ({
+        name: f.name,
+        type: f.type,
+        size: f.size,
+        textLength: 100,
+      }))
+
+      const summary = files.map(f => `--- ${f.name} ---\nExtracted text from ${f.name}`).join('\n')
+
+      return {
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: { files: fileData, summary, errors: [] },
+          }),
+      }
+    }
+    throw new Error(`Unexpected fetch: ${url}`)
+  })
+  global.fetch = mockFetch
+  return mockFetch
+}
 
 /** Default test config */
 function createConfig(overrides?: Partial<AdvancedGameConfig>): AdvancedGameConfig {
@@ -107,7 +141,18 @@ describe('AdvancedGameConfigurator', () => {
   // ============================================================================
 
   describe('File Upload', () => {
-    it('should add valid files via input', () => {
+    let originalFetch: typeof global.fetch
+
+    beforeEach(() => {
+      originalFetch = global.fetch
+      setupUploadMock()
+    })
+
+    afterEach(() => {
+      global.fetch = originalFetch
+    })
+
+    it('should add valid files via input', async () => {
       const onConfigChange = jest.fn()
       render(<AdvancedGameConfigurator config={createConfig()} onConfigChange={onConfigChange} />)
 
@@ -116,14 +161,16 @@ describe('AdvancedGameConfigurator', () => {
 
       fireEvent.change(fileInput, { target: { files: [file] } })
 
-      expect(onConfigChange).toHaveBeenCalledTimes(1)
+      await waitFor(() => {
+        expect(onConfigChange).toHaveBeenCalledTimes(1)
+      })
       const newConfig = onConfigChange.mock.calls[0][0] as AdvancedGameConfig
       expect(newConfig.files).toHaveLength(1)
       expect(newConfig.files[0].name).toBe('notes.txt')
       expect(newConfig.files[0].size).toBe(512)
     })
 
-    it('should accept .pdf, .docx, .md files', () => {
+    it('should accept .pdf, .docx, .md files', async () => {
       const onConfigChange = jest.fn()
       render(<AdvancedGameConfigurator config={createConfig()} onConfigChange={onConfigChange} />)
 
@@ -140,11 +187,14 @@ describe('AdvancedGameConfigurator', () => {
 
       fireEvent.change(fileInput, { target: { files } })
 
+      await waitFor(() => {
+        expect(onConfigChange).toHaveBeenCalledTimes(1)
+      })
       const newConfig = onConfigChange.mock.calls[0][0] as AdvancedGameConfig
       expect(newConfig.files).toHaveLength(3)
     })
 
-    it('should filter out invalid file types', () => {
+    it('should filter out invalid file types', async () => {
       const onConfigChange = jest.fn()
       render(<AdvancedGameConfigurator config={createConfig()} onConfigChange={onConfigChange} />)
 
@@ -157,13 +207,16 @@ describe('AdvancedGameConfigurator', () => {
 
       fireEvent.change(fileInput, { target: { files } })
 
+      await waitFor(() => {
+        expect(onConfigChange).toHaveBeenCalledTimes(1)
+      })
       const newConfig = onConfigChange.mock.calls[0][0] as AdvancedGameConfig
-      // Only .txt should be accepted
+      // Only .txt should be accepted (invalid types filtered client-side before upload)
       expect(newConfig.files).toHaveLength(1)
       expect(newConfig.files[0].name).toBe('notes.txt')
     })
 
-    it('should append files to existing files', () => {
+    it('should append files to existing files', async () => {
       const existingFile = {
         id: 'existing-1',
         name: 'old.txt',
@@ -184,6 +237,9 @@ describe('AdvancedGameConfigurator', () => {
         target: { files: [createMockFile('new.txt', 50)] },
       })
 
+      await waitFor(() => {
+        expect(onConfigChange).toHaveBeenCalledTimes(1)
+      })
       const newConfig = onConfigChange.mock.calls[0][0] as AdvancedGameConfig
       expect(newConfig.files).toHaveLength(2)
       expect(newConfig.files[0]).toBe(existingFile) // preserved
@@ -196,6 +252,17 @@ describe('AdvancedGameConfigurator', () => {
   // ============================================================================
 
   describe('Drag and Drop', () => {
+    let originalFetch: typeof global.fetch
+
+    beforeEach(() => {
+      originalFetch = global.fetch
+      setupUploadMock()
+    })
+
+    afterEach(() => {
+      global.fetch = originalFetch
+    })
+
     it('should change style on dragenter', () => {
       const { container } = render(
         <AdvancedGameConfigurator config={createConfig()} onConfigChange={jest.fn()} />
@@ -225,7 +292,7 @@ describe('AdvancedGameConfigurator', () => {
       expect(dropZone.className).toContain('border-gray-600')
     })
 
-    it('should handle file drop', () => {
+    it('should handle file drop', async () => {
       const onConfigChange = jest.fn()
       const { container } = render(
         <AdvancedGameConfigurator config={createConfig()} onConfigChange={onConfigChange} />
@@ -238,7 +305,9 @@ describe('AdvancedGameConfigurator', () => {
         dataTransfer: { files: [file] },
       })
 
-      expect(onConfigChange).toHaveBeenCalledTimes(1)
+      await waitFor(() => {
+        expect(onConfigChange).toHaveBeenCalledTimes(1)
+      })
       const newConfig = onConfigChange.mock.calls[0][0] as AdvancedGameConfig
       expect(newConfig.files).toHaveLength(1)
       expect(newConfig.files[0].name).toBe('dropped.txt')
