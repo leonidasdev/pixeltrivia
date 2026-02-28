@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (899 tests, 48 suites) |
+| **Testing** | Jest + React Testing Library (1222 tests, 65 suites) |
 
 ---
 
@@ -103,7 +103,9 @@ pixeltrivia/
 │   │   ├── lobby/[code]/     # Multiplayer lobby (realtime)
 │   │   ├── play/[code]/      # Multiplayer gameplay
 │   │   ├── mode/             # Mode selection
-│   │   └── select/           # Game selection
+│   │   ├── select/           # Game selection
+│   │   ├── leaderboard/      # Leaderboard rankings page
+│   │   └── achievements/     # Achievement showcase page
 │   ├── globals.css           # Global styles + Tailwind
 │   ├── layout.tsx            # Root layout
 │   ├── page.tsx              # Home page
@@ -130,6 +132,10 @@ pixeltrivia/
 │   ├── quickQuizApi.ts       # Quick quiz API client
 │   ├── customQuizApi.ts      # Custom quiz API client
 │   ├── scoring.ts            # Unified scoring logic for all game modes
+│   ├── leaderboard.ts        # Local leaderboard system (ranked entries, filters, personal records)
+│   ├── achievements.ts       # Achievement system (20 achievements, 4 tiers, progress tracking)
+│   ├── apiCache.ts           # SWR-based API response caching (typed hooks, config presets)
+│   ├── analytics.ts          # Client-side usage analytics (13 event types, session detection)
 │   └── utils.ts              # Shared utilities (generateId, formatDuration)
 │
 ├── types/                    # Shared TypeScript types

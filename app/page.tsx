@@ -201,7 +201,7 @@ export default function HomePage() {
                 onFocus={() => setHoveredButton('stats')}
                 onBlur={() => setHoveredButton(null)}
                 className={`
-                w-1/2 py-3 px-6 text-lg font-bold text-center
+                flex-1 py-3 px-4 text-base font-bold text-center
                 bg-purple-600 hover:bg-purple-500 active:bg-purple-700
                 text-white border-4 border-purple-800 hover:border-purple-600
                 transform transition-all duration-150 ease-in-out
@@ -218,11 +218,77 @@ export default function HomePage() {
                 aria-label="View game stats and history"
               >
                 <span className="block">📊 STATS</span>
-                <span className="block text-xs text-purple-200 mt-1 font-normal">
-                  History & records
-                </span>
               </button>
 
+              {/* Leaderboard Button */}
+              <button
+                onClick={() => {
+                  playSound('navigate')
+                  router.push('/game/leaderboard')
+                }}
+                onMouseEnter={() => {
+                  setHoveredButton('leaderboard')
+                  playSound('hover')
+                }}
+                onMouseLeave={() => setHoveredButton(null)}
+                onFocus={() => setHoveredButton('leaderboard')}
+                onBlur={() => setHoveredButton(null)}
+                className={`
+                flex-1 py-3 px-4 text-base font-bold text-center
+                bg-yellow-600 hover:bg-yellow-500 active:bg-yellow-700
+                text-white border-4 border-yellow-800 hover:border-yellow-600
+                transform transition-all duration-150 ease-in-out
+                focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:ring-opacity-50
+                ${
+                  hoveredButton === 'leaderboard'
+                    ? 'scale-105 pixel-shadow translate-x-1 translate-y-1'
+                    : 'hover:scale-105 hover:pixel-shadow hover:translate-x-1 hover:translate-y-1'
+                }
+                active:scale-95 active:translate-x-0 active:translate-y-0
+                pixel-border
+              `}
+                role="menuitem"
+                aria-label="View leaderboard rankings"
+              >
+                <span className="block">🏆 RANKS</span>
+              </button>
+
+              {/* Achievements Button */}
+              <button
+                onClick={() => {
+                  playSound('navigate')
+                  router.push('/game/achievements')
+                }}
+                onMouseEnter={() => {
+                  setHoveredButton('achievements')
+                  playSound('hover')
+                }}
+                onMouseLeave={() => setHoveredButton(null)}
+                onFocus={() => setHoveredButton('achievements')}
+                onBlur={() => setHoveredButton(null)}
+                className={`
+                flex-1 py-3 px-4 text-base font-bold text-center
+                bg-amber-700 hover:bg-amber-600 active:bg-amber-800
+                text-white border-4 border-amber-900 hover:border-amber-700
+                transform transition-all duration-150 ease-in-out
+                focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50
+                ${
+                  hoveredButton === 'achievements'
+                    ? 'scale-105 pixel-shadow translate-x-1 translate-y-1'
+                    : 'hover:scale-105 hover:pixel-shadow hover:translate-x-1 hover:translate-y-1'
+                }
+                active:scale-95 active:translate-x-0 active:translate-y-0
+                pixel-border
+              `}
+                role="menuitem"
+                aria-label="View achievements"
+              >
+                <span className="block">🏅 BADGES</span>
+              </button>
+            </div>
+
+            {/* Settings Row */}
+            <div className="flex justify-center w-full">
               {/* Settings Button */}
               <button
                 onClick={handleSettingsToggle}
@@ -234,7 +300,7 @@ export default function HomePage() {
                 onFocus={() => setHoveredButton('settings')}
                 onBlur={() => setHoveredButton(null)}
                 className={`
-                w-1/2 py-3 px-6 text-lg font-bold text-center
+                w-full py-3 px-6 text-base font-bold text-center
                 bg-gray-600 hover:bg-gray-500 active:bg-gray-700
                 text-white border-4 border-gray-800 hover:border-gray-600
                 transform transition-all duration-150 ease-in-out
@@ -251,9 +317,6 @@ export default function HomePage() {
                 aria-label="Open player settings"
               >
                 <span className="block">⚙️ SETTINGS</span>
-                <span className="block text-xs text-gray-200 mt-1 font-normal">
-                  Name, avatar & volume
-                </span>
               </button>
             </div>
           </StaggerChildren>

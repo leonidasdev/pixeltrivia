@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026
+> **Last Updated:** February 28, 2026 (Phase 14)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 61 |
-| Tests | 1139 |
+| Test Suites | 65 |
+| Tests | 1222 |
 | Coverage (Statements) | 62.65% |
 | Coverage (Branches) | 57.12% |
 | Coverage (Functions) | 66.42% |
@@ -63,18 +63,18 @@
 
 #### 3.1 Game Features
 - [x] Complete Advanced Game file upload processing (PDF, DOCX, TXT, MD parsing via `/api/upload`)
-- [ ] Implement leaderboards
-- [ ] Add achievements system
+- [x] Implement leaderboards (`lib/leaderboard.ts`, `app/game/leaderboard/page.tsx`)
+- [x] Add achievements system (`lib/achievements.ts`, `app/game/achievements/page.tsx` — 20 achievements across 4 tiers)
 - [x] Add background music (procedural chiptune loops for menu, gameplay, results via Web Audio API)
 
 #### 3.2 Performance
-- [ ] Add API response caching (React Query or SWR)
+- [x] Add API response caching with SWR (`lib/apiCache.ts` — typed hooks, 3 config presets, cache management)
 - [x] Analyze bundle with `@next/bundle-analyzer` (installed and configured, `npm run analyze`)
 - [x] Implement dynamic imports for game mode pages (select, quick, custom)
 
 #### 3.3 Monitoring
 - [x] Integrate error tracking (Sentry — client, server, edge configs; gated on DSN env var)
-- [ ] Add usage analytics
+- [x] Add usage analytics (`lib/analytics.ts` — 13 event types, session detection, privacy-first localStorage)
 
 #### 3.4 Database
 - [x] Add migration tooling (Supabase migrations — `database/migrations/001_initial_schema.sql`)
@@ -142,9 +142,15 @@ All items below have been completed and verified. See git history for details.
 - File upload processing: `lib/fileParser.ts` with PDF (pdf-parse), DOCX (mammoth), TXT, MD support
 - Upload API: `/api/upload` endpoint with multipart/form-data handling and text extraction
 - Advanced Game wired to real file upload (replaces mock content)
+- Leaderboard system: `lib/leaderboard.ts` with ranked entries, period/mode/category filtering, personal records
+- Achievement system: `lib/achievements.ts` with 20 achievements across 4 tiers (bronze/silver/gold/platinum) and 4 categories
+- Leaderboard page (`/game/leaderboard`) and Achievements page (`/game/achievements`) with full pixel-art UI
+- API response caching: `lib/apiCache.ts` with SWR — typed hooks, 3 config presets, cache invalidation/priming
+- Usage analytics: `lib/analytics.ts` — 13 event types, session detection, localStorage, privacy-first design
+- Home page navigation updated with Ranks and Badges buttons
 
 ### Testing and CI
-- 1139 tests across 61 suites (unit, component, hook, integration, E2E)
+- 1222 tests across 65 suites (unit, component, hook, integration, E2E)
 - Coverage thresholds enforced: branches 55%, functions 64%, lines 61%, statements 60%
 - CI/CD pipeline: GitHub Actions, Husky pre-commit, lint-staged
 - ESLint enforced during Next.js builds (`ignoreDuringBuilds: false`)
