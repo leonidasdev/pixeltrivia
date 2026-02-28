@@ -103,7 +103,7 @@ export const PixelInput = forwardRef<HTMLInputElement, PixelInputProps>(
     },
     ref
   ) => {
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`
+    const inputId = id || `input-${Math.random().toString(36).substring(2, 11)}`
     const styles = sizeStyles[size]
     const hasError = !!error
 
@@ -228,7 +228,7 @@ export const PixelTextarea = forwardRef<HTMLTextAreaElement, PixelTextareaProps>
     },
     ref
   ) => {
-    const inputId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`
+    const inputId = id || `textarea-${Math.random().toString(36).substring(2, 11)}`
     const styles = sizeStyles[size]
     const hasError = !!error
 

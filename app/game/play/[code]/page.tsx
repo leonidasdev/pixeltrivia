@@ -183,7 +183,7 @@ function PlayContent({ params }: PlayPageProps) {
           <div className="flex justify-center mt-4">
             <button
               onClick={handleViewStats}
-              className="font-pixel text-xs bg-cyan-600 hover:bg-cyan-500 text-white pixel-border px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95"
+              className="font-pixel text-xs bg-cyan-600 hover:bg-cyan-500 text-white border-4 border-cyan-800 pixel-border px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95 pixel-glow-hover"
             >
               📊 VIEW STATS
             </button>
@@ -253,8 +253,8 @@ function PlayContent({ params }: PlayPageProps) {
 
       {/* Sidebar — player list */}
       <aside className="lg:w-64 z-10">
-        <div className="bg-gray-900/90 border-2 border-gray-700 rounded-lg p-3 sticky top-4">
-          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+        <div className="bg-gray-900 bg-opacity-90 border-4 border-gray-600 pixel-border p-3 sticky top-4">
+          <h3 className="text-xs font-pixel text-gray-400 uppercase tracking-wider mb-3">
             Players ({room.players.length})
           </h3>
           <PlayerList

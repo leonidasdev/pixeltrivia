@@ -88,7 +88,7 @@ function shuffleArray<T>(array: T[]): T[] {
  * Generate a unique session ID
  */
 function generateSessionId(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
 }
 
 /**

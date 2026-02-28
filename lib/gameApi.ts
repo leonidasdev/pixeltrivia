@@ -1,5 +1,10 @@
 /**
- * Types and utilities for game questions
+ * Game API Client
+ *
+ * Types and utilities for game questions and sessions.
+ *
+ * @module lib/gameApi
+ * @since 1.0.0
  */
 
 import { logger } from './logger'
@@ -58,7 +63,7 @@ export async function fetchQuestions(
 
     return data
   } catch (error) {
-    console.error('Error fetching questions:', error)
+    logger.error('Error fetching questions:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -95,7 +100,7 @@ export function createGameSession(
   difficulty: string
 ): GameSession {
   return {
-    sessionId: `game-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    sessionId: `game-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     questions,
     currentQuestionIndex: 0,
     score: 0,
@@ -144,25 +149,4 @@ export function calculateScore(session: GameSession): {
     averageTime: Math.round(averageTime * 10) / 10,
     finalScore,
   }
-}
-
-/**
- * Example usage for testing
- */
-export async function testQuestionFetching() {
-  logger.debug('Testing question fetching...')
-
-  const result = await fetchQuestions('General Knowledge', 'classic', 5)
-
-  if (result.success && result.data) {
-    logger.info('✅ Questions fetched successfully!')
-    logger.debug('Category:', result.data.selectedCategory)
-    logger.debug('Difficulty:', result.data.selectedDifficulty)
-    logger.debug('Total Questions:', result.data.totalQuestions)
-    logger.debug('Questions:', result.data.questions)
-  } else {
-    logger.error('❌ Failed to fetch questions:', result.error)
-  }
-
-  return result
 }

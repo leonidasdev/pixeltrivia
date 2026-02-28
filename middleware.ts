@@ -1,6 +1,10 @@
 /**
  * Next.js Middleware
- * Applies security checks at the edge before requests hit API routes
+ *
+ * Applies security checks at the edge before requests hit API routes.
+ *
+ * @module middleware
+ * @since 1.0.0
  */
 
 import { NextResponse, type NextRequest } from 'next/server'

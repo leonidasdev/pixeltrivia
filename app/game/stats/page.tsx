@@ -165,13 +165,13 @@ export default function StatsPage() {
         <div className="flex flex-wrap justify-center gap-3 w-full pt-4">
           <button
             onClick={handlePlayAgain}
-            className="font-pixel text-sm bg-green-600 hover:bg-green-500 text-white pixel-border px-6 py-3 pixel-glow-hover transition-all duration-200 hover:scale-105 active:scale-95"
+            className="font-pixel text-sm bg-green-600 hover:bg-green-500 text-white border-4 border-green-800 pixel-border px-6 py-3 pixel-glow-hover transition-all duration-200 hover:scale-105 active:scale-95"
           >
             🎮 PLAY AGAIN
           </button>
           <button
             onClick={handleBack}
-            className="font-pixel text-sm bg-gray-600 hover:bg-gray-500 text-white pixel-border px-6 py-3 transition-all duration-200 hover:scale-105 active:scale-95"
+            className="font-pixel text-sm bg-gray-600 hover:bg-gray-500 text-white border-4 border-gray-800 pixel-border px-6 py-3 transition-all duration-200 hover:scale-105 active:scale-95"
           >
             ← BACK
           </button>

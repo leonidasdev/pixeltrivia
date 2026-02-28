@@ -1,6 +1,10 @@
 /**
- * Custom Error Classes for PixelTrivia
- * Provides structured error handling across the application
+ * Custom Error Classes
+ *
+ * Provides structured error handling across the application.
+ *
+ * @module lib/errors
+ * @since 1.0.0
  */
 
 /**

@@ -324,7 +324,7 @@ export function addHistoryEntry(entry: Omit<GameHistoryEntry, 'id' | 'playedAt'>
 
   const newEntry: GameHistoryEntry = {
     ...entry,
-    id: `game-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: `game-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     playedAt: new Date().toISOString(),
   }
 

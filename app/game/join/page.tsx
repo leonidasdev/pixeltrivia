@@ -109,7 +109,7 @@ function JoinGameContent() {
                 placeholder="Enter your name"
                 maxLength={20}
                 className="w-full px-4 py-3 bg-gray-800 border-4 border-gray-600 text-white font-pixel-body text-lg
-                       focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
+                       focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50
                        placeholder-gray-400 pixel-border transition-colors"
               />
             </div>
@@ -130,7 +130,7 @@ function JoinGameContent() {
                 placeholder="ABC123"
                 maxLength={6}
                 className="w-full px-4 py-3 bg-gray-800 border-4 border-gray-600 text-white font-pixel text-center text-xl tracking-widest
-                       focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
+                       focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50
                        placeholder-gray-400 pixel-border transition-colors"
               />
               <p className="font-pixel-body text-sm text-gray-400 mt-2">
@@ -150,7 +150,7 @@ function JoinGameContent() {
               focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50 pixel-glow-hover
               ${
                 roomCode.length === 6 && playerName.trim() && !isJoining
-                  ? 'bg-blue-600 hover:bg-blue-500 border-blue-800 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] pixel-shadow'
+                  ? 'bg-blue-600 hover:bg-blue-500 border-blue-800 text-white cursor-pointer hover:scale-105 active:scale-95 pixel-shadow'
                   : 'bg-gray-600 border-gray-800 text-gray-400 cursor-not-allowed'
               }
             `}

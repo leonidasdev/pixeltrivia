@@ -46,7 +46,7 @@ export default function AdvancedGameConfigurator({
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
-    
+
     const files = Array.from(e.dataTransfer.files)
     addFiles(files)
   }
@@ -60,17 +60,17 @@ export default function AdvancedGameConfigurator({
     })
 
     const newUploadedFiles: UploadedFile[] = validFiles.map(file => ({
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 11),
       name: file.name,
       size: file.size,
       type: file.type || 'text/plain',
-      content: `Mock content for ${file.name}` // Mock content for now
+      content: `Mock content for ${file.name}`, // Mock content for now
     }))
 
     const updatedFiles = [...config.files, ...newUploadedFiles]
     onConfigChange({
       ...config,
-      files: updatedFiles
+      files: updatedFiles,
     })
   }
 
@@ -79,7 +79,7 @@ export default function AdvancedGameConfigurator({
     const updatedFiles = config.files.filter(f => f.id !== fileId)
     onConfigChange({
       ...config,
-      files: updatedFiles
+      files: updatedFiles,
     })
   }
 
@@ -88,7 +88,7 @@ export default function AdvancedGameConfigurator({
     const time = parseInt(e.target.value)
     onConfigChange({
       ...config,
-      timePerQuestion: time
+      timePerQuestion: time,
     })
   }
 
@@ -96,7 +96,7 @@ export default function AdvancedGameConfigurator({
   const handleFormatChange = (format: 'short' | 'long') => {
     onConfigChange({
       ...config,
-      questionFormat: format
+      questionFormat: format,
     })
   }
 
@@ -116,14 +116,15 @@ export default function AdvancedGameConfigurator({
         <label className="block text-sm font-bold text-cyan-300 uppercase tracking-wider">
           Upload Documents
         </label>
-        
+
         {/* Upload Area */}
         <div
           className={`
             relative border-3 border-dashed rounded-lg p-6 text-center transition-all duration-200
-            ${dragActive 
-              ? 'border-cyan-400 bg-cyan-400 bg-opacity-10' 
-              : 'border-gray-600 hover:border-gray-500'
+            ${
+              dragActive
+                ? 'border-cyan-400 bg-cyan-400 bg-opacity-10'
+                : 'border-gray-600 hover:border-gray-500'
             }
           `}
           onDragEnter={handleDrag}
@@ -139,18 +140,12 @@ export default function AdvancedGameConfigurator({
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             aria-label="Upload document files"
           />
-          
+
           <div className="pointer-events-none">
             <div className="text-4xl mb-3">📄</div>
-            <p className="text-white font-bold mb-2">
-              Drop files here or click to browse
-            </p>
-            <p className="text-gray-400 text-sm">
-              Supports: .txt, .pdf, .docx, .md files
-            </p>
-            <p className="text-gray-500 text-xs mt-1">
-              Max 10MB per file • Up to 5 files
-            </p>
+            <p className="text-white font-bold mb-2">Drop files here or click to browse</p>
+            <p className="text-gray-400 text-sm">Supports: .txt, .pdf, .docx, .md files</p>
+            <p className="text-gray-500 text-xs mt-1">Max 10MB per file • Up to 5 files</p>
           </div>
         </div>
 
@@ -159,7 +154,7 @@ export default function AdvancedGameConfigurator({
           <div className="space-y-2">
             <h4 className="text-sm font-bold text-white">Uploaded Files:</h4>
             <div className="space-y-2">
-              {config.files.map((file) => (
+              {config.files.map(file => (
                 <div
                   key={file.id}
                   className="flex items-center justify-between p-3 bg-gray-800 border-2 border-gray-600 rounded pixel-border"
@@ -167,12 +162,8 @@ export default function AdvancedGameConfigurator({
                   <div className="flex items-center space-x-3">
                     <span className="text-lg">📄</span>
                     <div>
-                      <div className="text-white text-sm font-medium">
-                        {file.name}
-                      </div>
-                      <div className="text-gray-400 text-xs">
-                        {formatFileSize(file.size)}
-                      </div>
+                      <div className="text-white text-sm font-medium">{file.name}</div>
+                      <div className="text-gray-400 text-xs">{formatFileSize(file.size)}</div>
                     </div>
                   </div>
                   <button
@@ -191,8 +182,8 @@ export default function AdvancedGameConfigurator({
 
       {/* Time Per Question */}
       <div className="space-y-3">
-        <label 
-          htmlFor="timePerQuestion" 
+        <label
+          htmlFor="timePerQuestion"
           className="flex justify-between items-center text-sm font-bold text-cyan-300 uppercase tracking-wider"
         >
           <span>Time Per Question</span>
@@ -210,7 +201,7 @@ export default function AdvancedGameConfigurator({
             className="w-full h-3 bg-gray-700 rounded-lg appearance-none cursor-pointer
                      focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50"
             style={{
-              background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${((config.timePerQuestion - 10) / 80) * 100}%, #374151 ${((config.timePerQuestion - 10) / 80) * 100}%, #374151 100%)`
+              background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${((config.timePerQuestion - 10) / 80) * 100}%, #374151 ${((config.timePerQuestion - 10) / 80) * 100}%, #374151 100%)`,
             }}
             aria-label={`Time per question: ${config.timePerQuestion} seconds`}
           />
@@ -234,18 +225,17 @@ export default function AdvancedGameConfigurator({
             className={`
               p-4 border-3 rounded-lg text-center transition-all duration-200 pixel-border
               focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
-              ${config.questionFormat === 'short'
-                ? 'bg-green-600 border-green-800 text-white scale-105 pixel-shadow'
-                : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600 hover:border-gray-500 hover:scale-105'
+              ${
+                config.questionFormat === 'short'
+                  ? 'bg-green-600 border-green-800 text-white scale-105 pixel-shadow'
+                  : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600 hover:border-gray-500 hover:scale-105'
               }
             `}
             aria-pressed={config.questionFormat === 'short'}
           >
             <div className="text-2xl mb-2">⚡</div>
             <div className="font-bold text-sm">Short Questions</div>
-            <div className="text-xs mt-1 opacity-80">
-              Quick, focused questions
-            </div>
+            <div className="text-xs mt-1 opacity-80">Quick, focused questions</div>
           </button>
 
           <button
@@ -254,18 +244,17 @@ export default function AdvancedGameConfigurator({
             className={`
               p-4 border-3 rounded-lg text-center transition-all duration-200 pixel-border
               focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
-              ${config.questionFormat === 'long'
-                ? 'bg-purple-600 border-purple-800 text-white scale-105 pixel-shadow'
-                : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600 hover:border-gray-500 hover:scale-105'
+              ${
+                config.questionFormat === 'long'
+                  ? 'bg-purple-600 border-purple-800 text-white scale-105 pixel-shadow'
+                  : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600 hover:border-gray-500 hover:scale-105'
               }
             `}
             aria-pressed={config.questionFormat === 'long'}
           >
             <div className="text-2xl mb-2">📖</div>
             <div className="font-bold text-sm">Longer Questions</div>
-            <div className="text-xs mt-1 opacity-80">
-              Detailed, comprehensive
-            </div>
+            <div className="text-xs mt-1 opacity-80">Detailed, comprehensive</div>
           </button>
         </div>
       </div>

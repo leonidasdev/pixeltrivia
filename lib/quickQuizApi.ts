@@ -1,7 +1,11 @@
 /**
  * Client-side utilities for quick quiz functionality
+ *
+ * @module lib/quickQuizApi
+ * @since 1.0.0
  */
 
+import { logger } from './logger'
 import type { QuickQuizQuestion as _QuickQuizQuestion } from '@/types/quiz'
 
 // Re-export canonical type so existing imports from this module continue to work
@@ -43,7 +47,7 @@ export async function fetchQuickQuiz(category: string): Promise<QuickQuizRespons
 
     return data
   } catch (error) {
-    console.error('Error fetching quick quiz:', error)
+    logger.error('Error fetching quick quiz:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -111,7 +115,7 @@ export function createQuickQuizSession(
   category: string
 ): QuickQuizSession {
   return {
-    sessionId: `quick-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    sessionId: `quick-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     questions: shuffleQuestions(questions),
     currentQuestionIndex: 0,
     answers: [],

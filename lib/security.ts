@@ -1,8 +1,11 @@
 /**
  * Security Middleware and Utilities
- * Provides security headers, input sanitization, and request validation
  *
- * For pure utility functions (without Next.js dependencies), import from './security.core'
+ * Provides security headers, input sanitization, and request validation.
+ * For pure utility functions (without Next.js dependencies), import from './security.core'.
+ *
+ * @module lib/security
+ * @since 1.0.0
  */
 
 import { NextResponse } from 'next/server'
@@ -10,6 +13,7 @@ import type { z } from 'zod'
 import { ValidationError } from './errors'
 import { validationErrorResponse } from './apiResponse'
 import { formatZodErrors, getFirstError } from './validation'
+import { logger } from './logger'
 
 // Re-export pure functions from core module (for convenience)
 export {
@@ -181,7 +185,7 @@ export function validateApiKey(request: Request): boolean {
   const expectedKey = process.env.INTERNAL_API_KEY
 
   if (!expectedKey) {
-    console.warn('[Security] INTERNAL_API_KEY not configured')
+    logger.warn('[Security] INTERNAL_API_KEY not configured')
     return process.env.NODE_ENV === 'development'
   }
 

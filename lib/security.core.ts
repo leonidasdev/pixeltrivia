@@ -1,6 +1,10 @@
 /**
  * Security Utilities - Core Functions
- * Pure functions without Next.js dependencies (testable in Node.js)
+ *
+ * Pure functions without Next.js dependencies (testable in Node.js).
+ *
+ * @module lib/security.core
+ * @since 1.0.0
  */
 
 // ============================================================================

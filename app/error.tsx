@@ -47,8 +47,8 @@ export default function Error({
           <button
             onClick={reset}
             className="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-pixel text-xs
-                       border-4 border-cyan-700 hover:border-cyan-600 pixel-border transition-all duration-150
-                       focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
+                       border-4 border-cyan-800 hover:border-cyan-600 pixel-border transition-all duration-150
+                       focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-glow-hover"
           >
             🔄 Try Again
@@ -56,8 +56,8 @@ export default function Error({
           <a
             href="/"
             className="px-6 py-3 bg-gray-600 hover:bg-gray-500 text-white font-pixel text-xs
-                       border-4 border-gray-700 hover:border-gray-600 pixel-border transition-all duration-150
-                       focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50
+                       border-4 border-gray-800 hover:border-gray-600 pixel-border transition-all duration-150
+                       focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-glow-hover text-center"
           >
             🏠 Main Menu

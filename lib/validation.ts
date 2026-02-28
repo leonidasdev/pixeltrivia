@@ -1,6 +1,10 @@
 /**
  * Zod Validation Schemas
- * Centralized validation schemas for all API inputs
+ *
+ * Centralized validation schemas for all API inputs.
+ *
+ * @module lib/validation
+ * @since 1.0.0
  */
 
 import { z } from 'zod'

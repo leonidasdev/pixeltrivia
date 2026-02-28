@@ -117,7 +117,7 @@ function CreateGameContent() {
                 placeholder="Enter your name"
                 maxLength={20}
                 className="w-full px-4 py-3 bg-gray-800 border-4 border-gray-600 text-white font-pixel-body text-lg
-                       focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
+                       focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50
                        placeholder-gray-400 pixel-border transition-colors"
               />
             </div>
@@ -127,7 +127,7 @@ function CreateGameContent() {
               <div>
                 <label
                   htmlFor="maxPlayers"
-                  className="block font-pixel text-[8px] text-gray-400 mb-1 uppercase"
+                  className="block font-pixel text-[10px] text-cyan-300 mb-1 uppercase"
                 >
                   Max Players
                 </label>
@@ -135,7 +135,7 @@ function CreateGameContent() {
                   id="maxPlayers"
                   value={maxPlayers}
                   onChange={e => setMaxPlayers(parseInt(e.target.value))}
-                  className="w-full px-3 py-2 bg-gray-800 border-4 border-gray-600 text-white font-pixel-body pixel-border focus:border-cyan-400 focus:outline-none"
+                  className="w-full px-3 py-2 bg-gray-800 border-4 border-gray-600 text-white font-pixel-body pixel-border focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50"
                 >
                   {[2, 4, 6, 8, 10, 12, 16].map(n => (
                     <option key={n} value={n}>
@@ -148,7 +148,7 @@ function CreateGameContent() {
               <div>
                 <label
                   htmlFor="timeLimit"
-                  className="block font-pixel text-[8px] text-gray-400 mb-1 uppercase"
+                  className="block font-pixel text-[10px] text-cyan-300 mb-1 uppercase"
                 >
                   Time per Question
                 </label>
@@ -156,7 +156,7 @@ function CreateGameContent() {
                   id="timeLimit"
                   value={timeLimit}
                   onChange={e => setTimeLimit(parseInt(e.target.value))}
-                  className="w-full px-3 py-2 bg-gray-800 border-4 border-gray-600 text-white font-pixel-body pixel-border focus:border-cyan-400 focus:outline-none"
+                  className="w-full px-3 py-2 bg-gray-800 border-4 border-gray-600 text-white font-pixel-body pixel-border focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50"
                 >
                   {[10, 15, 20, 30, 45, 60].map(s => (
                     <option key={s} value={s}>
@@ -169,7 +169,7 @@ function CreateGameContent() {
               <div className="col-span-2">
                 <label
                   htmlFor="questionCount"
-                  className="block font-pixel text-[8px] text-gray-400 mb-1 uppercase"
+                  className="block font-pixel text-[10px] text-cyan-300 mb-1 uppercase"
                 >
                   Number of Questions
                 </label>
@@ -177,7 +177,7 @@ function CreateGameContent() {
                   id="questionCount"
                   value={questionCount}
                   onChange={e => setQuestionCount(parseInt(e.target.value))}
-                  className="w-full px-3 py-2 bg-gray-800 border-4 border-gray-600 text-white font-pixel-body pixel-border focus:border-cyan-400 focus:outline-none"
+                  className="w-full px-3 py-2 bg-gray-800 border-4 border-gray-600 text-white font-pixel-body pixel-border focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50"
                 >
                   {[5, 10, 15, 20, 25].map(n => (
                     <option key={n} value={n}>
@@ -205,7 +205,7 @@ function CreateGameContent() {
               focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50 pixel-glow-hover
               ${
                 !isCreating && playerName.trim()
-                  ? 'bg-green-600 hover:bg-green-500 border-green-800 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] pixel-shadow'
+                  ? 'bg-green-600 hover:bg-green-500 border-green-800 text-white cursor-pointer hover:scale-105 active:scale-95 pixel-shadow'
                   : 'bg-gray-600 border-gray-800 text-gray-400 cursor-not-allowed'
               }
             `}

@@ -79,7 +79,7 @@ const sampleStats: DetailedStats = {
 
 function createHistoryEntry(overrides: Partial<GameHistoryEntry> = {}): GameHistoryEntry {
   return {
-    id: `game-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: `game-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     mode: 'quick',
     category: 'Science',
     difficulty: 'medium',

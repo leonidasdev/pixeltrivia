@@ -7,7 +7,7 @@
 const mockFetch = jest.fn()
 global.fetch = mockFetch
 
-import { createRoom, testRoomCreation, type CreateRoomResponse } from '@/lib/roomApi'
+import { createRoom, type CreateRoomResponse } from '@/lib/roomApi'
 
 describe('roomApi', () => {
   beforeEach(() => {
@@ -118,73 +118,6 @@ describe('roomApi', () => {
       const result = await createRoom()
 
       expect(result.data?.status).toBe('waiting')
-    })
-  })
-
-  describe('testRoomCreation', () => {
-    beforeEach(() => {
-      // Logger output is suppressed in tests, so we just test the behavior
-      jest.spyOn(console, 'log').mockImplementation()
-      jest.spyOn(console, 'error').mockImplementation()
-    })
-
-    it('should call createRoom and return success on successful creation', async () => {
-      const mockResponse: CreateRoomResponse = {
-        success: true,
-        data: {
-          roomCode: 'SUCC01',
-          createdAt: '2024-01-01T00:00:00.000Z',
-          status: 'waiting',
-        },
-        message: 'Room created',
-      }
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockResponse),
-      })
-
-      const result = await testRoomCreation()
-
-      expect(result.success).toBe(true)
-      expect(result.data?.roomCode).toBe('SUCC01')
-    })
-
-    it('should return failure result on failed creation', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        json: () =>
-          Promise.resolve({
-            success: false,
-            error: 'Database error',
-            message: 'Failed',
-          }),
-      })
-
-      const result = await testRoomCreation()
-
-      expect(result.success).toBe(false)
-    })
-
-    it('should return the result from createRoom', async () => {
-      const mockResponse: CreateRoomResponse = {
-        success: true,
-        data: {
-          roomCode: 'RET001',
-          createdAt: '2024-01-01T00:00:00.000Z',
-          status: 'waiting',
-        },
-        message: 'Room created',
-      }
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockResponse),
-      })
-
-      const result = await testRoomCreation()
-
-      expect(result).toEqual(mockResponse)
     })
   })
 

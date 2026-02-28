@@ -1,5 +1,11 @@
-// Client utility for custom quiz API interactions
+/**
+ * Client-side utilities for custom quiz API interactions
+ *
+ * @module lib/customQuizApi
+ * @since 1.0.0
+ */
 
+import { logger } from './logger'
 import type {
   CustomQuizRequest as _CustomQuizRequest,
   CustomQuizQuestion as _CustomQuizQuestion,
@@ -43,7 +49,7 @@ export async function generateCustomQuiz(config: CustomQuizRequest): Promise<Cus
 
     return data
   } catch (error) {
-    console.error('Custom quiz generation failed:', error)
+    logger.error('Custom quiz generation failed:', error)
 
     // Return a properly formatted error response
     return {

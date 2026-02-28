@@ -39,7 +39,7 @@ export const AVATAR_OPTIONS: readonly AvatarOption[] = [
   { id: 'dragon', name: 'Dragon', emoji: '🐉', color: 'bg-red-500' },
   { id: 'unicorn', name: 'Unicorn', emoji: '🦄', color: 'bg-pink-500' },
   { id: 'cat', name: 'Cat', emoji: '🐱', color: 'bg-amber-500' },
-  { id: 'dog', name: 'Dog', emoji: '🐕', color: 'bg-brown-500' },
+  { id: 'dog', name: 'Dog', emoji: '🐕', color: 'bg-amber-700' },
   { id: 'fox', name: 'Fox', emoji: '🦊', color: 'bg-orange-600' },
 ] as const
 

@@ -49,7 +49,7 @@ export default function QuickGamePage() {
 
       // router.push('/game/play')
     } catch (err) {
-      console.error('Error starting quick game:', err)
+      logger.error('Error starting quick game:', err)
       toast.error(
         `Failed to start the game: ${err instanceof Error ? err.message : 'Unknown error'}`
       )
@@ -67,14 +67,14 @@ export default function QuickGamePage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
       <SparklesOverlay />
 
       {/* Main content */}
       <PageTransition style="slide-up" className="z-10 w-full max-w-4xl">
         {/* Page Header */}
         <header className="text-center mb-8">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-2 pixel-text-shadow">
+          <h1 className="text-2xl md:text-4xl font-pixel text-white mb-2 pixel-text-shadow">
             QUICK GAME
           </h1>
           <p className="text-cyan-300 text-lg md:text-xl">

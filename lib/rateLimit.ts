@@ -1,12 +1,17 @@
 /**
  * Rate Limiting Middleware
- * In-memory rate limiter for API routes
- * For production, consider using Redis-based solution
+ *
+ * In-memory rate limiter for API routes.
+ * For production, consider using Redis-based solution.
+ *
+ * @module lib/rateLimit
+ * @since 1.0.0
  */
 
 import type { NextResponse } from 'next/server'
 import { RateLimitError } from './errors'
 import { errorResponse } from './apiResponse'
+import { logger } from './logger'
 
 // ============================================================================
 // Types
@@ -227,7 +232,7 @@ export function rateLimit(
   const result = checkRateLimit(identifier, config)
 
   if (!result.allowed) {
-    console.warn(`[Rate Limit] Exceeded for ${identifier} on ${config.name}`)
+    logger.warn(`[Rate Limit] Exceeded for ${identifier} on ${config.name}`)
     return errorResponse(new RateLimitError(result.retryAfter))
   }
 
@@ -296,7 +301,7 @@ export function withRateLimitAndErrorHandling(
       // Execute handler
       return await handler(request)
     } catch (error) {
-      console.error('[API Error]', error)
+      logger.error('[API Error]', error)
       throw error // Let error handler deal with it
     }
   }

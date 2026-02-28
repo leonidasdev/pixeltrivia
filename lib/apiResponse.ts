@@ -1,9 +1,14 @@
 /**
  * API Response Utilities
- * Provides standardized response formatting for all API routes
+ *
+ * Provides standardized response formatting for all API routes.
+ *
+ * @module lib/apiResponse
+ * @since 1.0.0
  */
 
 import { NextResponse } from 'next/server'
+import { logger } from './logger'
 import {
   type AppError,
   ValidationError,
@@ -294,7 +299,7 @@ export function withErrorHandling(handler: ApiHandler): ApiHandler {
       return await handler(request)
     } catch (error) {
       // Log error for debugging
-      console.error('[API Error]', {
+      logger.error('[API Error]', {
         url: request.url,
         method: request.method,
         error: error instanceof Error ? error.message : 'Unknown error',
