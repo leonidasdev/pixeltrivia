@@ -84,12 +84,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled
 }
 
-/**
- * Generate a unique session ID
- */
-function generateSessionId(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
-}
+import { generateId } from '@/lib/utils'
 
 /**
  * Custom hook for managing complete quiz sessions
@@ -143,7 +138,7 @@ export function useQuizSession(): UseQuizSessionReturn {
         : [...questions]
 
       const newSession: QuizSession = {
-        sessionId: generateSessionId(quizType),
+        sessionId: generateId(quizType),
         quizType,
         questions: processedQuestions,
         currentQuestionIndex: 0,

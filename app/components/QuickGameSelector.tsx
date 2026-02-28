@@ -1,102 +1,9 @@
 import React, { useState } from 'react'
+import { GAME_CATEGORIES } from '@/constants/categories'
 
 interface QuickGameSelectorProps {
   onCategorySelected: (category: string, difficulty: string) => void
   onCancel?: () => void
-}
-
-// Category data structure with difficulty levels and their categories
-const GAME_CATEGORIES = {
-  elementary: {
-    title: 'Elementary',
-    emoji: '🎈',
-    description: 'Ages 6-10 • Fun & Simple',
-    color: 'bg-green-600',
-    hoverColor: 'hover:bg-green-500',
-    borderColor: 'border-green-700',
-    categories: [
-      'Colors & Shapes',
-      'Animals',
-      'Food',
-      'Family',
-      'Numbers',
-      'Weather',
-      'Transportation',
-      'Body Parts',
-    ],
-  },
-  'middle-school': {
-    title: 'Middle School',
-    emoji: '📚',
-    description: 'Ages 11-13 • Learning Adventure',
-    color: 'bg-blue-600',
-    hoverColor: 'hover:bg-blue-500',
-    borderColor: 'border-blue-700',
-    categories: [
-      'Basic Science',
-      'World Geography',
-      'Math Fundamentals',
-      'Literature',
-      'American History',
-      'Sports',
-      'Technology',
-      'Art & Music',
-    ],
-  },
-  'high-school': {
-    title: 'High School',
-    emoji: '🎓',
-    description: 'Ages 14-18 • Academic Challenge',
-    color: 'bg-purple-600',
-    hoverColor: 'hover:bg-purple-500',
-    borderColor: 'border-purple-700',
-    categories: [
-      'Advanced Science',
-      'World History',
-      'Mathematics',
-      'English Literature',
-      'Chemistry',
-      'Physics',
-      'Biology',
-      'Government & Politics',
-    ],
-  },
-  'college-level': {
-    title: 'College Level',
-    emoji: '🔬',
-    description: 'Ages 18+ • Expert Knowledge',
-    color: 'bg-red-600',
-    hoverColor: 'hover:bg-red-500',
-    borderColor: 'border-red-700',
-    categories: [
-      'Advanced Mathematics',
-      'Philosophy',
-      'Computer Science',
-      'Economics',
-      'Psychology',
-      'Biochemistry',
-      'Engineering',
-      'Law & Ethics',
-    ],
-  },
-  classic: {
-    title: 'Classic',
-    emoji: '🌟',
-    description: 'Mixed Difficulty • All Ages',
-    color: 'bg-yellow-600',
-    hoverColor: 'hover:bg-yellow-500',
-    borderColor: 'border-yellow-700',
-    categories: [
-      'General Knowledge',
-      'Movies & TV',
-      'Music',
-      'Sports & Games',
-      'Food & Drink',
-      'Nature',
-      'Travel',
-      'Pop Culture',
-    ],
-  },
 }
 
 export default function QuickGameSelector({
@@ -147,7 +54,7 @@ export default function QuickGameSelector({
               onKeyDown={e => handleKeyDown(e, () => handleSectionToggle(key))}
               className={`
                 w-full px-4 py-3 flex items-center justify-between
-                ${section.color} ${section.hoverColor} ${section.borderColor}
+                ${section.styles.color} ${section.styles.hoverColor} ${section.styles.borderColor}
                 text-white font-bold transition-all duration-200
                 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
                 hover:scale-[1.02] active:scale-[0.98]
@@ -210,9 +117,9 @@ export default function QuickGameSelector({
                           focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
                           ${
                             isSelected
-                              ? `${section.color} border-white text-white scale-105 pixel-shadow`
+                              ? `${section.styles.color} border-white text-white scale-105 pixel-shadow`
                               : hoveredButton === buttonKey
-                                ? `${section.color} ${section.borderColor} text-white scale-105 hover:pixel-shadow`
+                                ? `${section.styles.color} ${section.styles.borderColor} text-white scale-105 hover:pixel-shadow`
                                 : `bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600 hover:border-gray-500 hover:text-white hover:scale-105 pixel-glow-hover`
                           }
                         `}

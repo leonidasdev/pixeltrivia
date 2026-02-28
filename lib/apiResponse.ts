@@ -20,40 +20,10 @@ import {
   wrapError,
   formatErrorResponse,
 } from './errors'
+import type { ApiSuccessResponse, ApiErrorResponse, ApiResponse } from '@/types/api'
 
-// ============================================================================
-// Response Types
-// ============================================================================
-
-export interface ApiSuccessResponse<T = unknown> {
-  success: true
-  data: T
-  message?: string
-  meta?: {
-    timestamp: string
-    requestId?: string
-    pagination?: {
-      page: number
-      limit: number
-      total: number
-      totalPages: number
-    }
-  }
-}
-
-export interface ApiErrorResponse {
-  success: false
-  error: string
-  code: string
-  statusCode: number
-  details?: Record<string, unknown>
-  meta?: {
-    timestamp: string
-    requestId?: string
-  }
-}
-
-export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse
+// Re-export types so existing consumers can keep importing from here
+export type { ApiSuccessResponse, ApiErrorResponse, ApiResponse }
 
 // ============================================================================
 // Success Response Helpers

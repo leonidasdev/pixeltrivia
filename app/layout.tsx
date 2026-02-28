@@ -2,9 +2,9 @@
  * PixelTrivia Layout Component
  *
  * Enhanced navigation layout featuring:
- * 🪧 PixelTrivia Logo: Always visible (except during gameplay), clickable to return to main menu
- * ↩️ Back Button: Context-aware navigation using router.back()
- * 🆘 Help Button: Smart context-sensitive help system with modal tabs
+ * - PixelTrivia Logo: Always visible (except during gameplay), clickable to return to main menu
+ * - Back Button: Context-aware navigation using router.back()
+ * - Help Button: Smart context-sensitive help system with modal tabs
  *
  * Navigation hides during active gameplay (/play routes) to avoid UI clutter.
  * Layout uses flexbox for responsive positioning and pixel-art theming.

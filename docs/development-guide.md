@@ -487,10 +487,10 @@ npm run typecheck
 Some tests that import Next.js server modules need special handling. Use pure function imports:
 
 ```typescript
-// ✅ Works in tests
+// Recommended - works in tests
 import { sanitizeString } from '@/lib/security.core';
 
-// ❌ May fail in tests (Next.js server dependency)
+// Not recommended - may fail in tests (Next.js server dependency)
 import { withSecurity } from '@/lib/security';
 ```
 

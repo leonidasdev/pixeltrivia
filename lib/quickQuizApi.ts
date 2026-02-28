@@ -6,6 +6,8 @@
  */
 
 import { logger } from './logger'
+import { calculateGameScore, getGrade } from './scoring'
+import { generateId } from './utils'
 import type { QuickQuizQuestion as _QuickQuizQuestion } from '@/types/quiz'
 
 // Re-export canonical type so existing imports from this module continue to work
@@ -115,7 +117,7 @@ export function createQuickQuizSession(
   category: string
 ): QuickQuizSession {
   return {
-    sessionId: `quick-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+    sessionId: generateId('quick'),
     questions: shuffleQuestions(questions),
     currentQuestionIndex: 0,
     answers: [],
@@ -171,39 +173,15 @@ export interface QuizResults {
 }
 
 export function calculateQuizResults(session: QuickQuizSession): QuizResults {
-  const totalQuestions = session.questions.length
-  const correctAnswers = session.answers.filter(a => a.isCorrect).length
-  const accuracy = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0
-  const totalTime = session.answers.reduce((sum, a) => sum + a.timeSpent, 0)
-  const averageTime = totalQuestions > 0 ? totalTime / totalQuestions : 0
-
-  // Calculate score (100 points per correct answer, time bonus up to 20 points)
-  let score = 0
-  session.answers.forEach(answer => {
-    if (answer.isCorrect) {
-      // Base points for correct answer
-      score += 100
-
-      // Time bonus (faster = more points, max 20 bonus per question)
-      const timeBonus = Math.max(0, Math.min(20, (30 - answer.timeSpent) * (20 / 30)))
-      score += timeBonus
-    }
-  })
-
-  // Determine grade based on accuracy
-  let grade = 'F'
-  if (accuracy >= 90) grade = 'A'
-  else if (accuracy >= 80) grade = 'B'
-  else if (accuracy >= 70) grade = 'C'
-  else if (accuracy >= 60) grade = 'D'
+  const result = calculateGameScore(session.answers, session.questions.length, { maxTimeBonus: 20 })
 
   return {
-    totalQuestions,
-    correctAnswers,
-    accuracy: Math.round(accuracy * 10) / 10,
-    totalTime: Math.round(totalTime * 10) / 10,
-    averageTime: Math.round(averageTime * 10) / 10,
-    score: Math.round(score),
-    grade,
+    totalQuestions: result.totalQuestions,
+    correctAnswers: result.correctAnswers,
+    accuracy: result.accuracy,
+    totalTime: result.totalTime,
+    averageTime: result.averageTime,
+    score: result.score,
+    grade: getGrade(result.accuracy),
   }
 }

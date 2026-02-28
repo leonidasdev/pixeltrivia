@@ -181,10 +181,25 @@ export const MAX_API_RETRIES = 3
 export const STORAGE_PREFIX = 'pixeltrivia_'
 
 /**
+ * Storage schema version — increment when storage structure changes.
+ */
+export const STORAGE_VERSION = 1
+
+/**
  * Storage keys used in the application.
  * All localStorage access MUST use these constants — never hardcode key strings.
  */
 export const STORAGE_KEYS = {
+  /** Root versioned key for storage schema detection */
+  ROOT: `${STORAGE_PREFIX}v${STORAGE_VERSION}`,
+  /** Player profile (JSON) */
+  PROFILE: `${STORAGE_PREFIX}profile`,
+  /** Game settings (JSON) */
+  SETTINGS: `${STORAGE_PREFIX}settings`,
+  /** Game history entries (JSON array) */
+  HISTORY: `${STORAGE_PREFIX}history`,
+  /** Active session ID */
+  SESSION: `${STORAGE_PREFIX}session`,
   /** Player display name */
   PLAYER_NAME: `${STORAGE_PREFIX}player_name`,
   /** Player avatar ID */

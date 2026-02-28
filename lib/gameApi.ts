@@ -8,6 +8,8 @@
  */
 
 import { logger } from './logger'
+import { calculateGameScore, type ScoreResult } from './scoring'
+import { generateId } from './utils'
 import type { Question } from '@/types'
 
 export interface GameQuestion extends Question {
@@ -100,7 +102,7 @@ export function createGameSession(
   difficulty: string
 ): GameSession {
   return {
-    sessionId: `game-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+    sessionId: generateId('game'),
     questions,
     currentQuestionIndex: 0,
     score: 0,
@@ -122,31 +124,16 @@ export function calculateScore(session: GameSession): {
   averageTime: number
   finalScore: number
 } {
-  const correctAnswers = session.answers.filter(a => a.isCorrect).length
-  const totalQuestions = session.questions.length
-  const accuracy = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0
-  const totalTime = session.answers.reduce((sum, a) => sum + a.timeSpent, 0)
-  const averageTime = totalQuestions > 0 ? totalTime / totalQuestions : 0
-
-  // Score calculation: Base points for correct answers + time bonus
-  const basePoints = correctAnswers * 100
-  const timeBonus = session.answers.reduce((bonus, answer) => {
-    if (answer.isCorrect) {
-      // Bonus points for answering quickly (max 50 bonus per question)
-      const timeBonus = Math.max(0, (30 - answer.timeSpent) * (50 / 30))
-      return bonus + timeBonus
-    }
-    return bonus
-  }, 0)
-
-  const finalScore = Math.round(basePoints + timeBonus)
+  const result: ScoreResult = calculateGameScore(session.answers, session.questions.length, {
+    maxTimeBonus: 50,
+  })
 
   return {
-    correctAnswers,
-    totalQuestions,
-    accuracy: Math.round(accuracy * 10) / 10,
-    totalTime: Math.round(totalTime * 10) / 10,
-    averageTime: Math.round(averageTime * 10) / 10,
-    finalScore,
+    correctAnswers: result.correctAnswers,
+    totalQuestions: result.totalQuestions,
+    accuracy: result.accuracy,
+    totalTime: result.totalTime,
+    averageTime: result.averageTime,
+    finalScore: result.score,
   }
 }

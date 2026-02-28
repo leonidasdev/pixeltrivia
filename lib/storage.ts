@@ -11,15 +11,8 @@
 // Types
 // ============================================================================
 
-/**
- * Storage schema version - increment when storage structure changes
- */
-const STORAGE_VERSION = 1
-
-/**
- * Prefix for all storage keys
- */
-const STORAGE_PREFIX = 'pixeltrivia'
+import { STORAGE_KEYS, STORAGE_VERSION } from '@/constants/game'
+import { generateId } from './utils'
 
 /**
  * Player profile stored in localStorage
@@ -153,20 +146,8 @@ export const DEFAULT_STORAGE: StorageSchema = {
   currentSession: null,
 }
 
-// ============================================================================
-// Storage Keys
-// ============================================================================
-
-/**
- * All storage keys used by the application
- */
-export const STORAGE_KEYS = {
-  ROOT: `${STORAGE_PREFIX}_v${STORAGE_VERSION}`,
-  PROFILE: `${STORAGE_PREFIX}_profile`,
-  SETTINGS: `${STORAGE_PREFIX}_settings`,
-  HISTORY: `${STORAGE_PREFIX}_history`,
-  SESSION: `${STORAGE_PREFIX}_session`,
-} as const
+// Re-export STORAGE_KEYS for consumers that import from lib/storage
+export { STORAGE_KEYS }
 
 // ============================================================================
 // Core Functions
@@ -324,7 +305,7 @@ export function addHistoryEntry(entry: Omit<GameHistoryEntry, 'id' | 'playedAt'>
 
   const newEntry: GameHistoryEntry = {
     ...entry,
-    id: `game-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+    id: generateId('game'),
     playedAt: new Date().toISOString(),
   }
 

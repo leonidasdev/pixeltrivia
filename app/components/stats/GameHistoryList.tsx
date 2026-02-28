@@ -12,6 +12,7 @@
 
 import { useState, useMemo } from 'react'
 import type { GameHistoryEntry } from '@/lib/storage'
+import { formatDuration } from '@/lib/utils'
 
 // ============================================================================
 // Types
@@ -62,13 +63,6 @@ function formatDate(isoString: string): string {
     day: 'numeric',
     year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
   })
-}
-
-function formatDuration(seconds: number): string {
-  if (seconds < 60) return `${seconds}s`
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return secs > 0 ? `${mins}m ${secs}s` : `${mins}m`
 }
 
 function getAccuracyColor(accuracy: number): string {

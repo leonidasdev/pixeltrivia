@@ -21,7 +21,7 @@ import {
 } from '@/app/components/ui'
 import { useSound } from '@/hooks'
 import { joinRoom } from '@/lib/multiplayerApi'
-import { MULTIPLAYER_STORAGE_KEYS } from '@/constants/game'
+import { MULTIPLAYER_STORAGE_KEYS, STORAGE_KEYS } from '@/constants/game'
 
 function JoinGameContent() {
   const router = useRouter()
@@ -35,7 +35,7 @@ function JoinGameContent() {
   const [isJoining, setIsJoining] = useState(false)
 
   useEffect(() => {
-    const name = searchParams.get('name') || localStorage.getItem('pixeltrivia_player_name') || ''
+    const name = searchParams.get('name') || localStorage.getItem(STORAGE_KEYS.PLAYER_NAME) || ''
     const avatarParam = searchParams.get('avatar') || 'knight'
 
     setPlayerName(name)

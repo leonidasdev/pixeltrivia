@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import type { CustomGameConfig, KnowledgeLevel } from '@/types/game'
+import { KNOWLEDGE_LEVELS } from '@/constants/difficulties'
 
 // Re-export so existing imports from this module continue to work
 export type { CustomGameConfig }
@@ -9,39 +10,6 @@ interface CustomGameConfiguratorProps {
   onCancel?: () => void
   isLoading?: boolean
 }
-
-const KNOWLEDGE_LEVELS = [
-  {
-    value: 'classic',
-    label: 'Classic',
-    description: 'Mixed difficulty • General knowledge',
-    emoji: '🌟',
-  },
-  {
-    value: 'college',
-    label: 'College Level',
-    description: 'Advanced topics • University level',
-    emoji: '🎓',
-  },
-  {
-    value: 'high-school',
-    label: 'High School',
-    description: 'Academic subjects • Grade 9-12',
-    emoji: '📚',
-  },
-  {
-    value: 'middle-school',
-    label: 'Middle School',
-    description: 'Core subjects • Grade 6-8',
-    emoji: '📝',
-  },
-  {
-    value: 'elementary',
-    label: 'Elementary',
-    description: 'Basic concepts • Grade K-5',
-    emoji: '🎈',
-  },
-]
 
 export default function CustomGameConfigurator({
   onStartCustomGame,

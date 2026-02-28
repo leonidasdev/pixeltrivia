@@ -7,6 +7,8 @@
  * @since 1.0.0
  */
 
+import { ROOM_CODE_CHARACTERS, ROOM_CODE_LENGTH, ROOM_CODE_PATTERN } from '@/constants/game'
+
 /**
  * Generates a cryptographically secure 6-character alphanumeric room code
  * using uppercase letters A-Z and digits 0-9.
@@ -14,20 +16,14 @@
  * @returns {string} A 6-character room code (e.g., "ABC123", "XYZ789")
  */
 export function generateRoomCode(): string {
-  // Character set: A-Z (26 chars) + 0-9 (10 chars) = 36 total characters
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  const codeLength = 6
-
-  // Use crypto.getRandomValues for cryptographically secure random generation
-  const randomValues = new Uint8Array(codeLength)
+  const randomValues = new Uint8Array(ROOM_CODE_LENGTH)
   crypto.getRandomValues(randomValues)
 
   let roomCode = ''
 
-  for (let i = 0; i < codeLength; i++) {
-    // Map the random byte (0-255) to our character set (0-35)
-    const randomIndex = randomValues[i] % characters.length
-    roomCode += characters[randomIndex]
+  for (let i = 0; i < ROOM_CODE_LENGTH; i++) {
+    const randomIndex = randomValues[i] % ROOM_CODE_CHARACTERS.length
+    roomCode += ROOM_CODE_CHARACTERS[randomIndex]
   }
 
   return roomCode
@@ -40,9 +36,7 @@ export function generateRoomCode(): string {
  * @returns {boolean} True if the code is valid (6 chars, A-Z and 0-9 only)
  */
 export function isValidRoomCode(code: string): boolean {
-  // Check if code is exactly 6 characters and contains only A-Z and 0-9
-  const roomCodePattern = /^[A-Z0-9]{6}$/
-  return roomCodePattern.test(code)
+  return ROOM_CODE_PATTERN.test(code)
 }
 
 /**

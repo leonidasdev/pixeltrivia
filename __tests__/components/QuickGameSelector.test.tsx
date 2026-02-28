@@ -267,7 +267,7 @@ describe('QuickGameSelector', () => {
       renderComponent()
 
       const collegeButton = screen.getByRole('button', {
-        name: (name, element) => element?.getAttribute('aria-controls') === 'section-college-level',
+        name: (name, element) => element?.getAttribute('aria-controls') === 'section-college',
       })
       await user.click(collegeButton)
 
@@ -282,7 +282,7 @@ describe('QuickGameSelector', () => {
 
       // Classic is expanded by default
       expect(screen.getByText('General Knowledge')).toBeInTheDocument()
-      expect(screen.getByText('Movies & TV')).toBeInTheDocument()
+      expect(screen.getByText('Entertainment')).toBeInTheDocument()
       expect(screen.getByText('Pop Culture')).toBeInTheDocument()
     })
   })

@@ -23,6 +23,7 @@ import { useSound } from '@/hooks'
 import { createRoom } from '@/lib/multiplayerApi'
 import {
   MULTIPLAYER_STORAGE_KEYS,
+  STORAGE_KEYS,
   DEFAULT_MAX_PLAYERS,
   DEFAULT_TIME_LIMIT,
   DEFAULT_QUESTION_COUNT,
@@ -43,7 +44,7 @@ function CreateGameContent() {
   const [isCreating, setIsCreating] = useState(false)
 
   useEffect(() => {
-    const name = searchParams.get('name') || localStorage.getItem('pixeltrivia_player_name') || ''
+    const name = searchParams.get('name') || localStorage.getItem(STORAGE_KEYS.PLAYER_NAME) || ''
     const avatarParam = searchParams.get('avatar') || 'knight'
     const mode = searchParams.get('mode') || 'quick'
 
