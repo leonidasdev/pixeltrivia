@@ -10,7 +10,7 @@
 
 'use client'
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 
 interface HelpContextType {
@@ -44,7 +44,7 @@ export const HelpProvider = ({ children }: HelpProviderProps) => {
     }
   }, [pathname, visitedRoutes])
 
-  const getAvailableHelpTabs = (): string[] => {
+  const getAvailableHelpTabs = useCallback((): string[] => {
     const tabs = ['general']
 
     // Check if user has visited game mode routes
@@ -67,7 +67,7 @@ export const HelpProvider = ({ children }: HelpProviderProps) => {
     if (hasVisitedAdvanced) tabs.push('advanced')
 
     return tabs
-  }
+  }, [visitedRoutes])
 
   return (
     <HelpContext.Provider

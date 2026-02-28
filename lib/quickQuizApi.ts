@@ -5,7 +5,7 @@
  * @since 1.0.0
  */
 
-import { logger } from './logger'
+import { apiFetch } from './apiFetch'
 import { calculateGameScore, getGrade } from './scoring'
 import { generateId, shuffleArray } from './utils'
 import type { QuickQuizQuestion as _QuickQuizQuestion } from '@/types/quiz'
@@ -33,34 +33,19 @@ export interface QuickQuizResponse {
  * Fetches quick quiz questions for a specific category
  */
 export async function fetchQuickQuiz(category: string): Promise<QuickQuizResponse> {
-  try {
-    if (!category || typeof category !== 'string' || category.trim().length === 0) {
-      throw new Error('Category is required and must be a non-empty string')
-    }
-
-    const response = await fetch('/api/quiz/quick', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ category: category.trim() }),
-    })
-
-    const data: QuickQuizResponse = await response.json()
-
-    if (!response.ok) {
-      throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`)
-    }
-
-    return data
-  } catch (error) {
-    logger.error('Error fetching quick quiz:', error)
+  if (!category || typeof category !== 'string' || category.trim().length === 0) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
+      error: 'Category is required and must be a non-empty string',
       message: 'Failed to fetch quiz questions',
     }
   }
+
+  return apiFetch<QuickQuizQuestion[]>('/api/quiz/quick', {
+    method: 'POST',
+    body: { category: category.trim() },
+    errorContext: 'fetch quick quiz',
+  }) as Promise<QuickQuizResponse>
 }
 
 /**

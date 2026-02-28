@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026 (Phase 16 — Code Quality & Architecture)
+> **Last Updated:** February 28, 2026 (Phase 17 — API Abstraction & Performance)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 66+ |
-| Tests | 1236+ |
+| Test Suites | 68+ |
+| Tests | 1263+ |
 | Coverage (Statements) | ~62.65% |
 | Coverage (Branches) | ~57.12% |
 | Coverage (Functions) | ~66.42% |
@@ -29,13 +29,13 @@
 - [x] Merge `DifficultyLevel` and `KnowledgeLevel` in `types/game.ts` — `KnowledgeLevel` is now an alias of `DifficultyLevel`
 - [x] Resolve `Question` type conflict — renamed to `ValidatedQuestion` in `lib/validation.ts` with JSDoc explaining intentional difference
 - [x] Added `@see` cross-references between client-side response types and canonical API types
-- [ ] Consolidate `GameSession` type between `lib/gameApi.ts` and `types/game.ts` (blocked: different shapes serve different consumers)
+- [x] Consolidate `GameSession` type between `lib/gameApi.ts` and `types/game.ts` — renamed client variant to `ActiveGameSession` with `@deprecated` alias
 - [ ] Create shared `createSession()` factory in `lib/gameApi.ts` to replace near-identical session constructors
 
 #### 1.2 Deduplication
 - [x] Extracted `shuffleArray<T>()` into `lib/utils.ts` — replaced 5 duplicate Fisher-Yates implementations
 - [x] Fixed `createCustomGameSession()` to use `generateId('custom')` instead of `custom_${Date.now()}`
-- [ ] Abstract common API fetch/error-handling boilerplate into a generic `apiFetch<TReq, TRes>()` utility
+- [x] Abstracted common API fetch/error-handling boilerplate into `lib/apiFetch.ts` — refactored `gameApi`, `quickQuizApi`, `customQuizApi`, `roomApi`
 
 #### 1.3 Validation Alignment
 - [x] Fixed context max-length mismatch: `lib/customQuizApi.ts` now allows 2000 chars (aligned with `lib/validation.ts`)
@@ -59,11 +59,11 @@
 - [x] Documented `useHelpContext` co-location pattern and re-exported from `hooks/index.ts`
 
 #### 2.2 Storage Architecture
-- [ ] Evaluate moving `createStorage<T>()` from `hooks/useLocalStorage.ts` into its own `lib/createStorage.ts` file
+- [x] Evaluated: `createStorage<T>()` has zero production consumers — deferring extraction until usage grows
 
 #### 2.3 API Consistency
 - [x] Documented `noContentResponse`, `unauthorizedResponse`, `forbiddenResponse` as intentionally reserved (Supabase Auth, RBAC)
-- [ ] Consider splitting `lib/apiResponse.ts` into response builders vs request parsers
+- [x] Evaluated: `lib/apiResponse.ts` at 362 lines is manageable; splitting deferred
 
 ---
 
@@ -72,8 +72,8 @@
 #### 3.1 Coverage Gaps
 - [x] Added `__tests__/unit/lib/utils.test.ts` — 14 tests for `generateId`, `formatDuration`, `shuffleArray`
 - [x] `createStorage()` tests already exist in `__tests__/hooks/createStorage.test.ts`
-- [ ] Test error boundaries with actual error scenarios (component integration tests)
-- [ ] Add E2E tests for leaderboard and achievements pages
+- [x] Test error boundaries with actual error scenarios — `__tests__/integration/ErrorBoundary.test.tsx` with 11 tests
+- [x] Add E2E tests for leaderboard and achievements pages — `tests/leaderboard-achievements.spec.ts`
 
 #### 3.2 Test Organization
 - [x] Renamed `__tests__/components/Help/` to `__tests__/components/help/` for consistency
@@ -83,8 +83,9 @@
 ### Priority 4: Performance & Scalability
 
 #### 4.1 Rendering Optimization
-- [ ] Memoize `getAvailableHelpTabs()` in `HelpModal.tsx` (called on every render, used in `useEffect` deps)
-- [ ] Add `useMemo`/`useCallback` to expensive computations in game state hooks
+- [x] Memoize `getAvailableHelpTabs()` in `HelpContext.tsx` — wrapped with `useCallback` keyed on `visitedRoutes`
+- [x] Memoize available tabs in `HelpModal.tsx` — wrapped with `useMemo` keyed on `getAvailableHelpTabs`
+- [x] Added `useMemo` for `playerInfo` and return value in `usePlayerSettings`
 - [ ] Consider React Server Components for static game pages (mode, select)
 
 #### 4.2 Bundle Size
@@ -138,6 +139,34 @@
 - [ ] Add API versioning strategy documentation
 - [ ] Create runbook for common operational tasks
 - [ ] Add changelog (CHANGELOG.md) with version history
+
+---
+
+## Phase 17 Completed (API Abstraction & Performance)
+
+### API Abstraction
+- Created `lib/apiFetch.ts` — generic, type-safe `apiFetch<T>()` utility replacing duplicated try/catch/response.json boilerplate
+- Refactored 4 client API modules to use `apiFetch`: `gameApi.ts`, `quickQuizApi.ts`, `customQuizApi.ts`, `roomApi.ts`
+- Added `apiFetch` and types (`ApiClientResponse`, `ApiFetchOptions`) to `lib/index.ts` barrel export
+
+### Type Consolidation
+- Renamed `GameSession` in `lib/gameApi.ts` to `ActiveGameSession` — lightweight client variant with `@see` linking to canonical type
+- Added `@deprecated` alias `GameSession = ActiveGameSession` for backward compatibility
+
+### Performance
+- Memoized `getAvailableHelpTabs()` in `HelpContext.tsx` with `useCallback` keyed on `visitedRoutes`
+- Memoized filtered tabs in `HelpModal.tsx` with `useMemo` keyed on `getAvailableHelpTabs`
+- Added `useMemo` for `playerInfo` and return value in `usePlayerSettings`
+
+### P2 Evaluations
+- `createStorage<T>()`: zero production consumers — extraction deferred
+- `lib/apiResponse.ts`: 362 lines, manageable — split deferred
+
+### Testing
+- Added `__tests__/unit/lib/apiFetch.test.ts` — 13 tests covering success, errors, methods, body handling
+- Added `__tests__/integration/ErrorBoundary.test.tsx` — 11 tests with realistic error scenarios (TypeError, data-driven, deep trees, user-triggered, nested boundaries, sibling isolation)
+- Added `tests/leaderboard-achievements.spec.ts` — 13 E2E tests for Playwright
+- Total: 68 suites, 1263 tests passing
 
 ---
 
@@ -289,4 +318,4 @@ All items below have been completed and verified. See git history for details.
 
 ---
 
-*Last reviewed: February 28, 2026 (Phase 16)*
+*Last reviewed: February 28, 2026 (Phase 17)*

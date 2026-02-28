@@ -5,7 +5,7 @@
  * @since 1.0.0
  */
 
-import { logger } from './logger'
+import { apiFetch } from './apiFetch'
 import { generateId } from './utils'
 import { KNOWLEDGE_LEVELS } from '@/constants/difficulties'
 import type {
@@ -39,32 +39,11 @@ export interface CustomQuizResponse {
  * @returns Promise with the API response
  */
 export async function generateCustomQuiz(config: CustomQuizRequest): Promise<CustomQuizResponse> {
-  try {
-    const response = await fetch('/api/quiz/custom', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(config),
-    })
-
-    const data: CustomQuizResponse = await response.json()
-
-    if (!response.ok) {
-      throw new Error(data.error || `HTTP error! status: ${response.status}`)
-    }
-
-    return data
-  } catch (error) {
-    logger.error('Custom quiz generation failed:', error)
-
-    // Return a properly formatted error response
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-      message: 'Failed to generate custom quiz',
-    }
-  }
+  return apiFetch<CustomQuizQuestion[]>('/api/quiz/custom', {
+    method: 'POST',
+    body: config,
+    errorContext: 'generate custom quiz',
+  }) as Promise<CustomQuizResponse>
 }
 
 /**

@@ -10,7 +10,7 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useHelpContext } from './HelpContext'
 import { Modal } from '../ui/Modal'
 
@@ -32,11 +32,13 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
   const [activeTab, setActiveTab] = useState<HelpTab>('general')
   const { currentRoute, getAvailableHelpTabs } = useHelpContext()
 
-  // Get available tabs from context
-  const availableTabsFromContext = getAvailableHelpTabs()
-  const availableTabs: HelpTab[] = availableTabsFromContext.filter(tab =>
-    ['general', 'quick', 'custom', 'advanced'].includes(tab)
-  ) as HelpTab[]
+  // Get available tabs from context (memoized to prevent re-render churn)
+  const availableTabs = useMemo(() => {
+    const availableTabsFromContext = getAvailableHelpTabs()
+    return availableTabsFromContext.filter(tab =>
+      ['general', 'quick', 'custom', 'advanced'].includes(tab)
+    ) as HelpTab[]
+  }, [getAvailableHelpTabs])
 
   // Set appropriate tab based on current route
   useEffect(() => {

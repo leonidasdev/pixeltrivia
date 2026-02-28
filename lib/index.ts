@@ -17,8 +17,15 @@ export { calculateGameScore, getGrade } from './scoring'
 export { AppError, isAppError, createAppError, NetworkError, ValidationError } from './errors'
 
 // API helpers
+export { apiFetch } from './apiFetch'
+export type { ApiClientResponse, ApiFetchOptions } from './apiFetch'
 export { fetchQuestions, createGameSession } from './gameApi'
-export type { GameQuestion, FetchQuestionsResponse, GameSession } from './gameApi'
+export type {
+  GameQuestion,
+  FetchQuestionsResponse,
+  ActiveGameSession,
+  GameSession,
+} from './gameApi'
 export { fetchQuickQuiz, validateQuizQuestion, shuffleQuestions } from './quickQuizApi'
 export type { QuickQuizResponse, QuickQuizSession, QuizResults } from './quickQuizApi'
 export { generateCustomQuiz, validateCustomQuizConfig, formatKnowledgeLevel } from './customQuizApi'

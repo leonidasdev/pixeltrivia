@@ -7,7 +7,7 @@
  * @since 1.0.0
  */
 
-import { logger } from './logger'
+import { apiFetch } from './apiFetch'
 import { generateId } from './utils'
 import type { Question } from '@/types'
 
@@ -47,46 +47,30 @@ export async function fetchQuestions(
   difficulty: string,
   limit: number = 10
 ): Promise<FetchQuestionsResponse> {
-  try {
-    const params = new URLSearchParams({
-      category,
-      difficulty,
-      limit: limit.toString(),
-    })
+  const params = new URLSearchParams({
+    category,
+    difficulty,
+    limit: limit.toString(),
+  })
 
-    const response = await fetch(`/api/game/questions?${params}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    const data: FetchQuestionsResponse = await response.json()
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Failed to fetch questions')
-    }
-
-    return data
-  } catch (error) {
-    logger.error('Error fetching questions:', error)
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      message: 'Failed to fetch questions',
-    }
-  }
+  return apiFetch<FetchQuestionsResponse['data']>(`/api/game/questions?${params}`, {
+    errorContext: 'fetch questions',
+  }) as Promise<FetchQuestionsResponse>
 }
 
 /**
  * Game session management
  */
 /**
- * Client-side game session state.
+ * Client-side game session state (lightweight).
  *
- * @see {@link import('@/types/game').GameSession} for the canonical session type
+ * Unlike the canonical {@link import('@/types/game').GameSession GameSession},
+ * this type omits `state`, `isComplete`, and `timestamp` on answers, since
+ * those are managed in the component layer for the active game.
+ *
+ * @see {@link import('@/types/game').GameSession} for the full session type
  */
-export interface GameSession {
+export interface ActiveGameSession {
   sessionId: string
   questions: GameQuestion[]
   currentQuestionIndex: number
@@ -103,13 +87,18 @@ export interface GameSession {
 }
 
 /**
+ * @deprecated Use {@link ActiveGameSession} instead. Kept for backward compatibility.
+ */
+export type GameSession = ActiveGameSession
+
+/**
  * Creates a new game session
  */
 export function createGameSession(
   questions: GameQuestion[],
   category: string,
   difficulty: string
-): GameSession {
+): ActiveGameSession {
   return {
     sessionId: generateId('game'),
     questions,

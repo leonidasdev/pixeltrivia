@@ -10,7 +10,7 @@
 
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useLocalStorage } from './useLocalStorage'
 import { getAvatarById, DEFAULT_AVATAR_ID, type AvatarOption } from '@/constants/avatars'
@@ -167,31 +167,32 @@ export function usePlayerSettings(): UsePlayerSettingsReturn {
     updateSettings(DEFAULT_SETTINGS)
   }, [updateSettings])
 
-  // Compute player info with avatar details
-  // getAvatarById always returns a valid avatar (falls back to first option)
-  const avatarDetails = getAvatarById(settings.avatar) ??
-    getAvatarById(DEFAULT_AVATAR_ID) ?? {
-      id: DEFAULT_AVATAR_ID,
-      name: 'Player',
-      emoji: '🤖',
-      color: 'bg-blue-500',
-    }
+  // Compute player info with avatar details (memoized)
+  const playerInfo: PlayerInfo = useMemo(() => {
+    const avatarDetails = getAvatarById(settings.avatar) ??
+      getAvatarById(DEFAULT_AVATAR_ID) ?? {
+        id: DEFAULT_AVATAR_ID,
+        name: 'Player',
+        emoji: '🤖',
+        color: 'bg-blue-500',
+      }
 
-  const playerInfo: PlayerInfo = {
-    ...settings,
-    avatarDetails,
-  }
+    return { ...settings, avatarDetails }
+  }, [settings])
 
-  return {
-    settings,
-    playerInfo,
-    updateSettings,
-    setName,
-    setAvatar,
-    setVolume,
-    reset,
-    isLoaded,
-  }
+  return useMemo(
+    () => ({
+      settings,
+      playerInfo,
+      updateSettings,
+      setName,
+      setAvatar,
+      setVolume,
+      reset,
+      isLoaded,
+    }),
+    [settings, playerInfo, updateSettings, setName, setAvatar, setVolume, reset, isLoaded]
+  )
 }
 
 // ============================================================================
