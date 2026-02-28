@@ -50,11 +50,7 @@ export default function QuickGamePage() {
       localStorage.setItem('currentGameSession', JSON.stringify(gameSession))
 
       // Navigate to game screen
-      toast.success(
-        `Game loaded! Category: ${category} • Difficulty: ${difficulty} • ${questionsResult.data.questions.length} questions. Game screen coming soon!`
-      )
-
-      // router.push('/game/play')
+      router.push('/game/play')
     } catch (err) {
       logger.error('Error starting quick game:', err)
       toast.error(

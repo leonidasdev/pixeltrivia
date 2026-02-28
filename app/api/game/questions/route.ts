@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     // Build query based on category and difficulty
     let query = supabase
       .from('questions')
-      .select('id, question_text, options, correct_answer, category, difficulty')
+      .select('id, question_text, options, correct_answer, category, difficulty, image_url')
 
     // For classic mode, get mixed categories and difficulties
     if (difficulty === 'classic') {
@@ -101,6 +101,7 @@ export async function GET(request: NextRequest) {
       category: q.category,
       difficulty: q.difficulty,
       timeLimit: 30,
+      ...(q.image_url ? { imageUrl: q.image_url } : {}),
     }))
 
     return successResponse(

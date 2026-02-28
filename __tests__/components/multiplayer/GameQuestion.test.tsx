@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import { render, screen, fireEvent, act } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { GameQuestion } from '@/app/components/multiplayer/GameQuestion'
 import type { MultiplayerQuestion } from '@/types/room'
@@ -94,6 +94,19 @@ describe('GameQuestion', () => {
     it('should hide keyboard hint after answering', () => {
       render(<GameQuestion {...defaultProps} hasAnswered={true} selectedAnswer={0} />)
       expect(screen.queryByText(/Press 1-4 or A-D to answer/i)).not.toBeInTheDocument()
+    })
+
+    it('should render an image when question has imageUrl', () => {
+      const q = { ...mockQuestion, imageUrl: 'https://example.com/img.png' }
+      render(<GameQuestion {...defaultProps} question={q} />)
+      const img = screen.getByAltText('Question illustration')
+      expect(img).toBeInTheDocument()
+      expect(img).toHaveAttribute('src', 'https://example.com/img.png')
+    })
+
+    it('should not render an image when imageUrl is absent', () => {
+      render(<GameQuestion {...defaultProps} />)
+      expect(screen.queryByAltText('Question illustration')).not.toBeInTheDocument()
     })
   })
 

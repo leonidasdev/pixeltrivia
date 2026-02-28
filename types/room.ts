@@ -227,6 +227,8 @@ export interface MultiplayerQuestion {
   category?: string
   /** Difficulty if available */
   difficulty?: string
+  /** Optional image URL displayed alongside the question text */
+  imageUrl?: string
 }
 
 /**

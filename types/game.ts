@@ -29,6 +29,8 @@ export interface Question {
   difficulty: string
   /** Optional time limit for this specific question (in seconds) */
   timeLimit?: number
+  /** Optional image URL displayed alongside the question text */
+  imageUrl?: string
 }
 
 /**

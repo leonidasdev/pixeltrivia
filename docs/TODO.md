@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026 (Phase 22 — Adaptive Difficulty UI, Invite Links, Keyboard Navigation)
+> **Last Updated:** March 1, 2026 (Phase 23 — Single-Player Play Page, Image Questions)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 74+ |
-| Tests | 1367+ |
+| Test Suites | 75+ |
+| Tests | 1405+ |
 | Coverage (Statements) | ~62.65% |
 | Coverage (Branches) | ~57.12% |
 | Coverage (Functions) | ~66.42% |
@@ -114,7 +114,7 @@
 #### 5.3 Content
 - [x] Expand seed data beyond 90 questions — 150+ questions across all 40 categories and 3 difficulty levels
 - [x] Add question difficulty ratings based on player performance — `lib/adaptiveDifficulty.ts` tracks per-category accuracy, `getRecommendedDifficulty()` computes adaptive level, wired into `addHistoryEntry()` and quick quiz API
-- [ ] Support for image-based questions
+- [x] Support for image-based questions — `imageUrl?: string` on `Question` and `MultiplayerQuestion` types, `image_url` column in schema, rendering in both solo and multiplayer `GameQuestion` components, API routes return `imageUrl` from DB
 
 #### 5.4 Mobile
 - [x] Responsive design audit and fixes — touch targets raised to 44px minimum (WCAG), illegible text-[8px] bumped to text-[10px]+, responsive breakpoints added to titles/subtitles, grid columns made progressive
@@ -139,6 +139,33 @@
 - [x] Add API versioning strategy documentation — `docs/api-versioning.md` with URL-based strategy, migration guidelines, and implementation checklist
 - [x] Create runbook for common operational tasks — `docs/runbook.md` covering dev, testing, deployment, database, monitoring, and common issues
 - [x] Add changelog — `CHANGELOG.md` with version history from Phase 0 through Phase 18
+
+---
+
+## Phase 23 Completed (Single-Player Play Page, Image Questions)
+
+### Single-Player Play Page
+- Created `app/game/play/page.tsx` — full solo trivia gameplay screen reading session from localStorage
+- Renders questions with timer (via `useTimer`), score/streak display, category/difficulty badges
+- Answer reveal phase shows correct/wrong/timeout feedback with NEXT QUESTION / SEE RESULTS button
+- Keyboard navigation: 1-4 / A-D to answer, Enter / Space to advance
+- Results screen: grade, accuracy, score, correct count, avg time, share button, play again / stats / home navigation
+- Saves game history via `addHistoryEntry()` and cleans up localStorage session on completion
+- Wired quick game flow: `app/game/quick/page.tsx` now navigates to `/game/play` (was commented out)
+- Sound effects for correct/wrong/timer warning/victory via `useSound`
+
+### Image-Based Question Support
+- Added `imageUrl?: string` to `Question` type (`types/game.ts`) and `MultiplayerQuestion` type (`types/room.ts`)
+- Added `image_url TEXT DEFAULT NULL` column to `questions` table in `database/schema.sql` (+ migration ALTER TABLE)
+- Both `GameQuestion` (multiplayer) and Play page (solo) render image above question text when `imageUrl` is present
+- API routes (`/api/game/questions`, `/api/quiz/quick`) select and return `image_url` from Supabase
+
+### Test Coverage
+- Created `__tests__/components/pages/PlayPage.test.tsx` — 36 tests covering session loading, question rendering, image rendering, answer interactions, keyboard navigation, score/streak, timer, results screen
+- Added 2 image rendering tests to `GameQuestion.test.tsx`
+- Updated `QuickGamePage.test.tsx` — toast assertion → navigation assertion (router.push to /game/play)
+- Fixed `question.answers` → `question.options` TS error in GameQuestion keyboard handler
+- Total: 75 suites, 1405 tests (up from 74 suites, 1367 tests)
 
 ---
 

@@ -76,12 +76,12 @@ export function GameQuestion({
       }
 
       const index = keyMap[e.key.toLowerCase()]
-      if (index !== undefined && index < (question.answers?.length ?? 4)) {
+      if (index !== undefined && index < (question.options?.length ?? 4)) {
         e.preventDefault()
         onAnswer(index)
       }
     },
-    [hasAnswered, isRevealing, isLoading, onAnswer, question.answers?.length]
+    [hasAnswered, isRevealing, isLoading, onAnswer, question.options?.length]
   )
 
   useEffect(() => {
@@ -177,6 +177,18 @@ export function GameQuestion({
           </span>
         )}
       </div>
+
+      {/* Question image (if provided) */}
+      {question.imageUrl && (
+        <div className="bg-gray-800 border-4 border-gray-600 pixel-border overflow-hidden flex items-center justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={question.imageUrl}
+            alt="Question illustration"
+            className="max-h-48 md:max-h-64 object-contain"
+          />
+        </div>
+      )}
 
       {/* Question text */}
       <div className="bg-gray-800 border-4 border-gray-600 p-6 pixel-border pixel-shadow">

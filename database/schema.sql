@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS questions (
   correct_answer INTEGER NOT NULL, -- Index of correct option
   category VARCHAR(50),
   difficulty VARCHAR(20) DEFAULT 'medium' CHECK (difficulty IN ('easy', 'medium', 'hard')),
+  image_url TEXT DEFAULT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -361,3 +362,9 @@ BEGIN
   GROUP BY r.code, r.created_at, r.status, r.max_players;
 END;
 $$ LANGUAGE plpgsql;
+
+-- ============================================================================
+-- Migration: Add image_url column (Phase 23)
+-- Run this if you already have the questions table without image_url
+-- ============================================================================
+ALTER TABLE questions ADD COLUMN IF NOT EXISTS image_url TEXT DEFAULT NULL;

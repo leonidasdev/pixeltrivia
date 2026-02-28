@@ -7,6 +7,25 @@ Version numbers follow the project's internal phase numbering (not semver) until
 
 ---
 
+## [Phase 23] - 2026-03-01
+
+### Added
+- **Single-Player Play Page** — `app/game/play/page.tsx` with full solo trivia gameplay: timer, score/streak, answer reveal with correct/wrong/timeout feedback, keyboard navigation (1-4 / A-D + Enter/Space), results screen with grade, stats, share button, and navigation options
+- **Image-Based Questions** — `imageUrl?: string` on `Question` and `MultiplayerQuestion` types; `image_url` column in schema; image rendering in both solo and multiplayer `GameQuestion` components; API routes return `imageUrl` from DB
+- `__tests__/components/pages/PlayPage.test.tsx` — 36 tests (session loading, rendering, answers, keyboard, score, timer, results)
+- 2 image rendering tests added to `GameQuestion.test.tsx`
+
+### Changed
+- `app/game/quick/page.tsx`: navigates to `/game/play` after session creation (was previously commented out with a toast placeholder)
+- API routes (`/api/game/questions`, `/api/quiz/quick`) now select and return `image_url` from Supabase
+- `QuickGamePage.test.tsx`: updated assertion from toast text to `router.push('/game/play')` navigation
+- Test suite: 75 suites, 1405 tests (up from 74 suites, 1367 tests)
+
+### Fixed
+- `GameQuestion` keyboard handler referenced `question.answers` (non-existent) instead of `question.options`
+
+---
+
 ## [Phase 22] - 2026-02-28
 
 ### Added

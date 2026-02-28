@@ -96,7 +96,7 @@ describe('QuickGamePage', () => {
   })
 
   describe('Game start flow', () => {
-    it('shows success toast when game loads successfully', async () => {
+    it('navigates to play page when game loads successfully', async () => {
       ;(fetchQuestions as jest.Mock).mockResolvedValue({
         success: true,
         data: {
@@ -116,7 +116,7 @@ describe('QuickGamePage', () => {
       selectButton.click()
 
       await waitFor(() => {
-        expect(screen.getByText(/game loaded/i)).toBeInTheDocument()
+        expect(mockPush).toHaveBeenCalledWith('/game/play')
       })
     })
 

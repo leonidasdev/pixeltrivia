@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     // Query Supabase for questions matching the category (+ optional difficulty)
     let query = supabase
       .from('questions')
-      .select('id, question_text, options, correct_answer, category, difficulty')
+      .select('id, question_text, options, correct_answer, category, difficulty, image_url')
       .ilike('category', `%${trimmedCategory}%`) // Case-insensitive partial match
 
     // Filter by difficulty when provided (skip for 'classic' which means mixed)
@@ -78,6 +78,7 @@ export async function POST(request: NextRequest) {
         correctAnswer: q.correct_answer,
         category: q.category,
         difficulty: q.difficulty,
+        ...(q.image_url ? { imageUrl: q.image_url } : {}),
       }
     })
 
