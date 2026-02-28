@@ -26,6 +26,9 @@ export type { UseSoundReturn } from './useSound'
 export { useGameHistory } from './useGameHistory'
 export type { UseGameHistoryReturn } from './useGameHistory'
 
+export { useSwipe } from './useSwipe'
+export type { SwipeDirection, UseSwipeOptions, UseSwipeReturn } from './useSwipe'
+
 // Re-exported from app/components/help/ for discoverability.
 // The hook is co-located with HelpProvider (React Context pattern).
 export { useHelpContext } from '../app/components/help/HelpContext'

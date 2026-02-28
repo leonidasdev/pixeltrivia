@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026 (Phase 20 — Content Expansion, Responsive Fixes, Lighthouse & Sentry)
+> **Last Updated:** February 28, 2026 (Phase 21 — Social Features, Touch Gestures, Adaptive Difficulty, Monitoring)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 69+ |
-| Tests | 1273+ |
+| Test Suites | 72+ |
+| Tests | 1327+ |
 | Coverage (Statements) | ~62.65% |
 | Coverage (Branches) | ~57.12% |
 | Coverage (Functions) | ~66.42% |
@@ -108,18 +108,18 @@
 
 #### 5.2 Social Features
 - [ ] Global leaderboards (server-side)
-- [ ] Share game results
+- [x] Share game results — `lib/share.ts` with Web Share API + clipboard fallback, `ShareButton` component, wired into play page and Scoreboard
 - [ ] Challenge a friend mode
 
 #### 5.3 Content
 - [x] Expand seed data beyond 90 questions — 150+ questions across all 40 categories and 3 difficulty levels
-- [ ] Add question difficulty ratings based on player performance
+- [x] Add question difficulty ratings based on player performance — `lib/adaptiveDifficulty.ts` tracks per-category accuracy, `getRecommendedDifficulty()` computes adaptive level, wired into `addHistoryEntry()` and quick quiz API
 - [ ] Support for image-based questions
 
 #### 5.4 Mobile
 - [x] Responsive design audit and fixes — touch targets raised to 44px minimum (WCAG), illegible text-[8px] bumped to text-[10px]+, responsive breakpoints added to titles/subtitles, grid columns made progressive
 - [x] PWA support — added `public/manifest.json`, `Viewport` export, `appleWebApp` metadata in `layout.tsx`
-- [ ] Touch gesture support for game interactions
+- [x] Touch gesture support for game interactions — `hooks/useSwipe.ts` detects swipe direction with configurable threshold/timing, integrated into game mode and select pages for swipe-right-to-go-back
 
 ---
 
@@ -132,13 +132,42 @@
 
 #### 6.2 Monitoring
 - [x] Configure Sentry release tracking and source maps — release property in all 3 Sentry configs, `next.config.js` source map upload when `SENTRY_AUTH_TOKEN` is set, CI creates and finalises releases on main pushes
-- [ ] Add performance monitoring dashboards
-- [ ] Set up alerting for error rate spikes
+- [x] Add performance monitoring dashboards — `docs/monitoring.md` with dashboard widgets, key transactions, and sample rate guidance
+- [x] Set up alerting for error rate spikes — `docs/monitoring.md` with 5 alert rules (high error volume, new unhandled, API latency, web vitals, rate-limit abuse)
 
 #### 6.3 Documentation
 - [x] Add API versioning strategy documentation — `docs/api-versioning.md` with URL-based strategy, migration guidelines, and implementation checklist
 - [x] Create runbook for common operational tasks — `docs/runbook.md` covering dev, testing, deployment, database, monitoring, and common issues
 - [x] Add changelog — `CHANGELOG.md` with version history from Phase 0 through Phase 18
+
+---
+
+## Phase 21 Completed (Social Features, Touch Gestures, Adaptive Difficulty, Monitoring)
+
+### Share Game Results
+- Created `lib/share.ts` — `generateShareText()` builds emoji-rich text with grade emoji, score bar, rank suffix, site URL; `shareResults()` uses Web Share API with clipboard fallback; `canNativeShare()` feature detection
+- Created `app/components/ui/ShareButton.tsx` — pixel-styled green button with 44px min height, "Copied!" feedback, 2s timeout
+- Wired `ShareButton` into multiplayer play page (finished screen) and Scoreboard component
+- Added barrel exports to `app/components/ui/index.ts` and `lib/index.ts`
+- Tests: 19 tests in `__tests__/unit/lib/share.test.ts` (all passing)
+
+### Touch Gesture Support
+- Created `hooks/useSwipe.ts` — detects swipe gestures with configurable threshold, maxDuration, and direction callbacks; supports `preventScroll` and `disabled` options
+- Integrated into `app/game/mode/page.tsx` — swipe right to go back
+- Integrated into `app/game/select/page.tsx` — swipe right to go back (context-aware: returns to mode select or previous page)
+- Updated footer hints to mention swipe gesture
+- Tests: 10 tests in `__tests__/hooks/useSwipe.test.ts` (all passing)
+
+### Adaptive Difficulty Engine
+- Created `lib/adaptiveDifficulty.ts` — tracks per-category accuracy in localStorage (sliding window of last 5 games), maps average accuracy to difficulty tier (college ≥90%, high-school ≥75%, middle-school ≥55%, elementary <55%)
+- `recordCategoryPerformance()` auto-called from `addHistoryEntry()` in `lib/storage.ts`
+- Extended `fetchQuickQuiz()` to accept optional `difficulty` parameter
+- Extended `/api/quiz/quick` route to filter by difficulty when provided
+- Public API: `getRecommendedDifficulty()`, `getAllCategoryPerformance()`, `clearCategoryPerformance()`
+- Tests: 16 tests in `__tests__/unit/lib/adaptiveDifficulty.test.ts` (all passing)
+
+### Monitoring Documentation
+- Created `docs/monitoring.md` — comprehensive guide with Sentry alert rules (5 rules), performance monitoring, key transactions with expected latencies, dashboard widgets, incident response procedures, and maintenance checklists
 
 ---
 

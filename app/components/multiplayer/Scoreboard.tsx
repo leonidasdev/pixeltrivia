@@ -13,6 +13,7 @@
 
 import type { MultiplayerPlayer } from '@/types/room'
 import { AVATAR_OPTIONS } from '@/constants/avatars'
+import { ShareButton } from '@/app/components/ui/ShareButton'
 
 interface ScoreboardProps {
   /** Players sorted by score */
@@ -25,6 +26,10 @@ interface ScoreboardProps {
   onFinish?: () => void
   /** Whether current player is host */
   isHost?: boolean
+  /** Total questions in the game (for share) */
+  totalQuestions?: number
+  /** Category played (for share) */
+  category?: string
 }
 
 const PODIUM_STYLES = [
@@ -39,6 +44,8 @@ export function Scoreboard({
   isFinal,
   onFinish,
   isHost: _isHost,
+  totalQuestions = 0,
+  category = 'Mixed',
 }: ScoreboardProps) {
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
 

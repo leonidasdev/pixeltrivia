@@ -31,9 +31,15 @@ export interface QuickQuizResponse {
 }
 
 /**
- * Fetches quick quiz questions for a specific category
+ * Fetches quick quiz questions for a specific category.
+ *
+ * @param category - Category name to fetch.
+ * @param difficulty - Optional difficulty filter (e.g. from adaptive engine). Defaults to mixed.
  */
-export async function fetchQuickQuiz(category: string): Promise<QuickQuizResponse> {
+export async function fetchQuickQuiz(
+  category: string,
+  difficulty?: string
+): Promise<QuickQuizResponse> {
   if (!category || typeof category !== 'string' || category.trim().length === 0) {
     return {
       success: false,
@@ -42,9 +48,12 @@ export async function fetchQuickQuiz(category: string): Promise<QuickQuizRespons
     }
   }
 
+  const body: Record<string, string> = { category: category.trim() }
+  if (difficulty) body.difficulty = difficulty
+
   return apiFetch<QuickQuizQuestion[]>('/api/quiz/quick', {
     method: 'POST',
-    body: { category: category.trim() },
+    body,
     errorContext: 'fetch quick quiz',
   }) as Promise<QuickQuizResponse>
 }

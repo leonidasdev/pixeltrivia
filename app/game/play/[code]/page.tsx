@@ -26,6 +26,7 @@ import {
   ScorePopup,
   AnswerFeedback,
   PageTransition,
+  ShareButton,
   type FeedbackType,
 } from '@/app/components/ui'
 import { MULTIPLAYER_STORAGE_KEYS } from '@/constants/game'
@@ -180,13 +181,39 @@ function PlayContent({ params }: PlayPageProps) {
             onFinish={handleFinish}
             isHost={isHost}
           />
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center gap-3 mt-4">
             <button
               onClick={handleViewStats}
-              className="font-pixel text-xs bg-cyan-600 hover:bg-cyan-500 text-white border-4 border-cyan-800 pixel-border px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95 pixel-glow-hover"
+              className="font-pixel text-xs min-h-[44px] bg-cyan-600 hover:bg-cyan-500 text-white border-4 border-cyan-800 pixel-border px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95 pixel-glow-hover"
             >
               📊 VIEW STATS
             </button>
+            {(() => {
+              const sorted = [...room.players].sort((a, b) => b.score - a.score)
+              const currentPlayer = room.players.find(p => p.id === playerId)
+              const rank = sorted.findIndex(p => p.id === playerId) + 1
+              const totalCorrect = currentPlayer?.score
+                ? Math.round(
+                    (currentPlayer.score / (room.totalQuestions * 100)) * room.totalQuestions
+                  )
+                : 0
+              const accuracy =
+                room.totalQuestions > 0 ? Math.round((totalCorrect / room.totalQuestions) * 100) : 0
+              return (
+                <ShareButton
+                  result={{
+                    mode: 'multiplayer',
+                    score: currentPlayer?.score ?? 0,
+                    correctAnswers: totalCorrect,
+                    totalQuestions: room.totalQuestions,
+                    accuracy,
+                    category: room.category || 'Mixed',
+                    rank,
+                    totalPlayers: room.players.length,
+                  }}
+                />
+              )
+            })()}
           </div>
         </PageTransition>
         <ToastContainer messages={toasts} onDismiss={dismissToast} />

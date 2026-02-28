@@ -9,6 +9,7 @@ import {
   StaggerChildren,
 } from '@/app/components/ui'
 import { useSound } from '@/hooks/useSound'
+import { useSwipe } from '@/hooks/useSwipe'
 import Footer from '@/app/components/Footer'
 
 // Game mode types
@@ -81,10 +82,19 @@ function GameModeContent() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [router])
 
+  // Swipe-right to go back (mobile)
+  const { ref: swipeRef } = useSwipe<HTMLElement>({
+    onSwipeRight: () => router.back(),
+    threshold: 60,
+  })
+
   const avatarDetails = getAvatarDetails(playerSettings.avatar)
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <main
+      ref={swipeRef}
+      className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden"
+    >
       {/* Animated background elements */}
       <SparklesOverlay />
 
@@ -215,7 +225,7 @@ function GameModeContent() {
           </div>
         </section>{' '}
         {/* Footer info */}
-        <Footer hint="Use Escape key to go back • Arrow keys to navigate" />
+        <Footer hint="Swipe right or press Escape to go back" />
       </PageTransition>
     </main>
   )

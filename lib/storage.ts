@@ -13,6 +13,7 @@
 
 import { STORAGE_KEYS, STORAGE_VERSION } from '@/constants/game'
 import { generateId } from './utils'
+import { recordCategoryPerformance } from './adaptiveDifficulty'
 
 /**
  * Player profile stored in localStorage
@@ -320,6 +321,11 @@ export function addHistoryEntry(entry: Omit<GameHistoryEntry, 'id' | 'playedAt'>
 
   // Add to beginning and limit size
   const updated = [newEntry, ...history].slice(0, MAX_HISTORY_ENTRIES)
+
+  // Feed adaptive difficulty engine
+  if (entry.category) {
+    recordCategoryPerformance(entry.category, entry.accuracy)
+  }
 
   return setItem(STORAGE_KEYS.HISTORY, updated)
 }

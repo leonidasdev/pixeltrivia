@@ -7,6 +7,28 @@ Version numbers follow the project's internal phase numbering (not semver) until
 
 ---
 
+## [Phase 21] - 2026-02-28
+
+### Added
+- `lib/share.ts` — share game results via Web Share API with clipboard fallback; `generateShareText()`, `canNativeShare()`, `shareResults()` with emoji grade, score bar, and rank suffix
+- `app/components/ui/ShareButton.tsx` — pixel-styled share button with "Copied!" feedback (44px min height)
+- `hooks/useSwipe.ts` — touch swipe gesture detection hook with configurable threshold, maxDuration, and per-direction callbacks
+- `lib/adaptiveDifficulty.ts` — adaptive difficulty engine tracking per-category accuracy in localStorage; sliding window of last 5 games maps to difficulty tiers (college ≥90%, high-school ≥75%, middle-school ≥55%, elementary <55%)
+- `docs/monitoring.md` — Sentry alerting and monitoring guide with 5 alert rules, performance monitoring, key transactions, dashboard widgets, incident response, and maintenance checklists
+- 45 new tests: share (19), useSwipe (10), adaptiveDifficulty (16)
+
+### Changed
+- `lib/storage.ts`: `addHistoryEntry()` now feeds `recordCategoryPerformance()` for adaptive difficulty tracking
+- `lib/quickQuizApi.ts`: `fetchQuickQuiz()` accepts optional `difficulty` parameter
+- `app/api/quiz/quick/route.ts`: filters by difficulty when provided (skips for 'classic')
+- `app/game/mode/page.tsx`: swipe right to go back, updated footer hint
+- `app/game/select/page.tsx`: swipe right to go back (context-aware), updated footer hint
+- `app/game/play/[code]/page.tsx`: added ShareButton to finished game screen alongside VIEW STATS
+- `app/components/multiplayer/Scoreboard.tsx`: added `totalQuestions` and `category` props, ShareButton import
+- Barrel exports updated in `hooks/index.ts`, `lib/index.ts`, `app/components/ui/index.ts`
+
+---
+
 ## [Phase 20] - 2026-02-28
 
 ### Added

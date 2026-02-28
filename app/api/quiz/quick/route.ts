@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     // Parse the request body
     const body = await request.json()
-    const { category } = body
+    const { category, difficulty } = body
 
     // Validate category parameter
     if (!category || typeof category !== 'string' || category.trim().length === 0) {
@@ -33,12 +33,18 @@ export async function POST(request: NextRequest) {
 
     const trimmedCategory = category.trim()
 
-    // Query Supabase for questions matching the category
-    const { data: questions, error: fetchError } = await supabase
+    // Query Supabase for questions matching the category (+ optional difficulty)
+    let query = supabase
       .from('questions')
       .select('id, question_text, options, correct_answer, category, difficulty')
       .ilike('category', `%${trimmedCategory}%`) // Case-insensitive partial match
-      .limit(20) // Get more than needed for randomization
+
+    // Filter by difficulty when provided (skip for 'classic' which means mixed)
+    if (difficulty && typeof difficulty === 'string' && difficulty !== 'classic') {
+      query = query.eq('difficulty', difficulty)
+    }
+
+    const { data: questions, error: fetchError } = await query.limit(20)
 
     if (fetchError) {
       logger.error('Supabase fetch error:', fetchError)

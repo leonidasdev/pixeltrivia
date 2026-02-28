@@ -70,3 +70,16 @@ export { getAchievements, getNewlyUnlockedAchievements, ALL_ACHIEVEMENTS } from 
 
 // Validation
 export { validate, formatZodErrors, getFirstError } from './validation'
+
+// Sharing
+export { generateShareText, shareResults, canNativeShare } from './share'
+export type { ShareableResult } from './share'
+
+// Adaptive difficulty
+export {
+  recordCategoryPerformance,
+  getRecommendedDifficulty,
+  getAllCategoryPerformance,
+  clearCategoryPerformance,
+} from './adaptiveDifficulty'
+export type { DifficultyRecommendation, PerformanceEntry } from './adaptiveDifficulty'

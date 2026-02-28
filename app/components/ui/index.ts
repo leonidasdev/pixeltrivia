@@ -92,3 +92,6 @@ export type { PixelTimerProps } from './PixelTimer'
 
 export { PageTransition, StaggerChildren } from './PageTransition'
 export type { PageTransitionProps, TransitionStyle, StaggerChildrenProps } from './PageTransition'
+
+export { ShareButton } from './ShareButton'
+export type { ShareButtonProps } from './ShareButton'

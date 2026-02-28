@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import type { AdvancedGameConfig } from '../../components/AdvancedGameConfigurator'
 import { LoadingOverlay, SparklesOverlay, PageTransition } from '@/app/components/ui'
+import { useSwipe } from '@/hooks/useSwipe'
 import Footer from '@/app/components/Footer'
 
 const AdvancedGameConfigurator = dynamic(
@@ -146,10 +147,25 @@ function GameSelectContent() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [selectedGameMode, router, handleBackToGameMode])
 
+  // Swipe-right to go back (mobile)
+  const { ref: swipeRef } = useSwipe<HTMLElement>({
+    onSwipeRight: () => {
+      if (selectedGameMode) {
+        handleBackToGameMode()
+      } else {
+        router.back()
+      }
+    },
+    threshold: 60,
+  })
+
   const avatarDetails = getAvatarDetails(playerSettings.avatar)
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <main
+      ref={swipeRef}
+      className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden"
+    >
       {/* Animated background elements */}
       <SparklesOverlay />
 
@@ -365,7 +381,7 @@ function GameSelectContent() {
           )}
 
           {/* Footer info */}
-          <Footer hint="Use Escape key to go back • Arrow keys to navigate" />
+          <Footer hint="Swipe right or press Escape to go back" />
         </div>
       </PageTransition>
     </main>

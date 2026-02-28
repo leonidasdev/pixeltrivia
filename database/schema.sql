@@ -330,8 +330,8 @@ INSERT INTO questions (question_text, options, correct_answer, category, difficu
 CREATE OR REPLACE FUNCTION cleanup_old_rooms()
 RETURNS void AS $$
 BEGIN
-  DELETE FROM rooms 
-  WHERE created_at < NOW() - INTERVAL '24 hours' 
+  DELETE FROM rooms
+  WHERE created_at < NOW() - INTERVAL '24 hours'
   AND status = 'waiting';
 END;
 $$ LANGUAGE plpgsql;
@@ -348,7 +348,7 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
   RETURN QUERY
-  SELECT 
+  SELECT
     r.code,
     r.created_at,
     r.status,
