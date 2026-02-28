@@ -61,6 +61,8 @@ export function createdResponse<T>(
 
 /**
  * Creates a 204 No Content response
+ *
+ * @remarks Reserved for future use (e.g. DELETE endpoints). Tested in unit suite.
  */
 export function noContentResponse(): NextResponse {
   return new NextResponse(null, { status: 204 })
@@ -178,6 +180,8 @@ export function rateLimitResponse(retryAfter: number = 60): NextResponse<ApiErro
 
 /**
  * Creates an unauthorized error response
+ *
+ * @remarks Reserved for Supabase Auth integration. Tested in unit suite.
  */
 export function unauthorizedResponse(
   message: string = 'Authentication required'
@@ -197,6 +201,8 @@ export function unauthorizedResponse(
 
 /**
  * Creates a forbidden error response
+ *
+ * @remarks Reserved for role-based access control. Tested in unit suite.
  */
 export function forbiddenResponse(
   message: string = 'Access denied'

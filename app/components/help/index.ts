@@ -3,7 +3,7 @@
  *
  * Context-aware help system with modal and floating button.
  *
- * @module app/components/Help
+ * @module app/components/help
  * @since 1.0.0
  */
 

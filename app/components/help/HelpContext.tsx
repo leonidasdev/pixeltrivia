@@ -4,7 +4,7 @@
  * Tracks visited routes and provides available help tabs
  * based on navigation history.
  *
- * @module app/components/Help/HelpContext
+ * @module app/components/help/HelpContext
  * @since 1.0.0
  */
 

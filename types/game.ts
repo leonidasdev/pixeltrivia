@@ -57,14 +57,16 @@ export type GameState =
   | 'error'
 
 /**
- * Difficulty levels available in the game
+ * Difficulty / knowledge levels available in the game.
+ *
+ * Used for both game configuration (`DifficultyLevel`) and AI question
+ * generation (`KnowledgeLevel`). The two aliases exist for semantic
+ * clarity but resolve to the same union.
  */
 export type DifficultyLevel = 'elementary' | 'middle-school' | 'high-school' | 'college' | 'classic'
 
-/**
- * Knowledge levels for custom game configuration
- */
-export type KnowledgeLevel = 'classic' | 'college' | 'high-school' | 'middle-school' | 'elementary'
+/** Alias of {@link DifficultyLevel} used in custom-quiz / AI contexts. */
+export type KnowledgeLevel = DifficultyLevel
 
 // ============================================================================
 // Answer Types

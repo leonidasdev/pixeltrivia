@@ -6,6 +6,8 @@
  */
 
 import { logger } from './logger'
+import { generateId } from './utils'
+import { KNOWLEDGE_LEVELS } from '@/constants/difficulties'
 import type {
   CustomQuizRequest as _CustomQuizRequest,
   CustomQuizQuestion as _CustomQuizQuestion,
@@ -15,6 +17,11 @@ import type {
 export type CustomQuizRequest = _CustomQuizRequest
 export type CustomQuizQuestion = _CustomQuizQuestion
 
+/**
+ * Client-side response shape for custom quiz generation.
+ *
+ * @see {@link import('@/types/quiz').CustomQuizResponse} for the canonical API contract
+ */
 export interface CustomQuizResponse {
   success: boolean
   data?: CustomQuizQuestion[]
@@ -76,9 +83,12 @@ export function validateCustomQuizConfig(config: {
 } {
   const errors: string[] = []
 
-  // Validate knowledge level
-  const validLevels = ['classic', 'college', 'high-school', 'middle-school', 'elementary']
-  if (!config.knowledgeLevel || !validLevels.includes(config.knowledgeLevel)) {
+  // Validate knowledge level (sourced from constants/difficulties)
+  const validLevels = KNOWLEDGE_LEVELS.map(l => l.value)
+  if (
+    !config.knowledgeLevel ||
+    !validLevels.includes(config.knowledgeLevel as (typeof validLevels)[number])
+  ) {
     errors.push('Knowledge level must be one of: ' + validLevels.join(', '))
   }
 
@@ -91,9 +101,9 @@ export function validateCustomQuizConfig(config: {
     errors.push('Number of questions must be between 1 and 50')
   }
 
-  // Validate context length (optional field)
-  if (config.context && config.context.length > 1000) {
-    errors.push('Context must be 1000 characters or less')
+  // Validate context length (aligned with lib/validation.ts customQuizSchema)
+  if (config.context && config.context.length > 2000) {
+    errors.push('Context must be 2000 characters or less')
   }
 
   return {
@@ -140,7 +150,7 @@ export function createCustomGameSession(
   config: CustomQuizRequest
 ) {
   return {
-    id: `custom_${Date.now()}`,
+    id: generateId('custom'),
     type: 'custom' as const,
     questions,
     config,

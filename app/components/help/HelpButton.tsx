@@ -3,7 +3,7 @@
  *
  * Floating help button that opens the HelpModal.
  *
- * @module app/components/Help/HelpButton
+ * @module app/components/help/HelpButton
  * @since 1.0.0
  */
 

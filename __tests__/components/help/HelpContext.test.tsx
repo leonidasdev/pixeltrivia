@@ -18,7 +18,7 @@ jest.mock('next/navigation', () => ({
   usePathname: () => mockPathname,
 }))
 
-import { HelpProvider, useHelpContext } from '@/app/components/Help/HelpContext'
+import { HelpProvider, useHelpContext } from '@/app/components/help/HelpContext'
 
 // Test consumer component
 function TestConsumer() {

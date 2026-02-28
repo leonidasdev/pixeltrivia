@@ -72,19 +72,7 @@ export interface QuizSessionState {
  */
 export type UseQuizSessionReturn = QuizSessionState & QuizSessionActions
 
-/**
- * Shuffle an array using Fisher-Yates algorithm
- */
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array]
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-  }
-  return shuffled
-}
-
-import { generateId } from '@/lib/utils'
+import { generateId, shuffleArray } from '@/lib/utils'
 
 /**
  * Custom hook for managing complete quiz sessions

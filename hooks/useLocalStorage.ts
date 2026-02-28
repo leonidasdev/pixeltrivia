@@ -8,6 +8,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react'
+import { logger } from '@/lib/logger'
 
 /**
  * Options for the useLocalStorage hook
@@ -76,8 +77,7 @@ export function useLocalStorage<T>(
       const item = window.localStorage.getItem(key)
       return item !== null ? deserializer(item) : initialValue
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(`Error reading localStorage key "${key}":`, error)
+      logger.warn(`Error reading localStorage key "${key}":`, error)
       return initialValue
     }
   }, [key, initialValue, deserializer])
@@ -102,8 +102,7 @@ export function useLocalStorage<T>(
           return valueToStore
         })
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(`Error setting localStorage key "${key}":`, error)
+        logger.warn(`Error setting localStorage key "${key}":`, error)
       }
     },
     [key, serializer]
@@ -120,8 +119,7 @@ export function useLocalStorage<T>(
         window.localStorage.removeItem(key)
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(`Error removing localStorage key "${key}":`, error)
+      logger.warn(`Error setting localStorage key "${key}":`, error)
     }
   }, [key, initialValue])
 

@@ -11,7 +11,7 @@ jest.mock('react-dom', () => ({
 }))
 
 // Mock HelpModal
-jest.mock('@/app/components/Help/HelpModal', () => ({
+jest.mock('@/app/components/help/HelpModal', () => ({
   __esModule: true,
   HelpModal: function MockHelpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
     if (!isOpen) return null
@@ -23,7 +23,7 @@ jest.mock('@/app/components/Help/HelpModal', () => ({
   },
 }))
 
-import { HelpButton } from '@/app/components/Help/HelpButton'
+import { HelpButton } from '@/app/components/help/HelpButton'
 
 describe('HelpButton', () => {
   beforeEach(() => {

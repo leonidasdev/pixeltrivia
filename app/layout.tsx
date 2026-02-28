@@ -14,7 +14,7 @@ import { Press_Start_2P, VT323 } from 'next/font/google'
 import './globals.css'
 import MainMenuLogo from './components/MainMenuLogo'
 import BackButton from './components/BackButton'
-import { HelpButton, HelpProvider } from './components/Help'
+import { HelpButton, HelpProvider } from './components/help'
 
 const pressStart2P = Press_Start_2P({
   weight: '400',

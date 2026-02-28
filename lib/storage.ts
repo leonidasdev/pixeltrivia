@@ -37,7 +37,10 @@ export interface GameSettings {
 }
 
 /**
- * Game history entry
+ * Game history entry persisted to localStorage.
+ *
+ * @see {@link import('@/types/game').GameSession} for the runtime session type
+ * @see {@link import('@/types/game').GameSummary} for the computed summary type
  */
 export interface GameHistoryEntry {
   id: string

@@ -3,11 +3,11 @@
  */
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { HelpModal } from '@/app/components/Help/HelpModal'
-import { useHelpContext } from '@/app/components/Help/HelpContext'
+import { HelpModal } from '@/app/components/help/HelpModal'
+import { useHelpContext } from '@/app/components/help/HelpContext'
 
 // Mock the HelpContext
-jest.mock('@/app/components/Help/HelpContext', () => ({
+jest.mock('@/app/components/help/HelpContext', () => ({
   useHelpContext: jest.fn(),
 }))
 

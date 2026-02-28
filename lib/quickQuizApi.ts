@@ -7,12 +7,17 @@
 
 import { logger } from './logger'
 import { calculateGameScore, getGrade } from './scoring'
-import { generateId } from './utils'
+import { generateId, shuffleArray } from './utils'
 import type { QuickQuizQuestion as _QuickQuizQuestion } from '@/types/quiz'
 
 // Re-export canonical type so existing imports from this module continue to work
 export type QuickQuizQuestion = _QuickQuizQuestion
 
+/**
+ * Client-side response shape for quick quiz fetches.
+ *
+ * @see {@link import('@/types/quiz').QuickQuizResponse} for the canonical API contract
+ */
 export interface QuickQuizResponse {
   success: boolean
   data?: QuickQuizQuestion[]
@@ -83,14 +88,10 @@ export function validateQuizQuestion(question: unknown): question is QuickQuizQu
 
 /**
  * Shuffles the questions array and returns a new array
+ * @deprecated Use `shuffleArray` from `lib/utils` directly for new code.
  */
 export function shuffleQuestions(questions: QuickQuizQuestion[]): QuickQuizQuestion[] {
-  const shuffled = [...questions]
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-  }
-  return shuffled
+  return shuffleArray(questions)
 }
 
 /**

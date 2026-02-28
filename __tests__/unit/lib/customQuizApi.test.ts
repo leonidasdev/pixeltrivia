@@ -111,22 +111,22 @@ describe('customQuizApi', () => {
       expect(validateCustomQuizConfig(config50).isValid).toBe(true)
     })
 
-    it('should reject context longer than 1000 characters', () => {
+    it('should reject context longer than 2000 characters', () => {
       const config: CustomQuizRequest = {
         knowledgeLevel: 'college',
-        context: 'a'.repeat(1001),
+        context: 'a'.repeat(2001),
         numQuestions: 10,
       }
 
       const result = validateCustomQuizConfig(config)
       expect(result.isValid).toBe(false)
-      expect(result.errors).toContain('Context must be 1000 characters or less')
+      expect(result.errors).toContain('Context must be 2000 characters or less')
     })
 
-    it('should accept context at exactly 1000 characters', () => {
+    it('should accept context at exactly 2000 characters', () => {
       const config: CustomQuizRequest = {
         knowledgeLevel: 'college',
-        context: 'a'.repeat(1000),
+        context: 'a'.repeat(2000),
         numQuestions: 10,
       }
 
@@ -137,7 +137,7 @@ describe('customQuizApi', () => {
     it('should collect multiple errors', () => {
       const config = {
         knowledgeLevel: 'invalid',
-        context: 'a'.repeat(1001),
+        context: 'a'.repeat(2001),
         numQuestions: 100,
       }
 

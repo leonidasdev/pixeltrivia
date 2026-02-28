@@ -4,7 +4,7 @@
  * Tabbed modal displaying help content for each game mode.
  * Tabs are dynamically shown based on visited routes.
  *
- * @module app/components/Help/HelpModal
+ * @module app/components/help/HelpModal
  * @since 1.0.0
  */
 

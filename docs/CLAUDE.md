@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (1222+ tests, 64 suites) |
+| **Testing** | Jest + React Testing Library (1236+ tests, 66 suites) |
 
 ---
 
@@ -77,7 +77,7 @@ pixeltrivia/
 │   │   ├── MainMenuLogo.tsx
 │   │   ├── QuickGameSelector.tsx
 │   │   ├── SettingsPanel.tsx
-│   │   ├── Help/             # Help system (HelpButton, HelpModal, HelpContext)
+│   │   ├── help/             # Help system (HelpButton, HelpModal, HelpContext)
 │   │   ├── multiplayer/      # Multiplayer components
 │   │   │   ├── PlayerList.tsx     # Player list with avatars & scores
 │   │   │   ├── LobbyView.tsx     # Waiting room before game
@@ -328,7 +328,7 @@ All API routes use `lib/apiResponse.ts` helpers for consistent response envelope
 ## Testing Overview
 
 ### Test Statistics
-- **1222+ tests** across 64+ test suites
+- **1236+ tests** across 66+ test suites
 - **100% passing** on CI
 - **Coverage thresholds**: branches ≥55%, functions ≥64%, lines ≥61%, statements ≥60%
 
@@ -494,7 +494,7 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - Core game modes (Quick, Custom, Advanced)
 - Multiplayer system (room creation, joining, real-time sync, host controls)
 - Sound system (Web Audio API engine with 18 chiptune effects + procedural music loops)
-- Testing infrastructure (1222+ tests, 64+ suites)
+- Testing infrastructure (1236+ tests, 66+ suites)
 - CI/CD pipeline (GitHub Actions + Husky)
 - Security hardening (validation, rate limiting on all routes, middleware, CSP)
 - Structured logging via `lib/logger` with request ID tracing
@@ -583,4 +583,4 @@ When working on this codebase:
 
 ---
 
-*Last updated: February 28, 2026 (Phase 15 — Codebase Audit & Cleanup)*
+*Last updated: February 28, 2026 (Phase 16 — Code Quality & Architecture)*

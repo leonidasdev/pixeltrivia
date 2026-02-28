@@ -17,6 +17,11 @@ export interface GameQuestion extends Question {
   timeLimit: number
 }
 
+/**
+ * Client-side response shape for fetching game questions.
+ *
+ * @see {@link import('@/types/api').ApiResponse} for the canonical API envelope
+ */
 export interface FetchQuestionsResponse {
   success: boolean
   data?: {
@@ -75,6 +80,11 @@ export async function fetchQuestions(
 
 /**
  * Game session management
+ */
+/**
+ * Client-side game session state.
+ *
+ * @see {@link import('@/types/game').GameSession} for the canonical session type
  */
 export interface GameSession {
   sessionId: string

@@ -23,6 +23,7 @@ import {
   methodNotAllowedResponse,
 } from '@/lib/apiResponse'
 import { MIN_PLAYERS_TO_START } from '@/constants/game'
+import { shuffleArray } from '@/lib/utils'
 
 interface RouteParams {
   params: Promise<{ code: string }>
@@ -105,11 +106,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     // Shuffle and select the required number of questions
-    const shuffled = [...availableQuestions]
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-    }
+    const shuffled = shuffleArray(availableQuestions)
     const selectedQuestions = shuffled.slice(0, Math.min(questionCount, shuffled.length))
 
     // Store questions in game_questions table

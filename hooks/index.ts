@@ -25,3 +25,7 @@ export { useSound } from './useSound'
 export type { UseSoundReturn } from './useSound'
 export { useGameHistory } from './useGameHistory'
 export type { UseGameHistoryReturn } from './useGameHistory'
+
+// Re-exported from app/components/help/ for discoverability.
+// The hook is co-located with HelpProvider (React Context pattern).
+export { useHelpContext } from '../app/components/help/HelpContext'

@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026 (Phase 15 — Codebase Audit & Cleanup)
+> **Last Updated:** February 28, 2026 (Phase 16 — Code Quality & Architecture)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 64+ |
-| Tests | 1222+ |
+| Test Suites | 66+ |
+| Tests | 1236+ |
 | Coverage (Statements) | ~62.65% |
 | Coverage (Branches) | ~57.12% |
 | Coverage (Functions) | ~66.42% |
@@ -26,43 +26,43 @@
 ### Priority 1: Code Quality & Consistency (from Phase 15 Audit)
 
 #### 1.1 Type Consolidation
-- [ ] Merge `DifficultyLevel` and `KnowledgeLevel` in `types/game.ts` — identical unions with different member order
-- [ ] Resolve `Question` type conflict between `types/game.ts` (id: `number | string`, correctAnswer: `number`) and `lib/validation.ts` (id: `string`, correctAnswer: `string`)
-- [ ] Align `QuickQuizResponse` / `CustomQuizResponse` shapes between `lib/quickQuizApi.ts` and `types/quiz.ts`
-- [ ] Consolidate `GameSession` type between `lib/gameApi.ts` and `types/game.ts`
+- [x] Merge `DifficultyLevel` and `KnowledgeLevel` in `types/game.ts` — `KnowledgeLevel` is now an alias of `DifficultyLevel`
+- [x] Resolve `Question` type conflict — renamed to `ValidatedQuestion` in `lib/validation.ts` with JSDoc explaining intentional difference
+- [x] Added `@see` cross-references between client-side response types and canonical API types
+- [ ] Consolidate `GameSession` type between `lib/gameApi.ts` and `types/game.ts` (blocked: different shapes serve different consumers)
+- [ ] Create shared `createSession()` factory in `lib/gameApi.ts` to replace near-identical session constructors
 
 #### 1.2 Deduplication
-- [ ] Extract shared Fisher-Yates shuffle from `lib/quickQuizApi.ts` and `hooks/useQuizSession.ts` into `lib/utils.ts` as `shuffleArray<T>()`
-- [ ] Create shared `createSession()` factory in `lib/gameApi.ts` to replace near-identical session constructors in `quickQuizApi`, `customQuizApi`, and `gameApi`
+- [x] Extracted `shuffleArray<T>()` into `lib/utils.ts` — replaced 5 duplicate Fisher-Yates implementations
+- [x] Fixed `createCustomGameSession()` to use `generateId('custom')` instead of `custom_${Date.now()}`
 - [ ] Abstract common API fetch/error-handling boilerplate into a generic `apiFetch<TReq, TRes>()` utility
-- [ ] Fix `createCustomGameSession()` to use `generateId('custom')` instead of `custom_${Date.now()}`
 
 #### 1.3 Validation Alignment
-- [ ] Fix context max-length mismatch: `lib/customQuizApi.ts` allows 1000 chars vs `lib/validation.ts` allows 2000 chars
-- [ ] Replace hardcoded valid levels in `lib/customQuizApi.ts` with import from `constants/difficulties.ts`
-- [ ] Remove shadowed `KnowledgeLevel` re-declaration in `lib/validation.ts` (use canonical from `types/game.ts`)
+- [x] Fixed context max-length mismatch: `lib/customQuizApi.ts` now allows 2000 chars (aligned with `lib/validation.ts`)
+- [x] Replaced hardcoded valid levels in `lib/customQuizApi.ts` with import from `constants/difficulties.ts`
+- [x] Removed shadowed `KnowledgeLevel` re-declaration in `lib/validation.ts`
 
 #### 1.4 Logging Consistency
-- [ ] Replace raw `console.warn()` in `hooks/useLocalStorage.ts` with structured `logger` (3 occurrences)
+- [x] Replaced all 3 `console.warn()` in `hooks/useLocalStorage.ts` with structured `logger`
 
 #### 1.5 Response Type Alignment
-- [ ] Align `FetchQuestionsResponse` in `lib/gameApi.ts` with canonical `ApiResponse` from `types/api.ts`
-- [ ] Align `GameHistoryEntry` in `lib/storage.ts` with session types from `types/game.ts`
+- [x] Added `@see` JSDoc cross-references between `FetchQuestionsResponse`, `GameSession` in lib and canonical types
+- [x] Added `@see` cross-references for `GameHistoryEntry` relating to runtime session and summary types
 
 ---
 
 ### Priority 2: Architecture & Modularity
 
 #### 2.1 Module Organization
-- [ ] Create `lib/index.ts` barrel export for consistency with `types/`, `constants/`, `hooks/`
-- [ ] Rename `app/components/Help/` to `app/components/help/` (PascalCase is inconsistent with `multiplayer/`, `stats/`, `ui/`)
-- [ ] Move `useHelpContext` hook from `app/components/Help/HelpContext.tsx` into `hooks/` (or document the co-location pattern)
+- [x] Created `lib/index.ts` barrel export for consistency with `types/`, `constants/`, `hooks/`
+- [x] Renamed `app/components/Help/` to `app/components/help/` (all imports, mocks, and JSDoc updated)
+- [x] Documented `useHelpContext` co-location pattern and re-exported from `hooks/index.ts`
 
 #### 2.2 Storage Architecture
-- [ ] Evaluate moving `createStorage<T>()` from `hooks/useLocalStorage.ts` into its own `lib/createStorage.ts` file (different paradigm from React hook)
+- [ ] Evaluate moving `createStorage<T>()` from `hooks/useLocalStorage.ts` into its own `lib/createStorage.ts` file
 
 #### 2.3 API Consistency
-- [ ] Add missing `noContentResponse`, `unauthorizedResponse`, `forbiddenResponse` usage or mark as intentionally unused public API
+- [x] Documented `noContentResponse`, `unauthorizedResponse`, `forbiddenResponse` as intentionally reserved (Supabase Auth, RBAC)
 - [ ] Consider splitting `lib/apiResponse.ts` into response builders vs request parsers
 
 ---
@@ -70,13 +70,13 @@
 ### Priority 3: Testing & Coverage
 
 #### 3.1 Coverage Gaps
-- [ ] Add tests for `lib/leaderboard.ts` functions used only in production (currently tested but room for coverage growth)
-- [ ] Add tests for `lib/storage.ts` `createStorage()` utility
+- [x] Added `__tests__/unit/lib/utils.test.ts` — 14 tests for `generateId`, `formatDuration`, `shuffleArray`
+- [x] `createStorage()` tests already exist in `__tests__/hooks/createStorage.test.ts`
 - [ ] Test error boundaries with actual error scenarios (component integration tests)
 - [ ] Add E2E tests for leaderboard and achievements pages
 
 #### 3.2 Test Organization
-- [ ] Review test file locations: some component tests are in `__tests__/components/` while others are at root
+- [x] Renamed `__tests__/components/Help/` to `__tests__/components/help/` for consistency
 
 ---
 
@@ -138,6 +138,38 @@
 - [ ] Add API versioning strategy documentation
 - [ ] Create runbook for common operational tasks
 - [ ] Add changelog (CHANGELOG.md) with version history
+
+---
+
+## Phase 16 Completed (Code Quality & Architecture)
+
+### Type Consolidation
+- Merged `KnowledgeLevel` as alias of `DifficultyLevel` in `types/game.ts`
+- Renamed shadowed `Question` type to `ValidatedQuestion` in `lib/validation.ts` with JSDoc documenting intentional difference
+- Removed shadowed `KnowledgeLevel` re-declaration from `lib/validation.ts`
+
+### Deduplication
+- Extracted `shuffleArray<T>()` into `lib/utils.ts` — replaced 5 duplicate Fisher-Yates implementations across:
+  - `lib/quickQuizApi.ts`, `hooks/useQuizSession.ts`, `app/api/game/questions/route.ts`, `app/api/quiz/quick/route.ts`, `app/api/room/[code]/start/route.ts`
+- Fixed `createCustomGameSession()` to use `generateId('custom')` instead of `custom_${Date.now()}`
+
+### Validation & Consistency
+- Aligned context max-length: `lib/customQuizApi.ts` now allows 2000 chars (matching `lib/validation.ts`)
+- Replaced hardcoded valid levels in `lib/customQuizApi.ts` with import from `constants/difficulties.ts`
+- Replaced all `console.warn()` in `hooks/useLocalStorage.ts` with structured `logger`
+- Added `@see` JSDoc cross-references between client-side and canonical response/session types
+
+### Architecture
+- Created `lib/index.ts` barrel export (utilities, errors, API clients, storage, validation)
+- Renamed `app/components/Help/` → `app/components/help/` (consistent with `ui/`, `stats/`, `multiplayer/`)
+- Renamed `__tests__/components/Help/` → `__tests__/components/help/`
+- Re-exported `useHelpContext` from `hooks/index.ts` for discoverability (co-located with provider)
+- Documented intentionally unused API response helpers (`noContentResponse`, `unauthorizedResponse`, `forbiddenResponse`)
+
+### Testing
+- Added `__tests__/unit/lib/utils.test.ts` — 14 tests covering `generateId`, `formatDuration`, `shuffleArray`
+- Updated `customQuizApi.test.ts` to match new 2000-char context limit
+- Total: 66 suites, 1236 tests passing
 
 ---
 
@@ -257,4 +289,4 @@ All items below have been completed and verified. See git history for details.
 
 ---
 
-*Last reviewed: February 28, 2026 (Phase 15)*
+*Last reviewed: February 28, 2026 (Phase 16)*

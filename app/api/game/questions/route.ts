@@ -1,6 +1,7 @@
 import { type NextRequest } from 'next/server'
 import { getSupabaseClient } from '@/lib/supabase'
 import { logger } from '@/lib/logger'
+import { shuffleArray } from '@/lib/utils'
 import {
   successResponse,
   validationErrorResponse,
@@ -87,11 +88,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Randomize using Fisher-Yates and limit the questions
-    const shuffled = [...filteredQuestions]
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-    }
+    const shuffled = shuffleArray(filteredQuestions)
     const selected = shuffled.slice(0, limit)
 
     // Format questions for the game
