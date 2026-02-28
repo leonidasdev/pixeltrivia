@@ -10,8 +10,12 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 48 |
-| Tests | 900 |
+| Test Suites | 60 |
+| Tests | 1122 |
+| Coverage (Statements) | 62.65% |
+| Coverage (Branches) | 57.12% |
+| Coverage (Functions) | 66.42% |
+| Coverage (Lines) | 63.42% |
 | TypeScript Errors | 0 |
 | ESLint Errors | 0 |
 
@@ -22,13 +26,13 @@
 ### Priority 1: Testing
 
 #### 1.1 Expand Test Coverage
-- [ ] Page tests: `select/page.tsx`, `quick/page.tsx`, `custom/page.tsx`, `advanced/page.tsx`
-- [ ] Component tests: `HelpButton.tsx`, `HelpContext.tsx`, UI components (`PixelButton`, `PixelCard`, `PixelInput`, `PixelBadge`)
-- [ ] API route tests: `/api/quiz/custom`, `/api/quiz/advanced`
+- [x] Page tests: `select/page.tsx`, `quick/page.tsx`, `custom/page.tsx`, `advanced/page.tsx`
+- [x] Component tests: `HelpButton.tsx`, `HelpContext.tsx`, UI components (`PixelButton`, `PixelCard`, `PixelInput`, `PixelBadge`)
+- [x] API route tests: `/api/quiz/custom`, `/api/quiz/advanced`
 
 #### 1.2 Raise Coverage Thresholds
-- [ ] Current thresholds are low (branches 12%, functions/lines/statements 15%)
-- [ ] Raise incrementally toward 60%+ for lines and statements
+- [x] Raised thresholds from 12-15% to 55-64% (branches 55%, functions 64%, lines 61%, statements 60%)
+- [x] All thresholds now within 2-3% of actual coverage
 
 ---
 
@@ -130,7 +134,8 @@ All items below have been completed and verified. See git history for details.
 - Applied rate limiting to all API routes
 
 ### Testing and CI
-- 900 tests across 48 suites (unit, component, hook, integration, E2E)
+- 1122 tests across 60 suites (unit, component, hook, integration, E2E)
+- Coverage thresholds enforced: branches 55%, functions 64%, lines 61%, statements 60%
 - CI/CD pipeline: GitHub Actions, Husky pre-commit, lint-staged
 - Comprehensive documentation: 8 doc files + AUDIT.md + CLAUDE.md
 
