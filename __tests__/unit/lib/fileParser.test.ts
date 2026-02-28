@@ -6,16 +6,20 @@
  * Unit tests for lib/fileParser
  */
 
-jest.mock('pdf-parse', () => {
-  return jest.fn((buffer: Buffer) =>
+jest.mock('pdf-parse', () => ({
+  __esModule: true,
+  default: jest.fn((buffer: Buffer) =>
     Promise.resolve({ text: `PDF content from buffer of ${buffer.length} bytes` })
-  )
-})
+  ),
+}))
 
 jest.mock('mammoth', () => ({
-  extractRawText: jest.fn(({ buffer }: { buffer: Buffer }) =>
-    Promise.resolve({ value: `DOCX content from buffer of ${buffer.length} bytes` })
-  ),
+  __esModule: true,
+  default: {
+    extractRawText: jest.fn(({ buffer }: { buffer: Buffer }) =>
+      Promise.resolve({ value: `DOCX content from buffer of ${buffer.length} bytes` })
+    ),
+  },
 }))
 
 jest.mock('@/lib/logger', () => ({

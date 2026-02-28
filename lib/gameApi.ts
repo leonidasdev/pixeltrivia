@@ -8,7 +8,7 @@
  */
 
 import { apiFetch } from './apiFetch'
-import { generateId } from './utils'
+import { createBaseSession } from './session'
 import type { Question } from '@/types'
 
 export interface GameQuestion extends Question {
@@ -100,11 +100,8 @@ export function createGameSession(
   difficulty: string
 ): ActiveGameSession {
   return {
-    sessionId: generateId('game'),
-    questions,
-    currentQuestionIndex: 0,
+    ...createBaseSession('game', questions),
     score: 0,
-    startTime: new Date(),
     answers: [],
     category,
     difficulty,

@@ -6,7 +6,7 @@
  */
 
 import { apiFetch } from './apiFetch'
-import { generateId } from './utils'
+import { createBaseSession } from './session'
 import { KNOWLEDGE_LEVELS } from '@/constants/difficulties'
 import type {
   CustomQuizRequest as _CustomQuizRequest,
@@ -128,13 +128,14 @@ export function createCustomGameSession(
   questions: CustomQuizQuestion[],
   config: CustomQuizRequest
 ) {
+  const base = createBaseSession('custom', questions)
   return {
-    id: generateId('custom'),
+    id: base.sessionId,
     type: 'custom' as const,
-    questions,
+    questions: base.questions,
     config,
-    createdAt: new Date().toISOString(),
-    currentQuestionIndex: 0,
+    createdAt: base.startTime.toISOString(),
+    currentQuestionIndex: base.currentQuestionIndex,
     score: 0,
     answers: [] as number[],
     timeStarted: null as string | null,

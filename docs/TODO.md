@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026 (Phase 17 — API Abstraction & Performance)
+> **Last Updated:** February 28, 2026 (Phase 18 — Session Factory & Bundle Optimisation)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -30,7 +30,7 @@
 - [x] Resolve `Question` type conflict — renamed to `ValidatedQuestion` in `lib/validation.ts` with JSDoc explaining intentional difference
 - [x] Added `@see` cross-references between client-side response types and canonical API types
 - [x] Consolidate `GameSession` type between `lib/gameApi.ts` and `types/game.ts` — renamed client variant to `ActiveGameSession` with `@deprecated` alias
-- [ ] Create shared `createSession()` factory in `lib/gameApi.ts` to replace near-identical session constructors
+- [x] Create shared `createSession()` factory — `lib/session.ts` with `createBaseSession<Q>()` and `BaseSessionFields<Q>` type; refactored `gameApi`, `quickQuizApi`, `customQuizApi`
 
 #### 1.2 Deduplication
 - [x] Extracted `shuffleArray<T>()` into `lib/utils.ts` — replaced 5 duplicate Fisher-Yates implementations
@@ -86,11 +86,11 @@
 - [x] Memoize `getAvailableHelpTabs()` in `HelpContext.tsx` — wrapped with `useCallback` keyed on `visitedRoutes`
 - [x] Memoize available tabs in `HelpModal.tsx` — wrapped with `useMemo` keyed on `getAvailableHelpTabs`
 - [x] Added `useMemo` for `playerInfo` and return value in `usePlayerSettings`
-- [ ] Consider React Server Components for static game pages (mode, select)
+- [x] Consider React Server Components for static game pages — evaluated `mode/` and `select/` pages; both require heavy client-side interactivity (useState, useEffect, localStorage, event listeners); RSC conversion not viable
 
 #### 4.2 Bundle Size
-- [ ] Audit `pdf-parse` and `mammoth` bundle sizes — consider lazy loading for upload page only
-- [ ] Evaluate tree-shaking effectiveness of barrel exports
+- [x] Audit `pdf-parse` and `mammoth` bundle sizes — already server-only (API route); converted to lazy `import()` in `lib/fileParser.ts` for better cold-start performance
+- [x] Evaluate tree-shaking effectiveness — barrel exports use named `export { } from` pattern (not `export *`), which webpack tree-shakes correctly
 
 #### 4.3 Data Layer
 - [ ] Move leaderboard/achievements from localStorage to Supabase for persistence across devices
@@ -139,6 +139,25 @@
 - [ ] Add API versioning strategy documentation
 - [ ] Create runbook for common operational tasks
 - [ ] Add changelog (CHANGELOG.md) with version history
+
+---
+
+## Phase 18 Completed (Session Factory & Bundle Optimisation)
+
+### Shared Session Factory
+- Created `lib/session.ts` — `createBaseSession<Q>()` factory and `BaseSessionFields<Q>` type
+- Refactored `createGameSession()`, `createQuickQuizSession()`, `createCustomGameSession()` to spread from `createBaseSession`
+- Added `createBaseSession` and `BaseSessionFields` to `lib/index.ts` barrel export
+- Added `__tests__/unit/lib/session.test.ts` — 10 tests (field presence, prefix, uniqueness, generics, spread)
+
+### RSC Evaluation
+- Evaluated `/game/mode` and `/game/select` for React Server Component conversion
+- Both pages require `useState`, `useEffect`, `useCallback`, `useRouter`, `useSearchParams`, `localStorage` — RSC not viable
+
+### Bundle Optimisation
+- Converted `pdf-parse` and `mammoth` from eager top-level imports to lazy `import()` in `lib/fileParser.ts`
+- Updated `__tests__/unit/lib/fileParser.test.ts` mocks to use `__esModule: true` + `default` export for dynamic import compatibility
+- Confirmed barrel exports use named `export { }` pattern — tree-shakeable by webpack
 
 ---
 

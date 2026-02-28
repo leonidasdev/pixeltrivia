@@ -9,9 +9,6 @@
  * @since 1.3.0
  */
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pdfParse = require('pdf-parse') as (buffer: Buffer) => Promise<{ text: string }>
-import mammoth from 'mammoth'
 import { logger } from './logger'
 
 // ============================================================================
@@ -140,16 +137,22 @@ async function parseText(buffer: Buffer): Promise<string> {
 
 /**
  * Extract text from a PDF file using pdf-parse.
+ * Loaded lazily to avoid pulling the library into memory until needed.
  */
 async function parsePdf(buffer: Buffer): Promise<string> {
+  const pdfParse = (await import('pdf-parse')).default as (
+    buffer: Buffer
+  ) => Promise<{ text: string }>
   const result = await pdfParse(buffer)
   return result.text
 }
 
 /**
  * Extract text from a DOCX file using mammoth.
+ * Loaded lazily to avoid pulling the library into memory until needed.
  */
 async function parseDocx(buffer: Buffer): Promise<string> {
+  const mammoth = (await import('mammoth')).default
   const result = await mammoth.extractRawText({ buffer })
   return result.value
 }

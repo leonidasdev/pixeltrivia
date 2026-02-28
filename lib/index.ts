@@ -10,6 +10,8 @@
 
 // Utilities
 export { generateId, formatDuration, shuffleArray } from './utils'
+export { createBaseSession } from './session'
+export type { BaseSessionFields } from './session'
 export { logger } from './logger'
 export { calculateGameScore, getGrade } from './scoring'
 

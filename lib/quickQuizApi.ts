@@ -6,8 +6,9 @@
  */
 
 import { apiFetch } from './apiFetch'
+import { createBaseSession } from './session'
 import { calculateGameScore, getGrade } from './scoring'
-import { generateId, shuffleArray } from './utils'
+import { shuffleArray } from './utils'
 import type { QuickQuizQuestion as _QuickQuizQuestion } from '@/types/quiz'
 
 // Re-export canonical type so existing imports from this module continue to work
@@ -103,11 +104,8 @@ export function createQuickQuizSession(
   category: string
 ): QuickQuizSession {
   return {
-    sessionId: generateId('quick'),
-    questions: shuffleQuestions(questions),
-    currentQuestionIndex: 0,
+    ...createBaseSession('quick', shuffleQuestions(questions)),
     answers: [],
-    startTime: new Date(),
     category,
     isComplete: false,
   }
