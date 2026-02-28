@@ -104,7 +104,7 @@ export function AnswerFeedback({
         className={`
           ${c.animation}
           flex flex-col items-center gap-3
-          px-8 py-6 rounded-lg
+          px-8 py-6
           border-4 ${c.border}
           bg-gray-900/90 backdrop-blur-sm
           ${c.glow}

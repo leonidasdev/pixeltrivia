@@ -90,7 +90,7 @@ export default function QuickGamePage() {
 
         {/* Instructions */}
         <section className="mt-8 text-center text-gray-400 text-sm max-w-lg mx-auto">
-          <h3 className="text-white font-bold mb-2">How Quick Game Works:</h3>
+          <h3 className="text-white font-pixel font-bold mb-2">How Quick Game Works:</h3>
           <ul className="space-y-1 text-left">
             <li>• Choose your preferred difficulty level</li>
             <li>• Select a category that interests you</li>

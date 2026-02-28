@@ -280,12 +280,12 @@ export function ContentCard({ children, title, icon, className = '' }: ContentCa
     <div
       className={`
         bg-gray-800/80 backdrop-blur-sm border-2 border-purple-500/30
-        rounded-lg p-4 sm:p-6 shadow-lg
+        p-4 sm:p-6 shadow-lg pixel-border
         ${className}
       `}
     >
       {title && (
-        <h3 className="text-lg font-bold text-cyan-300 mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-pixel font-bold text-cyan-300 mb-4 flex items-center gap-2">
           {icon && <span>{icon}</span>}
           {title}
         </h3>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import SettingsPanel from './components/SettingsPanel'
+import Footer from './components/Footer'
 import {
   ToastContainer,
   useToast,
@@ -99,10 +100,10 @@ export default function HomePage() {
       >
         {/* Game title */}
         <header className="text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-2 pixel-text-shadow select-none animate-pixel-float">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-pixel font-bold text-white mb-2 pixel-text-shadow select-none animate-pixel-float">
             PIXEL
           </h1>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-yellow-400 pixel-text-shadow select-none">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-pixel font-bold text-yellow-400 pixel-text-shadow select-none">
             TRIVIA
           </h2>
           <div className="mt-3 text-cyan-300 text-base tracking-wider">
@@ -259,16 +260,13 @@ export default function HomePage() {
           </StaggerChildren>
         </nav>
         {/* Footer info */}
-        <footer className="text-center text-gray-400 text-sm mt-8">
-          <p className="font-pixel-body text-base">Use arrow keys and Enter to navigate</p>
-          <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia</p>
-        </footer>
+        <Footer hint="Use arrow keys and Enter to navigate" className="mt-8" />
       </PageTransition>{' '}
       {/* Settings Modal */}
       <Modal isOpen={showSettings} onClose={closeSettings} title="⚙️ PLAYER SETTINGS" size="lg">
         {nameError && (
           <div
-            className="mb-4 p-3 bg-red-900 bg-opacity-40 border-2 border-red-500 rounded-lg text-red-200 text-sm"
+            className="mb-4 p-3 bg-red-900 bg-opacity-40 border-2 border-red-500 text-red-200 text-sm pixel-border"
             role="alert"
           >
             {nameError}

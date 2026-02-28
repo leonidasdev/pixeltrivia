@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { SparklesOverlay, PageTransition, StaggerChildren } from '@/app/components/ui'
 import { StatsOverview, GameHistoryList, StatsCharts } from '@/app/components/stats'
+import Footer from '@/app/components/Footer'
 import { useGameHistory } from '@/hooks/useGameHistory'
 import { useSound } from '@/hooks/useSound'
 
@@ -178,10 +179,7 @@ export default function StatsPage() {
         </div>
 
         {/* Footer */}
-        <footer className="text-center text-gray-400 text-sm pt-4">
-          <p className="font-pixel-body text-base">Use Escape key to go back</p>
-          <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia</p>
-        </footer>
+        <Footer hint="Use Escape key to go back" className="pt-4" />
       </PageTransition>
     </main>
   )

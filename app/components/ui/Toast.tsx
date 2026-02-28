@@ -73,7 +73,7 @@ export function Toast({ message, onDismiss }: ToastProps) {
       role="alert"
       aria-live="assertive"
       className={`
-        ${styles.bg} ${styles.border} border-2 rounded-lg p-4 shadow-xl
+        ${styles.bg} ${styles.border} border-2 p-4 shadow-xl pixel-border
         max-w-sm w-full backdrop-blur-sm
         transform transition-all duration-200 ease-in-out
         ${isVisible && !isExiting ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}

@@ -101,7 +101,6 @@ export function PixelTimer({
         ${timerState.glowColor}
         ${timerState.animation}
         border-2 ${timerState.borderColor}
-        rounded-lg
         transition-all duration-300
         ${className}
       `}

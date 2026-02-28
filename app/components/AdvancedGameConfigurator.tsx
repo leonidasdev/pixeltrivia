@@ -122,7 +122,7 @@ export default function AdvancedGameConfigurator({
         {/* Upload Area */}
         <div
           className={`
-            relative border-3 border-dashed rounded-lg p-6 text-center transition-all duration-200
+            relative border-3 border-dashed p-6 text-center transition-all duration-200
             ${
               dragActive
                 ? 'border-cyan-400 bg-cyan-400 bg-opacity-10'
@@ -154,7 +154,7 @@ export default function AdvancedGameConfigurator({
         {/* Uploaded Files List */}
         {config.files.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-bold text-white">Uploaded Files:</h4>
+            <h4 className="text-sm font-pixel font-bold text-white">Uploaded Files:</h4>
             <div className="space-y-2">
               {config.files.map(file => (
                 <div
@@ -225,7 +225,7 @@ export default function AdvancedGameConfigurator({
             type="button"
             onClick={() => handleFormatChange('short')}
             className={`
-              p-4 border-3 rounded-lg text-center transition-all duration-200 pixel-border
+              p-4 border-3 text-center transition-all duration-200 pixel-border
               focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
               ${
                 config.questionFormat === 'short'
@@ -244,7 +244,7 @@ export default function AdvancedGameConfigurator({
             type="button"
             onClick={() => handleFormatChange('long')}
             className={`
-              p-4 border-3 rounded-lg text-center transition-all duration-200 pixel-border
+              p-4 border-3 text-center transition-all duration-200 pixel-border
               focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
               ${
                 config.questionFormat === 'long'
@@ -262,8 +262,8 @@ export default function AdvancedGameConfigurator({
       </div>
 
       {/* Info Box */}
-      <div className="bg-blue-900 bg-opacity-30 border-2 border-blue-600 rounded-lg p-4">
-        <h4 className="text-blue-300 font-bold text-sm mb-2 flex items-center">
+      <div className="bg-blue-900 bg-opacity-30 border-2 border-blue-600 p-4 pixel-border">
+        <h4 className="text-blue-300 font-pixel font-bold text-sm mb-2 flex items-center">
           <span className="mr-2">💡</span> Advanced Game Tips
         </h4>
         <ul className="text-blue-200 text-xs space-y-1">

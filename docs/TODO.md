@@ -11,7 +11,7 @@
 | Metric | Value |
 |--------|-------|
 | Test Suites | 48 |
-| Tests | 899+ |
+| Tests | 900 |
 | TypeScript Errors | 0 |
 | ESLint Errors | 0 |
 
@@ -19,71 +19,57 @@
 
 ## Remaining Tasks
 
-### Priority 1: Style Consistency
+### Priority 1: Testing
 
-#### 1.1 Pixel-Art Corner Consistency
-- [ ] Audit `rounded-lg` / `rounded-md` usage in pixel-art components
-- [ ] Replace with square corners (`rounded-none`) or `rounded-sm` where appropriate
-
-#### 1.2 Font Usage Audit
-- [ ] Standardize `font-pixel` (headings/labels) vs `font-pixel-body` (body text) across all game pages
-
-#### 1.3 Shared Footer Component
-- [ ] Extract duplicate copyright lines into a shared `<Footer>` component
-
----
-
-### Priority 2: Testing
-
-#### 2.1 Expand Test Coverage
+#### 1.1 Expand Test Coverage
 - [ ] Page tests: `select/page.tsx`, `quick/page.tsx`, `custom/page.tsx`, `advanced/page.tsx`
 - [ ] Component tests: `HelpButton.tsx`, `HelpContext.tsx`, UI components (`PixelButton`, `PixelCard`, `PixelInput`, `PixelBadge`)
 - [ ] API route tests: `/api/quiz/custom`, `/api/quiz/advanced`
 
-#### 2.2 Raise Coverage Thresholds
+#### 1.2 Raise Coverage Thresholds
 - [ ] Current thresholds are low (branches 12%, functions/lines/statements 15%)
 - [ ] Raise incrementally toward 60%+ for lines and statements
 
 ---
 
-### Priority 3: Infrastructure
+### Priority 2: Infrastructure
 
-#### 3.1 Production Logging
+#### 2.1 Production Logging
 - [ ] Evaluate pino or winston for production server-side logging
 - [ ] Add request ID tracking for API routes
 
-#### 3.2 Rate Limiting
+#### 2.2 Rate Limiting
 - [ ] In-memory `Map` rate limiter does not persist across serverless invocations
 - [ ] Evaluate Redis-backed solution (Upstash) for production
 
-#### 3.3 CSP Hardening
+#### 2.3 CSP Hardening
 - [ ] Remove `unsafe-eval` and `unsafe-inline` from CSP in production
 - [ ] Currently in `lib/security.core.ts`
 
-#### 3.4 Enable ESLint During Builds
+#### 2.4 Enable ESLint During Builds
 - [ ] `next.config.js` has `ignoreDuringBuilds: true`
 - [ ] Set to `false` in CI/production
 
 ---
 
-### Priority 4: Feature Backlog
+### Priority 3: Feature Backlog
 
-#### 4.1 Game Features
+#### 3.1 Game Features
 - [ ] Complete Advanced Game file upload processing
 - [ ] Implement leaderboards
 - [ ] Add achievements system
 - [ ] Add background music
 
-#### 4.2 Performance
+#### 3.2 Performance
 - [ ] Add API response caching (React Query or SWR)
 - [ ] Analyze bundle with `@next/bundle-analyzer`
 - [ ] Implement dynamic imports for game mode pages
 
-#### 4.3 Monitoring
+#### 3.3 Monitoring
 - [ ] Integrate error tracking (Sentry)
 - [ ] Add usage analytics
 
-#### 4.4 Database
+#### 3.4 Database
 - [ ] Add migration tooling (Supabase migrations)
 - [ ] Generate Supabase types
 - [ ] Add seed data scripts
@@ -131,6 +117,12 @@ All items below have been completed and verified. See git history for details.
 - Help system with context-aware modal and provider
 - Accessibility: skip navigation, ARIA labels, keyboard navigation, reduced motion support
 
+### Style Consistency
+- Removed `rounded-lg` / `rounded-md` from 22 pixel-art components (14 files); kept on range sliders and circular elements
+- Changed body default from `font-pixel` to `font-pixel-body`; added explicit `font-pixel` to 15 headings across 10 files
+- Created shared `<Footer>` component; replaced duplicate copyright footers in 5 pages
+- Added `titleClassName` prop to `Modal` for consumer title override
+
 ### Features
 - Multiplayer system: room creation, joining, real-time sync, host controls
 - Sound system: Web Audio API engine with 18 chiptune effects
@@ -138,7 +130,7 @@ All items below have been completed and verified. See git history for details.
 - Applied rate limiting to all API routes
 
 ### Testing and CI
-- 899+ tests across 48 suites (unit, component, hook, integration, E2E)
+- 900 tests across 48 suites (unit, component, hook, integration, E2E)
 - CI/CD pipeline: GitHub Actions, Husky pre-commit, lint-staged
 - Comprehensive documentation: 8 doc files + AUDIT.md + CLAUDE.md
 

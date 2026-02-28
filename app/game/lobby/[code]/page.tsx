@@ -129,7 +129,9 @@ function LobbyContent({ params }: LobbyPageProps) {
       <PageTransition style="slide-up" className="z-10 w-full max-w-2xl">
         {/* Header */}
         <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white pixel-text-shadow mb-2">GAME LOBBY</h1>
+          <h1 className="text-4xl font-pixel font-bold text-white pixel-text-shadow mb-2">
+            GAME LOBBY
+          </h1>
           {isRealtimeConnected && (
             <div className="flex items-center justify-center gap-2 text-xs text-green-400">
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />

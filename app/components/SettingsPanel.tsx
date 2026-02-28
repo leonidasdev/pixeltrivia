@@ -90,7 +90,7 @@ export default function SettingsPanel({
                 type="button"
                 onClick={() => onAvatarSelect(avatar.id)}
                 className={`
-                  relative p-3 border-3 rounded-lg transition-all duration-200
+                  relative p-3 border-3 transition-all duration-200
                   focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
                   ${
                     selectedAvatar === avatar.id

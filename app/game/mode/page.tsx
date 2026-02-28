@@ -9,6 +9,7 @@ import {
   StaggerChildren,
 } from '@/app/components/ui'
 import { useSound } from '@/hooks/useSound'
+import Footer from '@/app/components/Footer'
 
 // Game mode types
 type GameMode = 'quick' | 'custom' | 'advanced'
@@ -94,7 +95,7 @@ function GameModeContent() {
       >
         {/* Header with player info */}
         <header className="text-center relative w-full">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 pixel-text-shadow">
+          <h1 className="text-4xl md:text-5xl font-pixel font-bold text-white mb-2 pixel-text-shadow">
             SELECT GAME MODE
           </h1>
           <p className="text-cyan-300 text-lg mb-4">
@@ -104,7 +105,7 @@ function GameModeContent() {
           {/* Player info display */}
           <div className="flex items-center justify-center space-x-4 mb-6">
             <div
-              className={`w-12 h-12 ${avatarDetails.color} border-3 border-gray-600 rounded-lg flex items-center justify-center pixel-border`}
+              className={`w-12 h-12 ${avatarDetails.color} border-3 border-gray-600 flex items-center justify-center pixel-border`}
             >
               <span className="text-2xl" role="img" aria-label={avatarDetails.name}>
                 {avatarDetails.emoji}
@@ -131,7 +132,7 @@ function GameModeContent() {
                 onFocus={() => setHoveredCard('quick')}
                 onBlur={() => setHoveredCard(null)}
                 className={`
-                p-8 bg-gradient-to-br from-orange-600 to-orange-700 border-4 border-orange-800 rounded-lg
+                p-8 bg-gradient-to-br from-orange-600 to-orange-700 border-4 border-orange-800
                 text-white text-center transition-all duration-200 pixel-border
                 focus:outline-none focus:ring-4 focus:ring-orange-300 focus:ring-opacity-50
                 ${hoveredCard === 'quick' ? 'scale-105 pixel-shadow transform translate-x-1 translate-y-1' : 'hover:scale-105 hover:pixel-shadow hover:transform hover:translate-x-1 hover:translate-y-1'}
@@ -139,7 +140,7 @@ function GameModeContent() {
               `}
               >
                 <div className="text-4xl mb-4">⚡</div>
-                <h3 className="text-2xl font-bold mb-3 pixel-text-shadow">QUICK GAME</h3>
+                <h3 className="text-2xl font-pixel font-bold mb-3 pixel-text-shadow">QUICK GAME</h3>
                 <p className="text-orange-200 text-sm leading-relaxed">
                   Jump into instant trivia with predefined categories. Perfect for quick brain
                   challenges with 10 random questions!
@@ -160,7 +161,7 @@ function GameModeContent() {
                 onFocus={() => setHoveredCard('custom')}
                 onBlur={() => setHoveredCard(null)}
                 className={`
-                p-8 bg-gradient-to-br from-purple-600 to-purple-700 border-4 border-purple-800 rounded-lg
+                p-8 bg-gradient-to-br from-purple-600 to-purple-700 border-4 border-purple-800
                 text-white text-center transition-all duration-200 pixel-border
                 focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-opacity-50
                 ${hoveredCard === 'custom' ? 'scale-105 pixel-shadow transform translate-x-1 translate-y-1' : 'hover:scale-105 hover:pixel-shadow hover:transform hover:translate-x-1 hover:translate-y-1'}
@@ -168,7 +169,9 @@ function GameModeContent() {
               `}
               >
                 <div className="text-4xl mb-4">🤖</div>
-                <h3 className="text-2xl font-bold mb-3 pixel-text-shadow">CUSTOM GAME</h3>
+                <h3 className="text-2xl font-pixel font-bold mb-3 pixel-text-shadow">
+                  CUSTOM GAME
+                </h3>
                 <p className="text-purple-200 text-sm leading-relaxed">
                   Create AI-powered questions on any topic you choose. Specify difficulty, question
                   count, and educational level!
@@ -189,7 +192,7 @@ function GameModeContent() {
                 onFocus={() => setHoveredCard('advanced')}
                 onBlur={() => setHoveredCard(null)}
                 className={`
-                p-8 bg-gradient-to-br from-blue-600 to-blue-700 border-4 border-blue-800 rounded-lg
+                p-8 bg-gradient-to-br from-blue-600 to-blue-700 border-4 border-blue-800
                 text-white text-center transition-all duration-200 pixel-border
                 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50
                 ${hoveredCard === 'advanced' ? 'scale-105 pixel-shadow transform translate-x-1 translate-y-1' : 'hover:scale-105 hover:pixel-shadow hover:transform hover:translate-x-1 hover:translate-y-1'}
@@ -197,7 +200,9 @@ function GameModeContent() {
               `}
               >
                 <div className="text-4xl mb-4">📚</div>
-                <h3 className="text-2xl font-bold mb-3 pixel-text-shadow">ADVANCED GAME</h3>
+                <h3 className="text-2xl font-pixel font-bold mb-3 pixel-text-shadow">
+                  ADVANCED GAME
+                </h3>
                 <p className="text-blue-200 text-sm leading-relaxed">
                   Upload your own documents for AI-powered trivia generation. Perfect for studying
                   or testing knowledge of specific materials!
@@ -210,12 +215,7 @@ function GameModeContent() {
           </div>
         </section>{' '}
         {/* Footer info */}
-        <footer className="text-center text-gray-400 text-sm">
-          <p className="font-pixel-body text-base">
-            Use Escape key to go back • Arrow keys to navigate
-          </p>
-          <p className="text-xs mt-1 opacity-75">© 2026 PixelTrivia</p>
-        </footer>
+        <Footer hint="Use Escape key to go back • Arrow keys to navigate" />
       </PageTransition>
     </main>
   )

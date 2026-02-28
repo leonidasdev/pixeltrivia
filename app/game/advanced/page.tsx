@@ -11,6 +11,7 @@ import {
   LoadingOverlay,
   PageTransition,
 } from '@/app/components/ui'
+import Footer from '@/app/components/Footer'
 
 export default function AdvancedGamePage() {
   const router = useRouter()
@@ -217,14 +218,7 @@ export default function AdvancedGamePage() {
             </div>
           </section>
           {/* Processing Info */}
-          <footer className="text-center text-gray-400 font-pixel-body text-base">
-            <p>
-              💡 Tip: Questions will be generated based on the content of your uploaded documents
-            </p>
-            <p className="font-pixel text-[8px] mt-1 opacity-75">
-              © 2026 PixelTrivia Advanced Mode
-            </p>
-          </footer>
+          <Footer hint="💡 Tip: Questions will be generated based on the content of your uploaded documents" />
         </div>
       </PageTransition>
 

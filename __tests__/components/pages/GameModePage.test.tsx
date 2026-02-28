@@ -4,6 +4,14 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 
+// Mock Footer component
+jest.mock('@/app/components/Footer', () => ({
+  __esModule: true,
+  default: function MockFooter() {
+    return <div data-testid="footer">Footer</div>
+  },
+}))
+
 import GameModePage from '@/app/game/mode/page'
 
 describe('GameModePage', () => {
@@ -40,9 +48,9 @@ describe('GameModePage', () => {
       expect(screen.getByText('📚')).toBeInTheDocument()
     })
 
-    it('renders footer with keyboard instructions', () => {
+    it('renders footer', () => {
       render(<GameModePage />)
-      expect(screen.getByText(/escape key to go back/i)).toBeInTheDocument()
+      expect(screen.getByTestId('footer')).toBeInTheDocument()
     })
   })
 

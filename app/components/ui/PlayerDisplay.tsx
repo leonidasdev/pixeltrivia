@@ -141,7 +141,7 @@ export function AvatarDisplay({
       className={`
         ${sizeStyles.container} ${avatar.color}
         ${showBorder ? 'border-2 border-gray-600 pixel-border' : ''}
-        rounded-lg flex items-center justify-center
+        flex items-center justify-center
         ${className}
       `}
     >

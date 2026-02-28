@@ -6,6 +6,7 @@ import AdvancedGameConfigurator, {
   type AdvancedGameConfig,
 } from '../../components/AdvancedGameConfigurator'
 import { LoadingOverlay, SparklesOverlay, PageTransition } from '@/app/components/ui'
+import Footer from '@/app/components/Footer'
 
 // Game mode types
 type GameMode = 'quick' | 'custom' | 'advanced' | null
@@ -155,7 +156,7 @@ function GameSelectContent() {
             {/* Player info display */}
             <div className="flex items-center justify-center space-x-4 mb-6">
               <div
-                className={`w-12 h-12 ${avatarDetails.color} border-3 border-gray-600 rounded-lg flex items-center justify-center pixel-border`}
+                className={`w-12 h-12 ${avatarDetails.color} border-3 border-gray-600 flex items-center justify-center pixel-border`}
               >
                 <span className="text-2xl" role="img" aria-label={avatarDetails.name}>
                   {avatarDetails.emoji}
@@ -352,10 +353,7 @@ function GameSelectContent() {
           )}
 
           {/* Footer info */}
-          <footer className="text-center text-gray-400 font-pixel-body text-base">
-            <p>Use Escape key to go back • Arrow keys to navigate</p>
-            <p className="font-pixel text-[8px] mt-1 opacity-75">© 2026 PixelTrivia</p>
-          </footer>
+          <Footer hint="Use Escape key to go back • Arrow keys to navigate" />
         </div>
       </PageTransition>
     </main>

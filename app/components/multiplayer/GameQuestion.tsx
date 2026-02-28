@@ -149,7 +149,7 @@ export function GameQuestion({
 
       {/* Question text */}
       <div className="bg-gray-800 border-4 border-gray-600 p-6 pixel-border pixel-shadow">
-        <h2 className="text-xl md:text-2xl font-pixel-body text-white text-center leading-relaxed pixel-text-shadow">
+        <h2 className="text-xl md:text-2xl font-pixel text-white text-center leading-relaxed pixel-text-shadow">
           {question.questionText}
         </h2>
       </div>

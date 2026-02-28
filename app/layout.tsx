@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${pressStart2P.variable} ${vt323.variable}`}>
-      <body className="font-pixel bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 min-h-screen">
+      <body className="font-pixel-body bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 min-h-screen">
         <HelpProvider>
           {/* Skip navigation link for keyboard/screen-reader users */}
           <a

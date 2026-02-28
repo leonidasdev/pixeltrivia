@@ -147,7 +147,9 @@ export function PixelCard({
         >
           <div>
             {title && (
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider">{title}</h3>
+              <h3 className="text-lg font-pixel font-bold text-white uppercase tracking-wider">
+                {title}
+              </h3>
             )}
             {subtitle && <p className="text-sm text-gray-400 mt-1">{subtitle}</p>}
           </div>

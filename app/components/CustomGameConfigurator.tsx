@@ -69,9 +69,11 @@ export default function CustomGameConfigurator({
   const selectedLevel = KNOWLEDGE_LEVELS.find(level => level.value === knowledgeLevel)
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-gray-900 bg-opacity-90 border-4 border-gray-600 rounded-lg p-6 backdrop-blur-sm">
+    <div className="w-full max-w-2xl mx-auto bg-gray-900 bg-opacity-90 border-4 border-gray-600 p-6 backdrop-blur-sm pixel-border">
       <header className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-white pixel-text-shadow mb-2">🎯 CUSTOM GAME</h2>
+        <h2 className="text-3xl font-pixel font-bold text-white pixel-text-shadow mb-2">
+          🎯 CUSTOM GAME
+        </h2>
         <p className="text-cyan-300 text-sm">AI-generated questions tailored to your needs</p>
       </header>
 
@@ -203,7 +205,7 @@ export default function CustomGameConfigurator({
             type="submit"
             disabled={isLoading}
             className={`
-              flex-1 py-4 px-6 text-xl font-bold text-center rounded-lg
+              flex-1 py-4 px-6 text-xl font-bold text-center
               transform transition-all duration-150 ease-in-out
               focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-opacity-50
               ${
@@ -243,8 +245,8 @@ export default function CustomGameConfigurator({
               type="button"
               onClick={onCancel}
               disabled={isLoading}
-              className="px-6 py-3 bg-gray-600 hover:bg-gray-500 disabled:bg-gray-700 text-white font-bold rounded-lg
-                       border-2 border-gray-700 hover:border-gray-600 transition-all duration-150
+              className="px-6 py-3 bg-gray-600 hover:bg-gray-500 disabled:bg-gray-700 text-white font-bold
+                       border-2 border-gray-700 hover:border-gray-600 transition-all duration-150 pixel-border
                        focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95"
             >

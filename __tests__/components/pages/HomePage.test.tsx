@@ -10,6 +10,14 @@ jest.mock('react-dom', () => ({
   createPortal: (node: React.ReactNode) => node,
 }))
 
+// Mock Footer component
+jest.mock('@/app/components/Footer', () => ({
+  __esModule: true,
+  default: function MockFooter() {
+    return <div data-testid="footer">Footer</div>
+  },
+}))
+
 import HomePage from '@/app/page'
 
 describe('HomePage', () => {
@@ -36,9 +44,9 @@ describe('HomePage', () => {
       expect(screen.getByRole('menuitem', { name: /open player settings/i })).toBeInTheDocument()
     })
 
-    it('renders footer with copyright', () => {
+    it('renders footer', () => {
       render(<HomePage />)
-      expect(screen.getByText(/© 2026 PixelTrivia/)).toBeInTheDocument()
+      expect(screen.getByTestId('footer')).toBeInTheDocument()
     })
   })
 
