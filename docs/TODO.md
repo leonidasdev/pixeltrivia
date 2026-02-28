@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026 (Phase 18 — Session Factory & Bundle Optimisation)
+> **Last Updated:** February 28, 2026 (Phase 19 — Documentation, PWA & CI Enhancements)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 68+ |
-| Tests | 1263+ |
+| Test Suites | 69+ |
+| Tests | 1273+ |
 | Coverage (Statements) | ~62.65% |
 | Coverage (Branches) | ~57.12% |
 | Coverage (Functions) | ~66.42% |
@@ -118,7 +118,7 @@
 
 #### 5.4 Mobile
 - [ ] Responsive design audit and fixes
-- [ ] PWA support (service worker, manifest)
+- [x] PWA support — added `public/manifest.json`, `Viewport` export, `appleWebApp` metadata in `layout.tsx`
 - [ ] Touch gesture support for game interactions
 
 ---
@@ -127,7 +127,7 @@
 
 #### 6.1 CI/CD Enhancements
 - [ ] Add Lighthouse CI checks for performance regression
-- [ ] Add bundle size tracking in PR checks
+- [x] Add bundle size tracking in PR checks — CI workflow now reports bundle size and uploads build artifacts
 - [ ] Implement staging environment deployment
 
 #### 6.2 Monitoring
@@ -136,9 +136,25 @@
 - [ ] Set up alerting for error rate spikes
 
 #### 6.3 Documentation
-- [ ] Add API versioning strategy documentation
-- [ ] Create runbook for common operational tasks
-- [ ] Add changelog (CHANGELOG.md) with version history
+- [x] Add API versioning strategy documentation — `docs/api-versioning.md` with URL-based strategy, migration guidelines, and implementation checklist
+- [x] Create runbook for common operational tasks — `docs/runbook.md` covering dev, testing, deployment, database, monitoring, and common issues
+- [x] Add changelog — `CHANGELOG.md` with version history from Phase 0 through Phase 18
+
+---
+
+## Phase 19 Completed (Documentation, PWA & CI Enhancements)
+
+### Documentation
+- Created `CHANGELOG.md` — complete version history from Phase 0 (initial prototype) through Phase 18
+- Created `docs/api-versioning.md` — URL-based versioning strategy, migration guidelines, implementation checklist
+- Created `docs/runbook.md` — operational procedures for development, testing, deployment, database, monitoring, and troubleshooting
+
+### PWA Support
+- Added `public/manifest.json` with standalone display, theme colour, and icon configuration
+- Added `Viewport` export and `appleWebApp` metadata to `app/layout.tsx`
+
+### CI Enhancements
+- Enhanced `.github/workflows/ci.yml` with bundle size reporting (GitHub Step Summary) and build artifact uploads
 
 ---
 

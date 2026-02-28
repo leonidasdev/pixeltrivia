@@ -9,7 +9,7 @@
  * Navigation hides during active gameplay (/play routes) to avoid UI clutter.
  * Layout uses flexbox for responsive positioning and pixel-art theming.
  */
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Press_Start_2P, VT323 } from 'next/font/google'
 import './globals.css'
 import MainMenuLogo from './components/MainMenuLogo'
@@ -33,6 +33,20 @@ const vt323 = VT323({
 export const metadata: Metadata = {
   title: 'PixelTrivia - Retro Trivia Game',
   description: 'A pixel-perfect trivia game experience',
+  manifest: '/manifest.json',
+  themeColor: '#7c3aed',
+  appleWebApp: {
+    capable: true,
+    title: 'PixelTrivia',
+    statusBarStyle: 'black-translucent',
+  },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
