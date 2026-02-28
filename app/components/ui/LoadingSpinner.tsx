@@ -59,6 +59,24 @@ const sizeStyles: Record<LoadingSpinnerSize, { spinner: string; text: string }> 
   xl: { spinner: 'w-16 h-16', text: 'text-xl' },
 }
 
+/**
+ * Map of known color names to Tailwind text-color classes.
+ *
+ * Tailwind cannot detect dynamically-constructed class names like
+ * `text-${color}`. Using this map keeps classes statically analyzable.
+ */
+const TEXT_COLOR_MAP: Record<string, string> = {
+  white: 'text-white',
+  blue: 'text-blue-400',
+  green: 'text-green-400',
+  red: 'text-red-400',
+  yellow: 'text-yellow-400',
+  purple: 'text-purple-400',
+  gray: 'text-gray-400',
+  cyan: 'text-cyan-400',
+  pink: 'text-pink-400',
+}
+
 // ============================================================================
 // Pixel Spinner SVG (currently unused, available for future use)
 // ============================================================================
@@ -113,6 +131,7 @@ export function LoadingSpinner({
   className = '',
 }: LoadingSpinnerProps) {
   const styles = sizeStyles[size]
+  const colorClass = TEXT_COLOR_MAP[color] ?? `text-${color}`
 
   return (
     <div
@@ -121,7 +140,7 @@ export function LoadingSpinner({
       aria-label={label}
     >
       {/* Main spinner */}
-      <div className={`text-${color} ${styles.spinner}`}>
+      <div className={`${colorClass} ${styles.spinner}`}>
         <svg
           className="animate-spin"
           viewBox="0 0 24 24"
@@ -148,7 +167,7 @@ export function LoadingSpinner({
 
       {/* Optional label */}
       {showLabel && (
-        <span className={`text-${color} ${styles.text} font-medium animate-pulse`}>{label}</span>
+        <span className={`${colorClass} ${styles.text} font-medium animate-pulse`}>{label}</span>
       )}
 
       {/* Screen reader text */}

@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      borderWidth: {
+        3: '3px',
+      },
       fontFamily: {
         pixel: ['var(--font-pixel)', 'Courier New', 'monospace'],
         'pixel-body': ['var(--font-pixel-body)', 'Courier New', 'monospace'],

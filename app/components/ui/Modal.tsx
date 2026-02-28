@@ -67,6 +67,11 @@ export interface ModalProps {
   footer?: React.ReactNode
 
   /**
+   * Optional className for the title element
+   */
+  titleClassName?: string
+
+  /**
    * Optional className for modal content
    */
   className?: string
@@ -98,6 +103,7 @@ export function Modal({
   closeOnEscape = true,
   showCloseButton = true,
   footer,
+  titleClassName = '',
   className = '',
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null)
@@ -189,7 +195,9 @@ export function Modal({
             {title && (
               <h2
                 id="modal-title"
-                className="text-xl font-bold text-white uppercase tracking-wider"
+                className={
+                  titleClassName || 'text-xl font-bold text-white uppercase tracking-wider'
+                }
               >
                 {title}
               </h2>

@@ -31,7 +31,7 @@ describe('HelpModal', () => {
   })
 
   afterEach(() => {
-    document.body.style.overflow = 'unset'
+    document.body.style.overflow = ''
   })
 
   describe('Rendering', () => {
@@ -50,7 +50,7 @@ describe('HelpModal', () => {
     it('should render close button', () => {
       render(<HelpModal {...defaultProps} />)
 
-      expect(screen.getByRole('button', { name: /close help modal/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /close modal/i })).toBeInTheDocument()
     })
 
     it('should render all available tabs', () => {
@@ -125,7 +125,7 @@ describe('HelpModal', () => {
     it('should call onClose when close button is clicked', () => {
       render(<HelpModal {...defaultProps} />)
 
-      fireEvent.click(screen.getByRole('button', { name: /close help modal/i }))
+      fireEvent.click(screen.getByRole('button', { name: /close modal/i }))
 
       expect(defaultProps.onClose).toHaveBeenCalledTimes(1)
     })
@@ -172,7 +172,7 @@ describe('HelpModal', () => {
 
       rerender(<HelpModal {...defaultProps} isOpen={false} />)
 
-      expect(document.body.style.overflow).toBe('unset')
+      expect(document.body.style.overflow).toBe('')
     })
 
     it('should reset body overflow on unmount', () => {
@@ -181,7 +181,7 @@ describe('HelpModal', () => {
 
       unmount()
 
-      expect(document.body.style.overflow).toBe('unset')
+      expect(document.body.style.overflow).toBe('')
     })
   })
 
@@ -259,8 +259,8 @@ describe('HelpModal', () => {
     it('should have accessible close button', () => {
       render(<HelpModal {...defaultProps} />)
 
-      const closeButton = screen.getByRole('button', { name: /close help modal/i })
-      expect(closeButton).toHaveAttribute('aria-label', 'Close help modal')
+      const closeButton = screen.getByRole('button', { name: /close modal/i })
+      expect(closeButton).toHaveAttribute('aria-label', 'Close modal')
     })
 
     it('should focus trap within modal', () => {

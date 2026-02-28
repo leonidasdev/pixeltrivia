@@ -523,8 +523,8 @@ import { withSecurity } from '@/lib/security';
 - Read the [Architecture Overview](architecture.md)
 - Explore the [API Reference](api-reference.md)
 - Check the [Testing Guide](testing-guide.md)
-- Review the [Contributing Guidelines](CONTRIBUTING.md)
+- Review the [Contributing Guidelines](../CONTRIBUTING.md)
 
 ---
 
-*Last updated: February 27, 2026*
+*Last updated: February 28, 2026*

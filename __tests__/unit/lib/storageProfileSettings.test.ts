@@ -26,7 +26,7 @@ import {
   getStorageInfo,
   initializeStorage,
   DEFAULT_SETTINGS,
-  DEFAULT_PROFILE,
+  createDefaultProfile,
   STORAGE_KEYS,
   type PlayerProfile,
   type GameSettings,
@@ -79,7 +79,7 @@ describe('Storage — Profile, Settings, Session', () => {
         const stored = getProfile()
         expect(stored).not.toBeNull()
         expect(stored!.name).toBe('Bob')
-        expect(stored!.avatarId).toBe(DEFAULT_PROFILE.avatarId)
+        expect(stored!.avatarId).toBe(createDefaultProfile().avatarId)
         expect(stored!.lastPlayedAt).toBeDefined()
       })
 
@@ -398,11 +398,20 @@ describe('Storage — Profile, Settings, Session', () => {
       })
     })
 
-    it('DEFAULT_PROFILE should have expected shape', () => {
-      expect(DEFAULT_PROFILE.name).toBe('Player')
-      expect(DEFAULT_PROFILE.avatarId).toBe('robot')
-      expect(DEFAULT_PROFILE.createdAt).toBeDefined()
-      expect(DEFAULT_PROFILE.lastPlayedAt).toBeDefined()
+    it('createDefaultProfile should have expected shape', () => {
+      const profile = createDefaultProfile()
+      expect(profile.name).toBe('Player')
+      expect(profile.avatarId).toBe('robot')
+      expect(profile.createdAt).toBeDefined()
+      expect(profile.lastPlayedAt).toBeDefined()
+    })
+
+    it('createDefaultProfile should return fresh timestamps', () => {
+      const a = createDefaultProfile()
+      const b = createDefaultProfile()
+      expect(a).not.toBe(b)
+      expect(a.createdAt).toBeDefined()
+      expect(b.createdAt).toBeDefined()
     })
 
     it('STORAGE_KEYS should use correct prefix', () => {

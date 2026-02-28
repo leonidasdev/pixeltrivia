@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (610 tests, 36 suites) |
+| **Testing** | Jest + React Testing Library (899 tests, 48 suites) |
 
 ---
 
@@ -61,13 +61,14 @@ pixeltrivia/
 │   │   ├── quiz/quick/              # Quick play quiz API
 │   │   ├── quiz/custom/             # Custom quiz (AI-powered)
 │   │   ├── quiz/advanced/           # Advanced quiz (file-based)
-│   │   └── room/create/             # Room creation
-│   │       ├── room/join/           # Room joining API
-│   │       ├── room/[code]/         # Room state + leave/close
-│   │       ├── room/[code]/start/   # Start game (host)
-│   │       ├── room/[code]/answer/  # Submit answer
-│   │       ├── room/[code]/next/    # Next question (host)
-│   │       └── room/[code]/question/ # Get current question
+│   │   └── room/                    # Multiplayer room system
+│   │       ├── create/              # Room creation
+│   │       ├── join/                # Room joining API
+│   │       └── [code]/              # Room state + leave/close
+│   │           ├── start/           # Start game (host)
+│   │           ├── answer/          # Submit answer
+│   │           ├── next/            # Next question (host)
+│   │           └── question/        # Get current question
 │   ├── components/           # React components
 │   │   ├── AdvancedGameConfigurator.tsx
 │   │   ├── BackButton.tsx
@@ -127,7 +128,9 @@ pixeltrivia/
 │   ├── multiplayerApi.ts     # Multiplayer API client (all room/game operations)
 │   ├── gameApi.ts            # Game API client
 │   ├── quickQuizApi.ts       # Quick quiz API client
-│   └── customQuizApi.ts      # Custom quiz API client
+│   ├── customQuizApi.ts      # Custom quiz API client
+│   ├── scoring.ts            # Unified scoring logic for all game modes
+│   └── utils.ts              # Shared utilities (generateId, formatDuration)
 │
 ├── types/                    # Shared TypeScript types
 │   ├── index.ts              # Re-exports all types
@@ -152,7 +155,8 @@ pixeltrivia/
 │   ├── useQuizSession.ts     # Quiz session management
 │   ├── useSound.ts           # Sound effects hook (wraps soundManager)
 │   ├── useRoom.ts            # Room state + Supabase Realtime subscription
-│   └── useMultiplayerGame.ts # Multiplayer game state machine
+│   ├── useMultiplayerGame.ts # Multiplayer game state machine
+│   └── useGameHistory.ts     # Game history storage and stats
 │
 ├── database/
 │   ├── schema.sql            # PostgreSQL schema for Supabase
@@ -167,6 +171,7 @@ pixeltrivia/
 │   ├── testing-guide.md      # Testing guide
 │   ├── api-testing-guide.md  # API testing examples
 │   ├── CLAUDE.md             # AI assistant context (this file)
+│   ├── AUDIT.md              # Codebase audit findings
 │   └── TODO.md               # Project roadmap
 │
 ├── CONTRIBUTING.md           # Contribution guidelines
@@ -313,7 +318,7 @@ All API routes use `lib/apiResponse.ts` helpers for consistent response envelope
 ## Testing Overview
 
 ### Test Statistics
-- **488 tests** across 29 test suites
+- **899 tests** across 48 test suites
 - **100% passing** on CI
 - **Coverage thresholds**: branches ≥12%, functions/lines/statements ≥15%
 
@@ -477,7 +482,7 @@ export function ComponentName({ prop1, prop2 }: Props) {
 
 ### Completed
 - Core game modes (Quick, Custom, Advanced)
-- Testing infrastructure (488 tests, 29 suites)
+- Testing infrastructure (899 tests, 48 suites)
 - CI/CD pipeline (GitHub Actions + Husky)
 - Security hardening (validation, rate limiting on all routes, middleware)
 - Standardized API responses via `lib/apiResponse` helpers
@@ -496,12 +501,10 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - Comprehensive documentation
 
 ### In Progress
-- Multiplayer real-time sync
-- Score persistence
 - Leaderboards
+- Score persistence
 
 ### Planned
-- WebSocket integration
 - User authentication
 - Analytics dashboard
 - Mobile responsiveness improvements
@@ -567,4 +570,4 @@ When working on this codebase:
 
 ---
 
-*Last updated: February 27, 2026*
+*Last updated: February 28, 2026*

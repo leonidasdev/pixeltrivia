@@ -2,53 +2,14 @@
  * Next.js Middleware
  *
  * Applies security checks at the edge before requests hit API routes.
+ * Security headers and CORS origins are defined in `lib/security.core.ts`.
  *
  * @module middleware
  * @since 1.0.0
  */
 
 import { NextResponse, type NextRequest } from 'next/server'
-
-/**
- * Security headers to add to all responses
- */
-const SECURITY_HEADERS = {
-  'X-Frame-Options': 'DENY',
-  'X-Content-Type-Options': 'nosniff',
-  'X-XSS-Protection': '1; mode=block',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-}
-
-/**
- * Allowed origins for CORS.
- * In production, set ALLOWED_ORIGINS env var as a comma-separated list.
- * Example: ALLOWED_ORIGINS=https://pixeltrivia.com,https://www.pixeltrivia.com
- */
-function getAllowedOrigins(): Set<string> {
-  const envOrigins = process.env.ALLOWED_ORIGINS
-  const base = ['http://localhost:3000', 'http://localhost:3001']
-
-  if (envOrigins) {
-    const extras = envOrigins
-      .split(',')
-      .map(o => o.trim())
-      .filter(Boolean)
-    return new Set([...base, ...extras])
-  }
-
-  return new Set(base)
-}
-
-const ALLOWED_ORIGINS = getAllowedOrigins()
-
-/**
- * Check if the origin is allowed
- */
-function isAllowedOrigin(origin: string | null, env: string | undefined): boolean {
-  if (!origin) return true // Same-origin requests don't have origin header
-  if (env === 'development') return true
-  return ALLOWED_ORIGINS.has(origin)
-}
+import { SECURITY_HEADERS, isAllowedOrigin } from '@/lib/security.core'
 
 /**
  * Apply CORS headers for API routes
@@ -56,7 +17,8 @@ function isAllowedOrigin(origin: string | null, env: string | undefined): boolea
 function applyCorsHeaders(response: NextResponse, request: NextRequest): void {
   const origin = request.headers.get('origin')
 
-  if (origin && isAllowedOrigin(origin, process.env.NODE_ENV)) {
+  // Same-origin requests have no origin header; allow them implicitly
+  if (origin && isAllowedOrigin(origin)) {
     response.headers.set('Access-Control-Allow-Origin', origin)
     response.headers.set('Access-Control-Allow-Credentials', 'true')
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')

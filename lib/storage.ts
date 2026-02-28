@@ -114,13 +114,19 @@ export interface StorageSchema {
 // ============================================================================
 
 /**
- * Default player profile
+ * Create a default player profile with fresh timestamps.
+ *
+ * Returns a new object each call so `createdAt` / `lastPlayedAt`
+ * reflect the actual creation time, not module-load time.
  */
-export const DEFAULT_PROFILE: PlayerProfile = {
-  name: 'Player',
-  avatarId: 'robot',
-  createdAt: new Date().toISOString(),
-  lastPlayedAt: new Date().toISOString(),
+export function createDefaultProfile(): PlayerProfile {
+  const now = new Date().toISOString()
+  return {
+    name: 'Player',
+    avatarId: 'robot',
+    createdAt: now,
+    lastPlayedAt: now,
+  }
 }
 
 /**
@@ -228,7 +234,7 @@ export function getProfile(): PlayerProfile | null {
  * Save player profile
  */
 export function saveProfile(profile: Partial<PlayerProfile>): boolean {
-  const existing = getProfile() || DEFAULT_PROFILE
+  const existing = getProfile() || createDefaultProfile()
   const updated: PlayerProfile = {
     ...existing,
     ...profile,

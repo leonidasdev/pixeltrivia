@@ -111,6 +111,24 @@ const SPARKLE_PRESETS: Record<string, SparkleConfig[]> = {
   custom: [],
 }
 
+/**
+ * Map of sparkle color names to Tailwind bg-color classes.
+ *
+ * Tailwind cannot detect dynamically-constructed class names like
+ * `bg-${color}`. Using this map keeps classes statically analyzable.
+ */
+const BG_COLOR_MAP: Record<string, string> = {
+  'yellow-400': 'bg-yellow-400',
+  'pink-400': 'bg-pink-400',
+  'cyan-400': 'bg-cyan-400',
+  'green-400': 'bg-green-400',
+  'purple-400': 'bg-purple-400',
+  'orange-400': 'bg-orange-400',
+  'blue-400': 'bg-blue-400',
+  'red-400': 'bg-red-400',
+  white: 'bg-white',
+}
+
 const GRADIENT_PRESETS: Record<string, string> = {
   'purple-blue': 'bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900',
   dark: 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900',
@@ -128,6 +146,7 @@ interface SparkleProps extends SparkleConfig {
 }
 
 function Sparkle({ top, left, color, delay = 0, size = 2, opacity = 0.6, index }: SparkleProps) {
+  const bgClass = BG_COLOR_MAP[color] ?? `bg-${color}`
   const delayClass = useMemo(() => {
     if (delay === 0) return ''
     if (delay <= 300) return 'animation-delay-300'
@@ -145,7 +164,7 @@ function Sparkle({ top, left, color, delay = 0, size = 2, opacity = 0.6, index }
   return (
     <div
       key={index}
-      className={`absolute bg-${color} animate-pulse ${delayClass}`}
+      className={`absolute ${bgClass} animate-pulse ${delayClass}`}
       style={{
         top,
         left,

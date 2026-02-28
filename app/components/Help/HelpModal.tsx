@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useHelpContext } from './HelpContext'
+import { Modal } from '../ui/Modal'
 
 interface HelpModalProps {
   isOpen: boolean
@@ -31,33 +32,12 @@ export default function HelpModal({ isOpen, onClose }: HelpModalProps) {
     }
   }, [currentRoute, availableTabs])
 
-  // Close modal with Escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'hidden'
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen, onClose])
-
   // Reset to general tab if current tab becomes unavailable
   useEffect(() => {
     if (!availableTabs.includes(activeTab)) {
       setActiveTab('general')
     }
   }, [availableTabs, activeTab])
-
-  if (!isOpen) return null
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -159,47 +139,36 @@ export default function HelpModal({ isOpen, onClose }: HelpModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-
-      {/* Modal */}
-      <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 border-4 border-gray-600 pixel-border max-w-2xl w-full max-h-[80vh] overflow-hidden animate-slideIn">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b-2 border-gray-600 bg-gray-800/80">
-          <h2 className="text-lg font-pixel text-white pixel-text-shadow">Help & Information</h2>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Help & Information"
+      titleClassName="text-lg font-pixel text-white pixel-text-shadow"
+      size="lg"
+      className="bg-gradient-to-br from-gray-800 to-gray-900 pixel-border"
+    >
+      {/* Tabs */}
+      <div className="flex border-b-2 border-gray-600 bg-gray-800/50 -mx-4 -mt-4 mb-4">
+        {availableTabs.map(tab => (
           <button
-            onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300"
-            aria-label="Close help modal"
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`
+              px-4 py-2 font-pixel text-[10px] capitalize transition-colors border-b-2
+              ${
+                activeTab === tab
+                  ? 'text-white border-blue-400 bg-blue-900/30'
+                  : 'text-gray-300 border-transparent hover:text-white hover:bg-gray-700/50'
+              }
+            `}
           >
-            ✕
+            {tab}
           </button>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex border-b-2 border-gray-600 bg-gray-800/50">
-          {availableTabs.map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`
-                px-4 py-2 font-pixel text-[10px] capitalize transition-colors border-b-2
-                ${
-                  activeTab === tab
-                    ? 'text-white border-blue-400 bg-blue-900/30'
-                    : 'text-gray-300 border-transparent hover:text-white hover:bg-gray-700/50'
-                }
-              `}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
-        {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-96">{renderTabContent()}</div>
+        ))}
       </div>
-    </div>
+
+      {/* Tab Content */}
+      {renderTabContent()}
+    </Modal>
   )
 }
