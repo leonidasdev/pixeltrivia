@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** February 28, 2026 (Phase 21 — Social Features, Touch Gestures, Adaptive Difficulty, Monitoring)
+> **Last Updated:** February 28, 2026 (Phase 22 — Adaptive Difficulty UI, Invite Links, Keyboard Navigation)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 72+ |
-| Tests | 1327+ |
+| Test Suites | 74+ |
+| Tests | 1367+ |
 | Coverage (Statements) | ~62.65% |
 | Coverage (Branches) | ~57.12% |
 | Coverage (Functions) | ~66.42% |
@@ -139,6 +139,34 @@
 - [x] Add API versioning strategy documentation — `docs/api-versioning.md` with URL-based strategy, migration guidelines, and implementation checklist
 - [x] Create runbook for common operational tasks — `docs/runbook.md` covering dev, testing, deployment, database, monitoring, and common issues
 - [x] Add changelog — `CHANGELOG.md` with version history from Phase 0 through Phase 18
+
+---
+
+## Phase 22 Completed (Adaptive Difficulty UI, Invite Links, Keyboard Navigation)
+
+### Adaptive Difficulty UI
+- Wired `getRecommendedDifficulty()` into `QuickGameSelector` — each category button now shows a `★ XX%` accuracy badge when the player has history for that category
+- Badge has tooltip with adaptive difficulty reason (e.g., "Recommended: high-school — Consistent performance")
+- Uses `useMemo` to build recommendation map across all categories and difficulty sections
+
+### Multiplayer Invite Links
+- Added copy-to-clipboard and share invite buttons to `LobbyView` lobby screen
+- Room code display is now clickable (copies code to clipboard)
+- **📋 COPY CODE** button copies the 6-character room code
+- **📤 INVITE LINK** button uses Web Share API (with invite URL) or falls back to copying invite URL to clipboard
+- Feedback text shown after actions: "✓ Copied!", "✓ Link copied!", "✓ Shared!", "❌ Copy failed"
+- Invite URL format: `{origin}/game/join?code={roomCode}`
+
+### Keyboard Navigation for Answers
+- Added keyboard shortcuts to `GameQuestion` multiplayer component — press **1-4** or **A-D** to select answer options
+- Only active when not already answered, not revealing, and not loading
+- Visual hint "Press 1-4 or A-D to answer" shown on desktop (hidden on mobile via `hidden md:block`)
+- Keyboard listener properly cleaned up on unmount
+
+### Test Coverage Boost
+- Added `__tests__/components/multiplayer/GameQuestion.test.tsx` — 33 tests covering rendering, click interactions, keyboard navigation (1-4, A-D), feedback states, and timer styles
+- Added `__tests__/components/multiplayer/LobbyView.test.tsx` — 17 tests covering rendering, copy/share buttons, host vs non-host views, start/leave actions
+- Total: 74 suites, 1367 tests (up from 72 suites, 1318 tests)
 
 ---
 

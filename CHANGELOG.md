@@ -7,6 +7,23 @@ Version numbers follow the project's internal phase numbering (not semver) until
 
 ---
 
+## [Phase 22] - 2026-02-28
+
+### Added
+- **Adaptive Difficulty UI** — `QuickGameSelector` category buttons now show a `★ XX%` accuracy badge with tooltip when players have history for that category, powered by `getRecommendedDifficulty()` from `lib/adaptiveDifficulty.ts`
+- **Multiplayer Invite Links** — `LobbyView` now has clickable room code, "📋 COPY CODE" clipboard button, and "📤 INVITE LINK" Web Share API button (falls back to clipboard copy of invite URL)
+- **Keyboard Navigation** — `GameQuestion` supports **1-4** and **A-D** keys to select answers; visual hint shown on desktop, hidden after answering
+- `__tests__/components/multiplayer/GameQuestion.test.tsx` — 33 tests (rendering, clicks, keyboard shortcuts, feedback, timer)
+- `__tests__/components/multiplayer/LobbyView.test.tsx` — 17 tests (rendering, copy/share, host vs non-host, actions)
+
+### Fixed
+- `LobbyView` COPY CODE button now correctly renders "❌ Copy failed" error feedback (was silently swallowed)
+
+### Changed
+- Test suite: 74 suites, 1367 tests (up from 72 suites, 1318 tests)
+
+---
+
 ## [Phase 21] - 2026-02-28
 
 ### Added

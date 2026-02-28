@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { GAME_CATEGORIES } from '@/constants/categories'
+import { getRecommendedDifficulty } from '@/lib/adaptiveDifficulty'
 
 interface QuickGameSelectorProps {
   onCategorySelected: (category: string, difficulty: string) => void
@@ -16,6 +17,19 @@ export default function QuickGameSelector({
     difficulty: string
   } | null>(null)
   const [hoveredButton, setHoveredButton] = useState<string | null>(null)
+
+  // Build adaptive difficulty recommendations for each visible category
+  const recommendations = useMemo(() => {
+    const map: Record<string, ReturnType<typeof getRecommendedDifficulty>> = {}
+    for (const section of Object.values(GAME_CATEGORIES)) {
+      for (const cat of section.categories) {
+        if (!map[cat]) {
+          map[cat] = getRecommendedDifficulty(cat)
+        }
+      }
+    }
+    return map
+  }, [])
 
   const handleSectionToggle = (sectionKey: string) => {
     setExpandedSection(expandedSection === sectionKey ? null : sectionKey)
@@ -126,6 +140,14 @@ export default function QuickGameSelector({
                         aria-label={`Select ${category} category for ${section.title} difficulty`}
                       >
                         <span className="block leading-tight">{category}</span>
+                        {recommendations[category]?.gamesPlayed > 0 && (
+                          <span
+                            className="block text-[10px] font-pixel opacity-70 mt-0.5"
+                            title={recommendations[category].reason}
+                          >
+                            ★ {recommendations[category].averageAccuracy}%
+                          </span>
+                        )}
                       </button>
                     )
                   })}

@@ -11,6 +11,7 @@
 
 'use client'
 
+import { useState, useCallback } from 'react'
 import { PlayerList } from './PlayerList'
 import { formatRoomCode } from '@/lib/roomCode'
 import { MIN_PLAYERS_TO_START } from '@/constants/game'
@@ -41,6 +42,44 @@ export function LobbyView({
 }: LobbyViewProps) {
   const playerCount = room.players.length
   const canStart = playerCount >= MIN_PLAYERS_TO_START
+  const [copyFeedback, setCopyFeedback] = useState<string | null>(null)
+
+  const inviteUrl =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}/game/join?code=${room.code}`
+      : `/game/join?code=${room.code}`
+
+  const handleCopyCode = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(room.code)
+      setCopyFeedback('Code copied!')
+      setTimeout(() => setCopyFeedback(null), 2000)
+    } catch {
+      setCopyFeedback('Copy failed')
+      setTimeout(() => setCopyFeedback(null), 2000)
+    }
+  }, [room.code])
+
+  const handleShareInvite = useCallback(async () => {
+    const shareData = {
+      title: 'Join my PixelTrivia game!',
+      text: `Join my trivia room with code ${room.code}`,
+      url: inviteUrl,
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData)
+        setCopyFeedback('Shared!')
+      } else {
+        await navigator.clipboard.writeText(inviteUrl)
+        setCopyFeedback('Link copied!')
+      }
+    } catch {
+      // User cancelled share dialog — no error
+    }
+    setTimeout(() => setCopyFeedback(null), 2000)
+  }, [room.code, inviteUrl])
 
   return (
     <div className="max-w-xl w-full mx-auto space-y-6">
@@ -49,14 +88,35 @@ export function LobbyView({
         <p className="font-pixel-body text-lg text-gray-400 uppercase tracking-wider mb-2">
           Room Code
         </p>
-        <div className="bg-gray-800 border-4 border-cyan-500 px-8 py-4 inline-block pixel-border pixel-shadow">
+        <button
+          onClick={handleCopyCode}
+          className="bg-gray-800 border-4 border-cyan-500 px-8 py-4 inline-block pixel-border pixel-shadow hover:border-cyan-400 transition-colors cursor-pointer focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50"
+          title="Click to copy room code"
+        >
           <span className="text-4xl md:text-5xl font-pixel font-bold text-cyan-300 tracking-[0.3em] pixel-text-shadow">
             {formatRoomCode(room.code)}
           </span>
+        </button>
+        <div className="flex items-center justify-center gap-3 mt-3">
+          <button
+            onClick={handleCopyCode}
+            className="px-3 py-2 min-h-[44px] font-pixel text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white border-4 border-gray-600 pixel-border transition-all duration-150 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-300"
+          >
+            {copyFeedback === 'Code copied!'
+              ? '✓ Copied!'
+              : copyFeedback === 'Copy failed'
+                ? '❌ Copy failed'
+                : '📋 COPY CODE'}
+          </button>
+          <button
+            onClick={handleShareInvite}
+            className="px-3 py-2 min-h-[44px] font-pixel text-xs bg-cyan-700 hover:bg-cyan-600 text-white border-4 border-cyan-800 pixel-border transition-all duration-150 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-300"
+          >
+            {copyFeedback === 'Link copied!' || copyFeedback === 'Shared!'
+              ? `✓ ${copyFeedback}`
+              : '📤 INVITE LINK'}
+          </button>
         </div>
-        <p className="font-pixel-body text-base text-gray-500 mt-2">
-          Share this code with friends to join
-        </p>
       </div>
 
       {/* Game Settings */}

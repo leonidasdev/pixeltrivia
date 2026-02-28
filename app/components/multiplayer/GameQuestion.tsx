@@ -11,6 +11,7 @@
 
 'use client'
 
+import { useEffect, useCallback } from 'react'
 import type { MultiplayerQuestion } from '@/types/room'
 import { TIME_WARNING_THRESHOLD, TIME_CRITICAL_THRESHOLD } from '@/constants/game'
 
@@ -57,6 +58,36 @@ export function GameQuestion({
   onAnswer,
 }: GameQuestionProps) {
   const isRevealing = correctAnswer !== null
+
+  /** Keyboard navigation: press 1-4 or A-D to select an answer */
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (hasAnswered || isRevealing || isLoading) return
+
+      const keyMap: Record<string, number> = {
+        '1': 0,
+        '2': 1,
+        '3': 2,
+        '4': 3,
+        a: 0,
+        b: 1,
+        c: 2,
+        d: 3,
+      }
+
+      const index = keyMap[e.key.toLowerCase()]
+      if (index !== undefined && index < (question.answers?.length ?? 4)) {
+        e.preventDefault()
+        onAnswer(index)
+      }
+    },
+    [hasAnswered, isRevealing, isLoading, onAnswer, question.answers?.length]
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleKeyDown])
 
   const getTimerColor = () => {
     if (timeRemaining <= TIME_CRITICAL_THRESHOLD) return 'text-red-400'
@@ -181,6 +212,13 @@ export function GameQuestion({
           )
         })}
       </div>
+
+      {/* Keyboard shortcut hint */}
+      {!hasAnswered && !isRevealing && !isLoading && (
+        <p className="text-center font-pixel text-[10px] text-gray-600 hidden md:block">
+          Press 1-4 or A-D to answer
+        </p>
+      )}
 
       {/* Answer feedback */}
       {hasAnswered && !isRevealing && (
