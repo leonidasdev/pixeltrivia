@@ -2,11 +2,23 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import AdvancedGameConfigurator, {
-  type AdvancedGameConfig,
-} from '../../components/AdvancedGameConfigurator'
+import dynamic from 'next/dynamic'
+import type { AdvancedGameConfig } from '../../components/AdvancedGameConfigurator'
 import { LoadingOverlay, SparklesOverlay, PageTransition } from '@/app/components/ui'
 import Footer from '@/app/components/Footer'
+
+const AdvancedGameConfigurator = dynamic(
+  () => import('../../components/AdvancedGameConfigurator'),
+  {
+    loading: () => (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-yellow-400 font-pixel text-xs animate-pulse">
+          Loading configurator...
+        </div>
+      </div>
+    ),
+  }
+)
 
 // Game mode types
 type GameMode = 'quick' | 'custom' | 'advanced' | null

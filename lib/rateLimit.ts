@@ -159,9 +159,12 @@ class UpstashRateLimitStore implements RateLimitStore {
   // --- Redis REST helpers ---
 
   private async redisSet(key: string, entry: RateLimitEntry, ttl: number): Promise<void> {
-    await fetch(`${this.baseUrl}/set/${encodeURIComponent(key)}/${JSON.stringify(entry)}/EX/${ttl}`, {
-      headers: { Authorization: `Bearer ${this.token}` },
-    })
+    await fetch(
+      `${this.baseUrl}/set/${encodeURIComponent(key)}/${JSON.stringify(entry)}/EX/${ttl}`,
+      {
+        headers: { Authorization: `Bearer ${this.token}` },
+      }
+    )
   }
 
   private async redisGet(key: string): Promise<RateLimitEntry | null> {

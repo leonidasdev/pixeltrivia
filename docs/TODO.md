@@ -65,21 +65,21 @@
 - [ ] Complete Advanced Game file upload processing
 - [ ] Implement leaderboards
 - [ ] Add achievements system
-- [ ] Add background music
+- [x] Add background music (procedural chiptune loops for menu, gameplay, results via Web Audio API)
 
 #### 3.2 Performance
 - [ ] Add API response caching (React Query or SWR)
-- [ ] Analyze bundle with `@next/bundle-analyzer`
-- [ ] Implement dynamic imports for game mode pages
+- [x] Analyze bundle with `@next/bundle-analyzer` (installed and configured, `npm run analyze`)
+- [x] Implement dynamic imports for game mode pages (select, quick, custom)
 
 #### 3.3 Monitoring
-- [ ] Integrate error tracking (Sentry)
+- [x] Integrate error tracking (Sentry — client, server, edge configs; gated on DSN env var)
 - [ ] Add usage analytics
 
 #### 3.4 Database
-- [ ] Add migration tooling (Supabase migrations)
-- [ ] Generate Supabase types
-- [ ] Add seed data scripts
+- [x] Add migration tooling (Supabase migrations — `database/migrations/001_initial_schema.sql`)
+- [x] Generate Supabase types (`npm run db:types`)
+- [x] Add seed data scripts (`database/seed.sql` — 90+ questions across 12 categories)
 
 ---
 
@@ -133,6 +133,7 @@ All items below have been completed and verified. See git history for details.
 ### Features
 - Multiplayer system: room creation, joining, real-time sync, host controls
 - Sound system: Web Audio API engine with 18 chiptune effects
+- Background music: procedural chiptune loops for menu, gameplay, and results screens
 - Stats dashboard with history, charts, and overview tabs
 - Applied rate limiting to all API routes
 
@@ -148,6 +149,10 @@ All items below have been completed and verified. See git history for details.
 - `RateLimitStore` provider interface with Upstash Redis backend (`lib/rateLimit.ts`)
 - Environment-aware CSP: production removes `unsafe-eval` / `unsafe-inline` from `script-src`
 - Middleware assigns `x-request-id` on every response for distributed tracing
+- Sentry error tracking: client, server, and edge configs (gated on `SENTRY_DSN` env var)
+- Bundle analyzer: `@next/bundle-analyzer` configured, `npm run analyze` script
+- Dynamic imports for heavy game configurator components (select, quick, custom pages)
+- Database migration tooling: initial schema, seed data, `npm run db:types` for Supabase type generation
 
 ### Documentation
 - Professional tone across all docs (emojis removed from documentation files)

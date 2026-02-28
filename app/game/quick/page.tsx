@@ -2,8 +2,16 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import QuickGameSelector from '@/app/components/QuickGameSelector'
+import dynamic from 'next/dynamic'
 import { fetchQuestions, createGameSession } from '@/lib/gameApi'
+
+const QuickGameSelector = dynamic(() => import('@/app/components/QuickGameSelector'), {
+  loading: () => (
+    <div className="flex items-center justify-center p-8">
+      <div className="text-yellow-400 font-pixel text-xs animate-pulse">Loading...</div>
+    </div>
+  ),
+})
 import { logger } from '@/lib/logger'
 import {
   ToastContainer,

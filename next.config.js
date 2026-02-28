@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
+
+const { withSentryConfig } = require('@sentry/nextjs')
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const nextConfig = {
   // ESLint configuration
   eslint: {
@@ -69,4 +76,17 @@ const nextConfig = {
   }),
 }
 
-module.exports = nextConfig
+// Apply Sentry only when DSN is configured
+const sentryEnabled = !!process.env.NEXT_PUBLIC_SENTRY_DSN || !!process.env.SENTRY_DSN
+
+const finalConfig = withBundleAnalyzer(nextConfig)
+
+module.exports = sentryEnabled
+  ? withSentryConfig(finalConfig, {
+      // Suppress source map upload warnings when auth token is missing
+      silent: true,
+      // Don't widen the Next.js server-side build tracing
+      disableServerWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
+      disableClientWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
+    })
+  : finalConfig

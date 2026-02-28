@@ -2,10 +2,19 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import CustomGameConfigurator, {
-  type CustomGameConfig,
-} from '@/app/components/CustomGameConfigurator'
+import dynamic from 'next/dynamic'
+import type { CustomGameConfig } from '@/app/components/CustomGameConfigurator'
 import { generateCustomQuiz, type CustomQuizRequest } from '@/lib/customQuizApi'
+
+const CustomGameConfigurator = dynamic(() => import('@/app/components/CustomGameConfigurator'), {
+  loading: () => (
+    <div className="flex items-center justify-center p-8">
+      <div className="text-yellow-400 font-pixel text-xs animate-pulse">
+        Loading configurator...
+      </div>
+    </div>
+  ),
+})
 import { logger } from '@/lib/logger'
 import { ToastContainer, useToast, SparklesOverlay, PageTransition } from '@/app/components/ui'
 
