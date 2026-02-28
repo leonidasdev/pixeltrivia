@@ -28,26 +28,40 @@ export const SECURITY_HEADERS = {
 } as const
 
 /**
- * Content Security Policy directives
+ * Content Security Policy directives.
+ *
+ * In development, `unsafe-eval` is needed for Next.js Fast Refresh and
+ * `unsafe-inline` for HMR script injection. In production these are
+ * removed or tightened.
  */
-export const CSP_DIRECTIVES = {
-  'default-src': ["'self'"],
-  'script-src': ["'self'", "'unsafe-eval'", "'unsafe-inline'"], // Next.js needs these
-  'style-src': ["'self'", "'unsafe-inline'"], // Tailwind needs inline styles
-  'img-src': ["'self'", 'data:', 'blob:', 'https:'],
-  'font-src': ["'self'", 'data:'],
-  'connect-src': ["'self'", 'https://*.supabase.co', 'https://openrouter.ai'],
-  'frame-ancestors': ["'none'"],
-  'base-uri': ["'self'"],
-  'form-action': ["'self'"],
+function buildCSPDirectives(): Record<string, string[]> {
+  const isProd = process.env.NODE_ENV === 'production'
+
+  return {
+    'default-src': ["'self'"],
+    'script-src': isProd
+      ? ["'self'"] // No unsafe-eval or unsafe-inline in production
+      : ["'self'", "'unsafe-eval'", "'unsafe-inline'"], // Next.js dev / Fast Refresh
+    'style-src': ["'self'", "'unsafe-inline'"], // Tailwind injects inline styles
+    'img-src': ["'self'", 'data:', 'blob:', 'https:'],
+    'font-src': ["'self'", 'data:'],
+    'connect-src': ["'self'", 'https://*.supabase.co', 'https://openrouter.ai'],
+    'frame-ancestors': ["'none'"],
+    'base-uri': ["'self'"],
+    'form-action': ["'self'"],
+    ...(isProd && { 'upgrade-insecure-requests': [] }),
+  }
 }
 
+export const CSP_DIRECTIVES = buildCSPDirectives()
+
 /**
- * Build CSP header string from directives
+ * Build CSP header string from directives.
+ * Handles value-less directives like `upgrade-insecure-requests`.
  */
 export function buildCSP(directives: Record<string, string[]>): string {
   return Object.entries(directives)
-    .map(([key, values]) => `${key} ${values.join(' ')}`)
+    .map(([key, values]) => (values.length > 0 ? `${key} ${values.join(' ')}` : key))
     .join('; ')
 }
 

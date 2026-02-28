@@ -11,6 +11,21 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { SECURITY_HEADERS, isAllowedOrigin } from '@/lib/security.core'
 
+// ============================================================================
+// Request ID Generation
+// ============================================================================
+
+/**
+ * Generate a unique request ID for tracing.
+ * Uses crypto.randomUUID when available, falls back to timestamp-based ID.
+ */
+function generateRequestId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`
+}
+
 /**
  * Apply CORS headers for API routes
  */
@@ -114,6 +129,13 @@ export function middleware(request: NextRequest) {
 
   // Continue to the route handler
   const response = NextResponse.next()
+
+  // Assign request ID for tracing
+  const requestId =
+    request.headers.get('x-request-id') ||
+    request.headers.get('x-correlation-id') ||
+    generateRequestId()
+  response.headers.set('x-request-id', requestId)
 
   // Apply security headers
   applySecurityHeaders(response)

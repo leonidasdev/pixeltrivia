@@ -39,20 +39,23 @@
 ### Priority 2: Infrastructure
 
 #### 2.1 Production Logging
-- [ ] Evaluate pino or winston for production server-side logging
-- [ ] Add request ID tracking for API routes
+- [x] Enhanced logger with structured JSON output for production (parseable by CloudWatch, Datadog, Vercel Logs)
+- [x] Added request ID tracking: `getRequestId()`, `logger.child(requestId)` for per-request tracing
+- [x] Middleware assigns `x-request-id` header to all responses
 
 #### 2.2 Rate Limiting
-- [ ] In-memory `Map` rate limiter does not persist across serverless invocations
-- [ ] Evaluate Redis-backed solution (Upstash) for production
+- [x] Added `RateLimitStore` provider interface for swappable backends
+- [x] Added Upstash Redis store (`UpstashRateLimitStore`) — auto-enabled when `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set
+- [x] Falls back to in-memory store with production warning when Redis is not configured
 
 #### 2.3 CSP Hardening
-- [ ] Remove `unsafe-eval` and `unsafe-inline` from CSP in production
-- [ ] Currently in `lib/security.core.ts`
+- [x] Made `CSP_DIRECTIVES` environment-aware: production removes `unsafe-eval` and `unsafe-inline` from `script-src`
+- [x] Added `upgrade-insecure-requests` directive in production
+- [x] Updated `buildCSP()` to handle value-less directives
 
 #### 2.4 Enable ESLint During Builds
-- [ ] `next.config.js` has `ignoreDuringBuilds: true`
-- [ ] Set to `false` in CI/production
+- [x] Set `ignoreDuringBuilds: false` in `next.config.js`
+- [x] ESLint verified clean (0 warnings, 0 errors)
 
 ---
 
@@ -137,7 +140,14 @@ All items below have been completed and verified. See git history for details.
 - 1122 tests across 60 suites (unit, component, hook, integration, E2E)
 - Coverage thresholds enforced: branches 55%, functions 64%, lines 61%, statements 60%
 - CI/CD pipeline: GitHub Actions, Husky pre-commit, lint-staged
+- ESLint enforced during Next.js builds (`ignoreDuringBuilds: false`)
 - Comprehensive documentation: 8 doc files + AUDIT.md + CLAUDE.md
+
+### Infrastructure
+- Structured JSON logging in production with request ID tracing (`lib/logger.ts`)
+- `RateLimitStore` provider interface with Upstash Redis backend (`lib/rateLimit.ts`)
+- Environment-aware CSP: production removes `unsafe-eval` / `unsafe-inline` from `script-src`
+- Middleware assigns `x-request-id` on every response for distributed tracing
 
 ### Documentation
 - Professional tone across all docs (emojis removed from documentation files)
