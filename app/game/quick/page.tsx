@@ -13,8 +13,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { fetchQuestions, createGameSession } from '@/lib/gameApi'
-import { STORAGE_KEYS } from '@/constants/game'
+import { fetchQuestions, createGameSession, saveGameSession } from '@/lib/gameApi'
 import { logger } from '@/lib/logger'
 import { getErrorMessage } from '@/lib/errors'
 import { ToastContainer, useToast, GamePageLayout, LoadingOverlay } from '@/app/components/ui'
@@ -47,13 +46,10 @@ export default function QuickGamePage() {
         throw new Error(questionsResult.error || 'Failed to load questions')
       }
 
-      // Create game session
+      // Create game session and save to localStorage
       const gameSession = createGameSession(questionsResult.data.questions, category, difficulty)
-
       logger.debug('Game session created:', gameSession)
-
-      // Store game session in localStorage for the game screen
-      localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, JSON.stringify(gameSession))
+      saveGameSession({ ...gameSession, mode: 'quick' })
 
       // Navigate to game screen
       router.push('/game/play')

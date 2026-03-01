@@ -16,12 +16,8 @@ import { LoadingOverlay, ToastContainer, useToast, GamePageLayout } from '@/app/
 import { useSound } from '@/hooks'
 import { usePlayerSettings } from '@/hooks/usePlayerSettings'
 import { createRoom } from '@/lib/multiplayerApi'
-import {
-  MULTIPLAYER_STORAGE_KEYS,
-  DEFAULT_MAX_PLAYERS,
-  DEFAULT_TIME_LIMIT,
-  DEFAULT_QUESTION_COUNT,
-} from '@/constants/game'
+import { saveMultiplayerSession } from '@/lib/gameApi'
+import { DEFAULT_MAX_PLAYERS, DEFAULT_TIME_LIMIT, DEFAULT_QUESTION_COUNT } from '@/constants/game'
 
 function CreateGameContent() {
   const router = useRouter()
@@ -66,9 +62,11 @@ function CreateGameContent() {
 
     if (result.success && result.data) {
       // Store session info
-      localStorage.setItem(MULTIPLAYER_STORAGE_KEYS.PLAYER_ID, String(result.data.playerId))
-      localStorage.setItem(MULTIPLAYER_STORAGE_KEYS.ROOM_CODE, result.data.roomCode)
-      localStorage.setItem(MULTIPLAYER_STORAGE_KEYS.IS_HOST, 'true')
+      saveMultiplayerSession({
+        playerId: result.data.playerId,
+        roomCode: result.data.roomCode,
+        isHost: true,
+      })
 
       toast.success(`Room ${result.data.roomCode} created!`)
 

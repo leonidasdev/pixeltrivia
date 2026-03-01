@@ -42,6 +42,7 @@ jest.mock('@/app/components/QuickGameSelector', () => ({
 jest.mock('@/lib/gameApi', () => ({
   fetchQuestions: jest.fn(),
   createGameSession: jest.fn(() => ({ id: 'test-session' })),
+  saveGameSession: jest.fn(),
 }))
 
 const mockPush = jest.fn()

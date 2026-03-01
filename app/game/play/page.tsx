@@ -18,38 +18,26 @@ import { useGameState } from '@/hooks/useGameState'
 import { useTimer } from '@/hooks/useTimer'
 import { useSound } from '@/hooks/useSound'
 import { addHistoryEntry, getProfile } from '@/lib/storage'
-import { getGrade } from '@/lib/scoring'
 import type { Question, DifficultyLevel } from '@/types/game'
 import {
   LoadingOverlay,
   ToastContainer,
   useToast,
   AnimatedBackground,
-  PixelConfetti,
   ScorePopup,
   AnswerFeedback,
   PageTransition,
-  ShareButton,
   PixelButton,
   type FeedbackType,
 } from '@/app/components/ui'
+import { DEFAULT_TIME_LIMIT, STORAGE_KEYS } from '@/constants/game'
 import {
-  DEFAULT_TIME_LIMIT,
-  TIME_WARNING_THRESHOLD,
-  TIME_CRITICAL_THRESHOLD,
-  STORAGE_KEYS,
-} from '@/constants/game'
-
-// ============================================================================
-// Option styling (A / B / C / D)
-// ============================================================================
-
-const OPTION_COLORS = [
-  { bg: 'bg-red-600', hover: 'hover:bg-red-500', border: 'border-red-800', label: 'A' },
-  { bg: 'bg-blue-600', hover: 'hover:bg-blue-500', border: 'border-blue-800', label: 'B' },
-  { bg: 'bg-yellow-600', hover: 'hover:bg-yellow-500', border: 'border-yellow-800', label: 'C' },
-  { bg: 'bg-green-600', hover: 'hover:bg-green-500', border: 'border-green-800', label: 'D' },
-]
+  OPTION_COLORS,
+  getTimerColor,
+  getTimerAnimation,
+  getOptionStyle,
+  ResultsScreen,
+} from '@/app/components/game'
 
 // ============================================================================
 // Component
@@ -92,8 +80,7 @@ export default function PlayPage() {
         playSound('wrong')
         setFeedbackType('wrong')
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [game.state, showCorrectReveal, timeLimit]),
+    }, [game.state, game.submitAnswer, showCorrectReveal, timeLimit, playSound]),
     onWarning: useCallback(() => playSound('timerWarning'), [playSound]),
     onCritical: useCallback(() => playSound('timerCritical'), [playSound]),
   })
@@ -132,7 +119,7 @@ export default function PlayPage() {
       toast.error('Failed to load game session.')
       router.push('/')
     }
-    // Run once on mount
+    // Intentional: mount-only effect to bootstrap game from localStorage
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -146,6 +133,11 @@ export default function PlayPage() {
       timer.start()
       playSound('questionReveal')
     }
+    // Intentional: only re-run on question/state transitions.
+    // timer, currentQuestion and playSound are excluded because:
+    // - timer is not memoized (new object each render), would cause infinite re-runs
+    // - currentQuestion is derived from game.currentQuestionIndex (already in deps)
+    // - playSound is a stable utility, not a trigger condition
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game.currentQuestionIndex, game.state])
 
@@ -176,8 +168,7 @@ export default function PlayPage() {
 
     // Cleanup session
     localStorage.removeItem(STORAGE_KEYS.CURRENT_GAME_SESSION)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [game.state])
+  }, [game.state, game.getSummary, game.category, game.difficulty, game.streak, historySaved, playSound, gameMode])
 
   // ── Handlers ──
 
@@ -203,13 +194,18 @@ export default function PlayPage() {
         setFeedbackType('wrong')
       }
     },
-    [showCorrectReveal, game, timer, playSound]
+    // Intentional: timer and playSound excluded — timer is not memoized (new ref each render),
+    // playSound is a stable utility. Including them would recreate this callback every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [showCorrectReveal, game]
   )
 
   const handleNext = useCallback(() => {
     playSound('navigate')
     game.nextQuestion()
-  }, [game, playSound])
+    // Intentional: playSound is a stable utility, not a dependency trigger
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game])
 
   // Keyboard shortcuts: 1-4 / A-D to answer, Enter / Space to advance
   useEffect(() => {
@@ -247,37 +243,20 @@ export default function PlayPage() {
 
   // ── Helper renderers ──
 
-  const getTimerColor = () => {
-    if (timer.timeRemaining <= TIME_CRITICAL_THRESHOLD) return 'text-red-400'
-    if (timer.timeRemaining <= TIME_WARNING_THRESHOLD) return 'text-yellow-400'
-    return 'text-cyan-400'
-  }
+  const timerColor = getTimerColor(timer.timeRemaining)
+  const timerAnim = getTimerAnimation(timer.timeRemaining)
 
-  const getTimerAnimation = () => {
-    if (timer.timeRemaining <= TIME_CRITICAL_THRESHOLD) return 'animate-pulse-urgent'
-    if (timer.timeRemaining <= TIME_WARNING_THRESHOLD) return 'animate-pixel-shake'
-    return ''
-  }
-
-  const getOptionStyle = (index: number) => {
-    const c = OPTION_COLORS[index] ?? OPTION_COLORS[0]
-
-    if (showCorrectReveal && currentQuestion) {
-      if (index === currentQuestion.correctAnswer) {
-        return 'bg-green-500 border-green-300 ring-4 ring-green-300 ring-opacity-50 scale-[1.02] animate-pixel-bounce'
-      }
-      if (index === selectedAnswer && !lastAnswerCorrect) {
-        return 'bg-red-500 border-red-300 opacity-80 animate-pixel-shake'
-      }
-      return 'bg-gray-700 border-gray-600 opacity-50'
-    }
-
-    return `${c.bg} ${c.hover} ${c.border} cursor-pointer hover:scale-[1.02] active:scale-[0.98] pixel-glow-hover`
-  }
+  const computeOptionStyle = (index: number) =>
+    getOptionStyle({
+      index,
+      isRevealing: showCorrectReveal,
+      correctAnswer: currentQuestion?.correctAnswer ?? null,
+      selectedAnswer,
+      wasCorrect: lastAnswerCorrect,
+    })
 
   // ── Derived values for results screen ──
   const summary = game.state === 'finished' ? game.getSummary() : null
-  const grade = summary ? getGrade(summary.accuracy) : ''
 
   // ── Render ──
 
@@ -289,78 +268,16 @@ export default function PlayPage() {
   // Finished
   if (game.state === 'finished' && summary) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
-        <AnimatedBackground />
-        <PixelConfetti active={showConfetti} onComplete={() => setShowConfetti(false)} />
-
-        <PageTransition style="scale" className="z-10 w-full max-w-lg">
-          {/* Results card */}
-          <div className="bg-gray-900 bg-opacity-95 border-4 border-gray-600 pixel-border pixel-shadow p-6 space-y-5">
-            {/* Header */}
-            <h1 className="text-2xl md:text-3xl font-pixel text-yellow-400 text-center pixel-text-shadow">
-              Game Over!
-            </h1>
-
-            {/* Grade */}
-            <div className="text-center">
-              <span className="text-5xl">
-                {grade === 'S'
-                  ? 'W'
-                  : grade === 'A'
-                    ? '*'
-                    : grade === 'B'
-                      ? 'T'
-                      : grade === 'C'
-                        ? '!'
-                        : '#'}
-              </span>
-              <p className="font-pixel text-lg text-cyan-400 mt-1">Grade: {grade}</p>
-            </div>
-
-            {/* Stats grid */}
-            <div className="grid grid-cols-2 gap-3 text-center">
-              <Stat label="Score" value={summary.finalScore.toLocaleString()} />
-              <Stat label="Accuracy" value={`${Math.round(summary.accuracy)}%`} />
-              <Stat label="Correct" value={`${summary.correctAnswers}/${summary.totalQuestions}`} />
-              <Stat label="Avg Time" value={`${(summary.averageTime / 1000).toFixed(1)}s`} />
-            </div>
-
-            {/* Category / difficulty */}
-            <p className="font-pixel-body text-xs text-gray-400 text-center">
-              {game.category} • {game.difficulty}
-            </p>
-
-            {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <PixelButton variant="primary" onClick={() => router.push('/game/quick')}>
-                PLAY AGAIN
-              </PixelButton>
-              <PixelButton variant="secondary" onClick={() => router.push('/game/stats')}>
-                VIEW STATS
-              </PixelButton>
-              <PixelButton variant="secondary" onClick={() => router.push('/')}>
-                HOME
-              </PixelButton>
-            </div>
-
-            {/* Share */}
-            <div className="flex justify-center">
-              <ShareButton
-                result={{
-                  mode: gameMode,
-                  score: summary.finalScore,
-                  correctAnswers: summary.correctAnswers,
-                  totalQuestions: summary.totalQuestions,
-                  accuracy: Math.round(summary.accuracy),
-                  category: game.category,
-                }}
-              />
-            </div>
-          </div>
-        </PageTransition>
-
-        <ToastContainer messages={toasts} onDismiss={dismissToast} />
-      </main>
+      <ResultsScreen
+        summary={summary}
+        category={game.category}
+        difficulty={game.difficulty}
+        gameMode={gameMode}
+        showConfetti={showConfetti}
+        onConfettiComplete={() => setShowConfetti(false)}
+        toasts={toasts}
+        onDismissToast={dismissToast}
+      />
     )
   }
 
@@ -397,7 +314,7 @@ export default function PlayPage() {
             </span>
 
             <div
-              className={`flex items-center gap-2 font-pixel font-bold text-2xl ${getTimerColor()} ${getTimerAnimation()}`}
+              className={`flex items-center gap-2 font-pixel font-bold text-2xl ${timerColor} ${timerAnim}`}
             >
               <span>TIME</span>
               <span>{timer.timeRemaining}s</span>
@@ -475,7 +392,7 @@ export default function PlayPage() {
                     p-4 pixel-border border-4 text-left font-pixel-body text-lg text-white
                     transition-all duration-200 flex items-center gap-3
                     focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-30
-                    ${getOptionStyle(index)}
+                    ${computeOptionStyle(index)}
                   `}
                 >
                   <span
@@ -539,18 +456,5 @@ export default function PlayPage() {
 
       <ToastContainer messages={toasts} onDismiss={dismissToast} />
     </main>
-  )
-}
-
-// ============================================================================
-// Sub-components
-// ============================================================================
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="bg-gray-800 border-2 border-gray-700 pixel-border p-3">
-      <p className="font-pixel text-[10px] text-gray-500 uppercase">{label}</p>
-      <p className="font-pixel text-lg text-white">{value}</p>
-    </div>
   )
 }

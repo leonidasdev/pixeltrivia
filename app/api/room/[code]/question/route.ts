@@ -12,21 +12,20 @@
 import { type NextRequest } from 'next/server'
 import { getSupabaseClient } from '@/lib/supabase'
 import { isValidRoomCode } from '@/lib/roomCode'
-import { logger } from '@/lib/logger'
 import {
   successResponse,
   validationErrorResponse,
   notFoundResponse,
-  serverErrorResponse,
   methodNotAllowedResponse,
+  withErrorHandling,
 } from '@/lib/apiResponse'
 
 interface RouteParams {
   params: Promise<{ code: string }>
 }
 
-export async function GET(request: NextRequest, { params }: RouteParams) {
-  try {
+export const GET = withErrorHandling<RouteParams>(
+  async (request: NextRequest, { params }: RouteParams) => {
     const { code } = await params
     const roomCode = code.toUpperCase()
 
@@ -111,11 +110,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         hasAnswered: p.current_answer !== null,
       })),
     })
-  } catch (error) {
-    logger.error('Get question error:', error)
-    return serverErrorResponse(error instanceof Error ? error.message : 'Unknown error')
   }
-}
+)
 
 export const POST = () => methodNotAllowedResponse('GET')
 export const PUT = () => methodNotAllowedResponse('GET')

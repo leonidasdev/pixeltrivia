@@ -145,6 +145,7 @@ export function useMultiplayerGame({
         fetchCurrentQuestion()
       }
     }
+    // Intentional: only react to room status/question changes from server
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [room?.status, room?.currentQuestion])
 
@@ -180,6 +181,7 @@ export function useMultiplayerGame({
     if (room?.status === 'active' && playerId && phase !== 'revealing') {
       fetchCurrentQuestion()
     }
+    // Intentional: only refetch when server advances to a new question
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [room?.currentQuestion])
 

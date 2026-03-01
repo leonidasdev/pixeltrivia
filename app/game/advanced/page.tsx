@@ -13,6 +13,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { AdvancedGameConfig } from '../../components/AdvancedGameConfigurator'
+import { saveGameSession } from '@/lib/gameApi'
 import { STORAGE_KEYS } from '@/constants/game'
 import { logger } from '@/lib/logger'
 import { getErrorMessage } from '@/lib/errors'
@@ -89,14 +90,13 @@ export default function AdvancedGamePage() {
 
       const result = await response.json()
 
-      // Store as a game session compatible with the play page
-      const gameSession = {
+      // Save game session for the play page
+      saveGameSession({
         questions: result.data.questions,
         category: 'Advanced',
         difficulty: 'medium',
         mode: 'advanced',
-      }
-      localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, JSON.stringify(gameSession))
+      })
       localStorage.setItem(STORAGE_KEYS.GAME_METADATA, JSON.stringify(result.data.metadata))
 
       toast.success(`Generated ${result.data.questions.length} questions from your documents!`)

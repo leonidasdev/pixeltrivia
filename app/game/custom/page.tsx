@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import type { CustomGameConfig } from '@/app/components/CustomGameConfigurator'
 import { generateCustomQuiz, type CustomQuizRequest } from '@/lib/customQuizApi'
-import { STORAGE_KEYS } from '@/constants/game'
+import { saveGameSession } from '@/lib/gameApi'
 import { logger } from '@/lib/logger'
 import { getErrorMessage } from '@/lib/errors'
 import { ToastContainer, useToast, GamePageLayout } from '@/app/components/ui'
@@ -58,14 +58,13 @@ export default function CustomGamePage() {
       logger.debug('Generated questions:', response.data)
 
       if (response.data) {
-        // Store as a game session compatible with the play page
-        const gameSession = {
+        // Save game session for the play page
+        saveGameSession({
           questions: response.data,
           category: config.context || 'Custom',
           difficulty: config.knowledgeLevel,
           mode: 'custom',
-        }
-        localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, JSON.stringify(gameSession))
+        })
       }
 
       toast.success(

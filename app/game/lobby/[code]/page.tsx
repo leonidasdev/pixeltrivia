@@ -23,7 +23,7 @@ import {
   AnimatedBackground,
   PageTransition,
 } from '@/app/components/ui'
-import { MULTIPLAYER_STORAGE_KEYS } from '@/constants/game'
+import { loadMultiplayerSession, clearMultiplayerSession } from '@/lib/gameApi'
 
 interface LobbyPageProps {
   params: Promise<{ code: string }>
@@ -42,10 +42,11 @@ function LobbyContent({ params }: LobbyPageProps) {
   const [isStarting, setIsStarting] = useState(false)
 
   useEffect(() => {
-    const storedId = localStorage.getItem(MULTIPLAYER_STORAGE_KEYS.PLAYER_ID)
-    const storedHost = localStorage.getItem(MULTIPLAYER_STORAGE_KEYS.IS_HOST)
-    if (storedId) setPlayerId(parseInt(storedId))
-    if (storedHost === 'true') setIsHost(true)
+    const session = loadMultiplayerSession()
+    if (session) {
+      setPlayerId(session.playerId)
+      setIsHost(session.isHost)
+    }
   }, [])
 
   // Room state with real-time updates
@@ -79,8 +80,7 @@ function LobbyContent({ params }: LobbyPageProps) {
     if (error) {
       toast.error(error)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error])
+  }, [error, toast])
 
   const handleStartGame = useCallback(async () => {
     if (!playerId) return
@@ -105,9 +105,7 @@ function LobbyContent({ params }: LobbyPageProps) {
     await leaveRoom(roomCode, playerId)
 
     // Clear session
-    localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.PLAYER_ID)
-    localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.ROOM_CODE)
-    localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.IS_HOST)
+    clearMultiplayerSession()
 
     router.push('/')
   }, [playerId, roomCode, router])

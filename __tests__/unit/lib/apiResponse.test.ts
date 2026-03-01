@@ -34,6 +34,7 @@ import {
   validateNumberRange,
 } from '@/lib/apiResponse'
 import { AppError, ValidationError, NotFoundError, RateLimitError } from '@/lib/errors'
+import { NextRequest } from 'next/server'
 
 // ============================================================================
 // Helpers
@@ -46,8 +47,8 @@ async function getResponseBody(response: Response): Promise<any> {
 }
 
 /** Create a mock Request with JSON body */
-function mockRequest(body: unknown, method = 'POST'): Request {
-  return new Request('http://localhost/api/test', {
+function mockRequest(body: unknown, method = 'POST'): NextRequest {
+  return new NextRequest('http://localhost/api/test', {
     method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -55,8 +56,8 @@ function mockRequest(body: unknown, method = 'POST'): Request {
 }
 
 /** Create a mock Request with invalid body */
-function mockInvalidRequest(method = 'POST'): Request {
-  return new Request('http://localhost/api/test', {
+function mockInvalidRequest(method = 'POST'): NextRequest {
+  return new NextRequest('http://localhost/api/test', {
     method,
     headers: { 'Content-Type': 'application/json' },
     body: 'not valid json{{{',
@@ -468,6 +469,21 @@ describe('withErrorHandling', () => {
 
     expect(res.status).toBe(429)
     expect(res.headers.get('Retry-After')).toBe('45')
+  })
+
+  it('should handle SyntaxError as validation error', async () => {
+    const handler = async () => {
+      throw new SyntaxError('Unexpected token')
+    }
+    const wrapped = withErrorHandling(handler)
+
+    const req = mockRequest({})
+    const res = await wrapped(req)
+    const body = await getResponseBody(res)
+
+    expect(res.status).toBe(400)
+    expect(body.success).toBe(false)
+    expect(body.error).toBe('Request body must be valid JSON')
   })
 })
 

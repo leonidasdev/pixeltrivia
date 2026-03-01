@@ -21,6 +21,7 @@ import {
   databaseErrorResponse,
   serverErrorResponse,
   methodNotAllowedResponse,
+  withErrorHandling,
 } from '@/lib/apiResponse'
 import { BASE_SCORE, TIME_BONUS_MULTIPLIER } from '@/constants/game'
 
@@ -28,8 +29,8 @@ interface RouteParams {
   params: Promise<{ code: string }>
 }
 
-export async function POST(request: NextRequest, { params }: RouteParams) {
-  try {
+export const POST = withErrorHandling<RouteParams>(
+  async (request: NextRequest, { params }: RouteParams) => {
     const { code } = await params
     const roomCode = code.toUpperCase()
 
@@ -140,11 +141,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       },
       isCorrect ? 'Correct!' : 'Incorrect'
     )
-  } catch (error) {
-    logger.error('Submit answer error:', error)
-    return serverErrorResponse(error instanceof Error ? error.message : 'Unknown error')
   }
-}
+)
 
 export const GET = () => methodNotAllowedResponse('POST')
 export const PUT = () => methodNotAllowedResponse('POST')

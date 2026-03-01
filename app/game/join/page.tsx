@@ -16,7 +16,7 @@ import { LoadingOverlay, ToastContainer, useToast, GamePageLayout } from '@/app/
 import { useSound } from '@/hooks'
 import { usePlayerSettings } from '@/hooks/usePlayerSettings'
 import { joinRoom } from '@/lib/multiplayerApi'
-import { MULTIPLAYER_STORAGE_KEYS } from '@/constants/game'
+import { saveMultiplayerSession } from '@/lib/gameApi'
 
 function JoinGameContent() {
   const router = useRouter()
@@ -57,9 +57,11 @@ function JoinGameContent() {
 
     if (result.success && result.data) {
       // Store session info
-      localStorage.setItem(MULTIPLAYER_STORAGE_KEYS.PLAYER_ID, String(result.data.playerId))
-      localStorage.setItem(MULTIPLAYER_STORAGE_KEYS.ROOM_CODE, roomCode)
-      localStorage.setItem(MULTIPLAYER_STORAGE_KEYS.IS_HOST, 'false')
+      saveMultiplayerSession({
+        playerId: result.data.playerId,
+        roomCode,
+        isHost: false,
+      })
 
       toast.success('Joined room!')
 

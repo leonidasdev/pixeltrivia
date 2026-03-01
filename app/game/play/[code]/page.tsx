@@ -29,7 +29,7 @@ import {
   ShareButton,
   type FeedbackType,
 } from '@/app/components/ui'
-import { MULTIPLAYER_STORAGE_KEYS } from '@/constants/game'
+import { loadMultiplayerSession, clearMultiplayerSession } from '@/lib/gameApi'
 
 interface PlayPageProps {
   params: Promise<{ code: string }>
@@ -52,10 +52,11 @@ function PlayContent({ params }: PlayPageProps) {
   const [isHost, setIsHost] = useState(false)
 
   useEffect(() => {
-    const storedId = localStorage.getItem(MULTIPLAYER_STORAGE_KEYS.PLAYER_ID)
-    const storedHost = localStorage.getItem(MULTIPLAYER_STORAGE_KEYS.IS_HOST)
-    if (storedId) setPlayerId(parseInt(storedId))
-    if (storedHost === 'true') setIsHost(true)
+    const session = loadMultiplayerSession()
+    if (session) {
+      setPlayerId(session.playerId)
+      setIsHost(session.isHost)
+    }
   }, [])
 
   // Room state
@@ -81,8 +82,7 @@ function PlayContent({ params }: PlayPageProps) {
   useEffect(() => {
     if (roomError) toast.error(roomError)
     if (game.error) toast.error(game.error)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomError, game.error])
+  }, [roomError, game.error, toast])
 
   // Sound effects for answer feedback
   useEffect(() => {
@@ -145,9 +145,7 @@ function PlayContent({ params }: PlayPageProps) {
   }, [game.phase, playSound, room, playerId])
 
   const handleFinish = () => {
-    localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.PLAYER_ID)
-    localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.ROOM_CODE)
-    localStorage.removeItem(MULTIPLAYER_STORAGE_KEYS.IS_HOST)
+    clearMultiplayerSession()
     router.push('/')
   }
 

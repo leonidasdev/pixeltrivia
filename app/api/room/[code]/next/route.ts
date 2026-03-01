@@ -20,16 +20,16 @@ import {
   validationErrorResponse,
   notFoundResponse,
   databaseErrorResponse,
-  serverErrorResponse,
   methodNotAllowedResponse,
+  withErrorHandling,
 } from '@/lib/apiResponse'
 
 interface RouteParams {
   params: Promise<{ code: string }>
 }
 
-export async function POST(request: NextRequest, { params }: RouteParams) {
-  try {
+export const POST = withErrorHandling<RouteParams>(
+  async (request: NextRequest, { params }: RouteParams) => {
     const { code } = await params
     const roomCode = code.toUpperCase()
 
@@ -177,11 +177,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         : null,
       questionStartTime: now,
     })
-  } catch (error) {
-    logger.error('Next question error:', error)
-    return serverErrorResponse(error instanceof Error ? error.message : 'Unknown error')
   }
-}
+)
 
 export const GET = () => methodNotAllowedResponse('POST')
 export const PUT = () => methodNotAllowedResponse('POST')

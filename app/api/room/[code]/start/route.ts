@@ -19,8 +19,8 @@ import {
   validationErrorResponse,
   notFoundResponse,
   databaseErrorResponse,
-  serverErrorResponse,
   methodNotAllowedResponse,
+  withErrorHandling,
 } from '@/lib/apiResponse'
 import { MIN_PLAYERS_TO_START } from '@/constants/game'
 import { shuffleArray } from '@/lib/utils'
@@ -29,8 +29,8 @@ interface RouteParams {
   params: Promise<{ code: string }>
 }
 
-export async function POST(request: NextRequest, { params }: RouteParams) {
-  try {
+export const POST = withErrorHandling<RouteParams>(
+  async (request: NextRequest, { params }: RouteParams) => {
     const { code } = await params
     const roomCode = code.toUpperCase()
 
@@ -167,11 +167,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       },
       'Game started'
     )
-  } catch (error) {
-    logger.error('Start game error:', error)
-    return serverErrorResponse(error instanceof Error ? error.message : 'Unknown error')
   }
-}
+)
 
 export const GET = () => methodNotAllowedResponse('POST')
 export const PUT = () => methodNotAllowedResponse('POST')

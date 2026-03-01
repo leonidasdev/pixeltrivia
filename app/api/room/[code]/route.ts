@@ -9,22 +9,21 @@
 import { type NextRequest } from 'next/server'
 import { getSupabaseClient } from '@/lib/supabase'
 import { isValidRoomCode } from '@/lib/roomCode'
-import { logger } from '@/lib/logger'
 import {
   successResponse,
   validationErrorResponse,
   notFoundResponse,
   databaseErrorResponse,
-  serverErrorResponse,
   methodNotAllowedResponse,
+  withErrorHandling,
 } from '@/lib/apiResponse'
 
 interface RouteParams {
   params: Promise<{ code: string }>
 }
 
-export async function GET(_request: NextRequest, { params }: RouteParams) {
-  try {
+export const GET = withErrorHandling<RouteParams>(
+  async (_request: NextRequest, { params }: RouteParams) => {
     const { code } = await params
     const roomCode = code.toUpperCase()
 
@@ -73,14 +72,11 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
         joinedAt: p.joined_at,
       })),
     })
-  } catch (error) {
-    logger.error('Get room error:', error)
-    return serverErrorResponse(error instanceof Error ? error.message : 'Unknown error')
   }
-}
+)
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
-  try {
+export const DELETE = withErrorHandling<RouteParams>(
+  async (request: NextRequest, { params }: RouteParams) => {
     const { code } = await params
     const roomCode = code.toUpperCase()
 
@@ -134,11 +130,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
       return successResponse({ action: 'player_left' }, 'Left room')
     }
-  } catch (error) {
-    logger.error('Leave room error:', error)
-    return serverErrorResponse(error instanceof Error ? error.message : 'Unknown error')
   }
-}
+)
 
 export const POST = () => methodNotAllowedResponse('GET, DELETE')
 export const PUT = () => methodNotAllowedResponse('GET, DELETE')

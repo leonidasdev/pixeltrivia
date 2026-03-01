@@ -13,7 +13,12 @@
 
 import { useEffect, useCallback } from 'react'
 import type { MultiplayerQuestion } from '@/types/room'
-import { TIME_WARNING_THRESHOLD, TIME_CRITICAL_THRESHOLD } from '@/constants/game'
+import {
+  OPTION_COLORS,
+  getTimerColor,
+  getTimerAnimation,
+  getOptionStyle,
+} from '@/app/components/game'
 
 interface GameQuestionProps {
   /** The question data */
@@ -37,13 +42,6 @@ interface GameQuestionProps {
   /** Callback when player selects an answer */
   onAnswer: (answerIndex: number) => void
 }
-
-const OPTION_COLORS = [
-  { bg: 'bg-red-600', hover: 'hover:bg-red-500', border: 'border-red-800', label: 'A' },
-  { bg: 'bg-blue-600', hover: 'hover:bg-blue-500', border: 'border-blue-800', label: 'B' },
-  { bg: 'bg-yellow-600', hover: 'hover:bg-yellow-500', border: 'border-yellow-800', label: 'C' },
-  { bg: 'bg-green-600', hover: 'hover:bg-green-500', border: 'border-green-800', label: 'D' },
-]
 
 export function GameQuestion({
   question,
@@ -89,44 +87,19 @@ export function GameQuestion({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleKeyDown])
 
-  const getTimerColor = () => {
-    if (timeRemaining <= TIME_CRITICAL_THRESHOLD) return 'text-red-400'
-    if (timeRemaining <= TIME_WARNING_THRESHOLD) return 'text-yellow-400'
-    return 'text-cyan-400'
-  }
+  const timerColor = getTimerColor(timeRemaining)
+  const timerAnim = getTimerAnimation(timeRemaining)
 
-  const getTimerAnimation = () => {
-    if (timeRemaining <= TIME_CRITICAL_THRESHOLD) return 'animate-pulse-urgent'
-    if (timeRemaining <= TIME_WARNING_THRESHOLD) return 'animate-pixel-shake'
-    return ''
-  }
-
-  const getOptionStyle = (index: number) => {
-    const color = OPTION_COLORS[index] ?? OPTION_COLORS[0]
-
-    if (isRevealing) {
-      if (index === correctAnswer) {
-        return 'bg-green-500 border-green-300 ring-4 ring-green-300 ring-opacity-50 scale-[1.02] animate-pixel-bounce'
-      }
-      if (index === selectedAnswer && !wasCorrect) {
-        return 'bg-red-500 border-red-300 opacity-80 animate-pixel-shake'
-      }
-      return 'bg-gray-700 border-gray-600 opacity-50'
-    }
-
-    if (hasAnswered) {
-      if (index === selectedAnswer) {
-        return `${color.bg} ${color.border} ring-2 ring-cyan-300`
-      }
-      return 'bg-gray-700 border-gray-600 opacity-50 cursor-not-allowed'
-    }
-
-    if (isLoading) {
-      return `${color.bg} ${color.border} opacity-50 cursor-wait`
-    }
-
-    return `${color.bg} ${color.hover} ${color.border} cursor-pointer hover:scale-[1.02] active:scale-[0.98] pixel-glow-hover`
-  }
+  const computeOptionStyle = (index: number) =>
+    getOptionStyle({
+      index,
+      isRevealing,
+      correctAnswer,
+      selectedAnswer,
+      wasCorrect,
+      hasAnswered,
+      isLoading,
+    })
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
@@ -137,7 +110,7 @@ export function GameQuestion({
         </div>
 
         <div
-          className={`flex items-center gap-2 font-pixel font-bold text-2xl ${getTimerColor()} ${getTimerAnimation()}`}
+          className={`flex items-center gap-2 font-pixel font-bold text-2xl ${timerColor} ${timerAnim}`}
         >
           <span>T</span>
           <span>{timeRemaining}s</span>
@@ -210,7 +183,7 @@ export function GameQuestion({
                 p-4 pixel-border border-4 text-left font-pixel-body text-lg text-white
                 transition-all duration-200 flex items-center gap-3
                 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-30
-                ${getOptionStyle(index)}
+                ${computeOptionStyle(index)}
               `}
             >
               <span

@@ -186,6 +186,7 @@ export default function LeaderboardPage() {
         mode: (modeFilter as 'quick' | 'custom' | 'advanced' | undefined) || undefined,
         limit: 20,
       }),
+    // Intentional: use history.length to avoid recalculating when entries content unchanged
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [period, sortBy, modeFilter, history.length]
   )

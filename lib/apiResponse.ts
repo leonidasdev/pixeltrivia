@@ -8,6 +8,7 @@
  */
 
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { logger } from './logger'
 import {
   type AppError,
@@ -263,16 +264,43 @@ export function methodNotAllowedResponse(allowed: string = 'POST'): NextResponse
 // API Handler Wrapper
 // ============================================================================
 
-type ApiHandler = (request: Request) => Promise<NextResponse>
+/** Handler without route params (e.g. POST /api/quiz/quick) */
+type SimpleApiHandler = (request: NextRequest) => Promise<NextResponse>
+
+/** Handler with route params (e.g. GET /api/room/[code]) */
+type ParamApiHandler<P = unknown> = (request: NextRequest, context: P) => Promise<NextResponse>
 
 /**
- * Wraps an API handler with error handling
- * Catches any errors and returns appropriate error responses
+ * Wraps an API handler with error handling.
+ *
+ * Catches any errors thrown inside the handler and returns the appropriate
+ * JSON error response.  Supports both simple handlers and handlers that
+ * receive Next.js route context (dynamic `params`).
+ *
+ * @example
+ * ```ts
+ * // Simple route
+ * export const POST = withErrorHandling(async (request) => {
+ *   const body = await parseJsonBody(request, ['category'])
+ *   // ...business logic...
+ *   return successResponse(data)
+ * })
+ *
+ * // Dynamic route with params
+ * export const GET = withErrorHandling(async (request, { params }) => {
+ *   const { code } = await params
+ *   // ...business logic...
+ *   return successResponse(data)
+ * })
+ * ```
  */
-export function withErrorHandling(handler: ApiHandler): ApiHandler {
-  return async (request: Request): Promise<NextResponse> => {
+export function withErrorHandling<P = undefined>(
+  handler: P extends undefined ? SimpleApiHandler : ParamApiHandler<P>
+): P extends undefined ? SimpleApiHandler : ParamApiHandler<P> {
+  const wrapped = async (request: NextRequest, context?: P): Promise<NextResponse> => {
     try {
-      return await handler(request)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return await (handler as any)(request, context)
     } catch (error) {
       // Log error for debugging
       logger.error('[API Error]', {
@@ -281,6 +309,11 @@ export function withErrorHandling(handler: ApiHandler): ApiHandler {
         error: error instanceof Error ? error.message : 'Unknown error',
         stack: error instanceof Error ? error.stack : undefined,
       })
+
+      // Handle JSON parse errors as validation errors
+      if (error instanceof SyntaxError) {
+        return validationErrorResponse('Request body must be valid JSON')
+      }
 
       // Return appropriate error response
       if (isAppError(error)) {
@@ -292,6 +325,9 @@ export function withErrorHandling(handler: ApiHandler): ApiHandler {
       return errorResponse(wrappedError)
     }
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return wrapped as any
 }
 
 // ============================================================================

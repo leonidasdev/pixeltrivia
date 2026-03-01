@@ -7,7 +7,7 @@
  * @since 1.0.0
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef } from 'react'
 import type { Question, GameState, Answer, GameSummary, DifficultyLevel } from '../types/game'
 import { BASE_SCORE, STREAK_INCREMENT, MAX_STREAK_MULTIPLIER } from '../constants/game'
 
@@ -109,6 +109,10 @@ const initialState: GameStateData = {
 export function useGameState(): UseGameStateReturn {
   const [gameState, setGameState] = useState<GameStateData>(initialState)
 
+  // Keep a ref in sync with state to avoid stale closures in callbacks
+  const gameStateRef = useRef(gameState)
+  gameStateRef.current = gameState
+
   /**
    * Calculate score with streak bonus
    */
@@ -142,8 +146,9 @@ export function useGameState(): UseGameStateReturn {
    */
   const submitAnswer = useCallback(
     (selectedAnswer: number | null, timeSpent: number): boolean => {
-      const currentQuestion = gameState.questions[gameState.currentQuestionIndex]
-      if (!currentQuestion || gameState.state !== 'playing') {
+      const { questions, currentQuestionIndex, state } = gameStateRef.current
+      const currentQuestion = questions[currentQuestionIndex]
+      if (!currentQuestion || state !== 'playing') {
         return false
       }
 
@@ -171,7 +176,7 @@ export function useGameState(): UseGameStateReturn {
 
       return isCorrect
     },
-    [gameState.questions, gameState.currentQuestionIndex, gameState.state, calculateScore]
+    [calculateScore]
   )
 
   /**
@@ -221,30 +226,32 @@ export function useGameState(): UseGameStateReturn {
    * Get the current question
    */
   const getCurrentQuestion = useCallback((): Question | null => {
-    return gameState.questions[gameState.currentQuestionIndex] ?? null
-  }, [gameState.questions, gameState.currentQuestionIndex])
+    const { questions, currentQuestionIndex } = gameStateRef.current
+    return questions[currentQuestionIndex] ?? null
+  }, [])
 
   /**
    * Get the game summary
    */
   const getSummary = useCallback((): GameSummary | null => {
-    if (gameState.state !== 'finished' || gameState.answers.length === 0) {
+    const { state, answers, questions, score } = gameStateRef.current
+    if (state !== 'finished' || answers.length === 0) {
       return null
     }
 
-    const correctAnswers = gameState.answers.filter(a => a.isCorrect).length
-    const totalQuestions = gameState.questions.length
-    const totalTime = gameState.answers.reduce((sum, a) => sum + a.timeSpent, 0)
+    const correctAnswers = answers.filter(a => a.isCorrect).length
+    const totalQuestions = questions.length
+    const totalTime = answers.reduce((sum, a) => sum + a.timeSpent, 0)
 
     return {
       correctAnswers,
       totalQuestions,
       accuracy: totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0,
       totalTime,
-      averageTime: gameState.answers.length > 0 ? totalTime / gameState.answers.length : 0,
-      finalScore: gameState.score,
+      averageTime: answers.length > 0 ? totalTime / answers.length : 0,
+      finalScore: score,
     }
-  }, [gameState.state, gameState.answers, gameState.questions.length, gameState.score])
+  }, [])
 
   return useMemo(
     () => ({
