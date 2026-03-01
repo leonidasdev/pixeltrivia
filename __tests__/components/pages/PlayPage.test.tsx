@@ -203,7 +203,8 @@ describe('PlayPage', () => {
       render(<PlayPage />)
       const img = screen.getByAltText('Question illustration')
       expect(img).toBeInTheDocument()
-      expect(img).toHaveAttribute('src', 'https://example.com/test.png')
+      // next/image transforms the src, so just verify it contains the original URL
+      expect(img.getAttribute('src')).toContain('example.com')
     })
 
     it('does not render image when question has no imageUrl', () => {

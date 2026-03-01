@@ -10,6 +10,7 @@
 
 'use client'
 
+import { useMemo, memo } from 'react'
 import { useRouter } from 'next/navigation'
 import type { GameSummary } from '@/types/game'
 import type { GameMode } from '@/lib/gameApi'
@@ -28,14 +29,14 @@ import {
 // Sub-component
 // ============================================================================
 
-function Stat({ label, value }: { label: string; value: string }) {
+const Stat = memo(function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-gray-800 border-2 border-gray-700 pixel-border p-3">
       <p className="font-pixel text-xs text-gray-500 uppercase">{label}</p>
       <p className="font-pixel text-lg text-white">{value}</p>
     </div>
   )
-}
+})
 
 // ============================================================================
 // Props
@@ -67,7 +68,7 @@ export function ResultsScreen({
   onDismissToast,
 }: ResultsScreenProps) {
   const router = useRouter()
-  const grade = getGrade(summary.accuracy)
+  const grade = useMemo(() => getGrade(summary.accuracy), [summary.accuracy])
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">

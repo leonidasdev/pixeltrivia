@@ -10,7 +10,7 @@
 
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo } from 'react'
 import { useRouter } from 'next/navigation'
 import { SparklesOverlay, PageTransition, StaggerChildren } from '@/app/components/ui'
 import Footer from '@/app/components/Footer'
@@ -53,14 +53,14 @@ const MODE_OPTIONS = [
 // Sub-Components
 // ============================================================================
 
-function RankBadge({ rank }: { rank: number }) {
+const RankBadge = memo(function RankBadge({ rank }: { rank: number }) {
   if (rank === 1) return <span className="text-2xl">1st</span>
   if (rank === 2) return <span className="text-2xl">2nd</span>
   if (rank === 3) return <span className="text-2xl">3rd</span>
   return <span className="font-pixel text-gray-400 text-lg">#{rank}</span>
-}
+})
 
-function LeaderboardRow({ item }: { item: LeaderboardEntry }) {
+const LeaderboardRow = memo(function LeaderboardRow({ item }: { item: LeaderboardEntry }) {
   const { rank, entry, isPersonalBest } = item
   const isTop3 = rank <= 3
   const modeEmoji: Record<string, string> = {
@@ -105,10 +105,10 @@ function LeaderboardRow({ item }: { item: LeaderboardEntry }) {
       </div>
     </div>
   )
-}
+})
 
 function PersonalRecordsSection() {
-  const records = getPersonalRecords()
+  const records = useMemo(() => getPersonalRecords(), [])
 
   const recordCards = [
     {

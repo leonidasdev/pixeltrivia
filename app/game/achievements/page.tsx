@@ -9,7 +9,7 @@
 
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo } from 'react'
 import { useRouter } from 'next/navigation'
 import { SparklesOverlay, PageTransition, StaggerChildren } from '@/app/components/ui'
 import Footer from '@/app/components/Footer'
@@ -60,7 +60,7 @@ function ProgressBar({ progress }: { progress: number }) {
   )
 }
 
-function AchievementCard({ achievement }: { achievement: Achievement }) {
+const AchievementCard = memo(function AchievementCard({ achievement }: { achievement: Achievement }) {
   const tier = getTierDisplay(achievement.tier)
 
   return (
@@ -107,7 +107,7 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
       </div>
     </div>
   )
-}
+})
 
 function SummaryBar() {
   const summary = getAchievementSummary()

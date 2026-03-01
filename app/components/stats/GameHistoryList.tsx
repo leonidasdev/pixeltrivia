@@ -10,7 +10,7 @@
 
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo } from 'react'
 import type { GameHistoryEntry } from '@/lib/storage'
 import { formatDuration } from '@/lib/utils'
 
@@ -89,7 +89,7 @@ interface HistoryRowProps {
   onDelete?: (id: string) => void
 }
 
-function HistoryRow({ entry, onDelete }: HistoryRowProps) {
+const HistoryRow = memo(function HistoryRow({ entry, onDelete }: HistoryRowProps) {
   const [showDetails, setShowDetails] = useState(false)
   const badge = getAccuracyBadge(entry.accuracy)
 
@@ -181,7 +181,7 @@ function HistoryRow({ entry, onDelete }: HistoryRowProps) {
       )}
     </div>
   )
-}
+})
 
 // ============================================================================
 // Component

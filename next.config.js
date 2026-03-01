@@ -13,6 +13,16 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
 
+  // Allow external images from any HTTPS source (question illustrations)
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
+
   // Security headers applied globally
   async headers() {
     return [

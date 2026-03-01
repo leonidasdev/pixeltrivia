@@ -12,8 +12,9 @@
 
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { useGameState } from '@/hooks/useGameState'
 import { useTimer } from '@/hooks/useTimer'
 import { useSound } from '@/hooks/useSound'
@@ -265,7 +266,10 @@ export default function PlayPage() {
     })
 
   // ── Derived values for results screen ──
-  const summary = game.state === 'finished' ? game.getSummary() : null
+  const summary = useMemo(
+    () => (game.state === 'finished' ? game.getSummary() : null),
+    [game.state, game]
+  )
 
   // ── Render ──
 
@@ -373,12 +377,13 @@ export default function PlayPage() {
 
           {/* Question card */}
           {currentQuestion.imageUrl && (
-            <div className="bg-gray-800 border-4 border-gray-600 pixel-border overflow-hidden flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className="relative bg-gray-800 border-4 border-gray-600 pixel-border overflow-hidden" style={{ minHeight: '12rem' }}>
+              <Image
                 src={currentQuestion.imageUrl}
                 alt="Question illustration"
-                className="max-h-48 md:max-h-64 object-contain"
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
           )}

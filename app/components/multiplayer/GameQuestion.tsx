@@ -12,6 +12,7 @@
 'use client'
 
 import { useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import type { MultiplayerQuestion } from '@/types/room'
 import {
   OPTION_COLORS,
@@ -153,12 +154,13 @@ export function GameQuestion({
 
       {/* Question image (if provided) */}
       {question.imageUrl && (
-        <div className="bg-gray-800 border-4 border-gray-600 pixel-border overflow-hidden flex items-center justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+        <div className="relative bg-gray-800 border-4 border-gray-600 pixel-border overflow-hidden" style={{ minHeight: '12rem' }}>
+          <Image
             src={question.imageUrl}
             alt="Question illustration"
-            className="max-h-48 md:max-h-64 object-contain"
+            fill
+            className="object-contain"
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
       )}
