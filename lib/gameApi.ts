@@ -59,9 +59,6 @@ export async function fetchQuestions(
 }
 
 /**
- * Game session management
- */
-/**
  * Client-side game session state (lightweight).
  *
  * Unlike the canonical {@link import('@/types/game').GameSession GameSession},

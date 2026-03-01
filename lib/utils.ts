@@ -36,6 +36,18 @@ export function generateId(prefix?: string): string {
  * @param seconds - Duration in whole seconds
  * @returns Formatted string (e.g. "45s", "2m 30s", "1h 15m")
  */
+export function formatDuration(seconds: number): string {
+  if (seconds < 60) return `${seconds}s`
+  if (seconds < 3600) {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return secs > 0 ? `${mins}m ${secs}s` : `${mins}m`
+  }
+  const hours = Math.floor(seconds / 3600)
+  const mins = Math.floor((seconds % 3600) / 60)
+  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
+}
+
 // ============================================================================
 // Array Utilities
 // ============================================================================
@@ -56,16 +68,4 @@ export function shuffleArray<T>(array: T[]): T[] {
     ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
   }
   return shuffled
-}
-
-export function formatDuration(seconds: number): string {
-  if (seconds < 60) return `${seconds}s`
-  if (seconds < 3600) {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return secs > 0 ? `${mins}m ${secs}s` : `${mins}m`
-  }
-  const hours = Math.floor(seconds / 3600)
-  const mins = Math.floor((seconds % 3600) / 60)
-  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
 }
