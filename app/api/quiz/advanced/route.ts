@@ -20,83 +20,23 @@ import {
   withErrorHandling,
 } from '@/lib/apiResponse'
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
+import {
+  advancedRouteRequestSchema,
+  getFirstError,
+  type AdvancedRouteRequestInput,
+} from '@/lib/validation'
 
-// Input validation and sanitization interfaces
-interface QuizRequest {
-  filesSummary: string
-  numQuestions?: number
-  format?: 'short' | 'long'
-  timeLimit?: number
-}
+import type { OpenRouterResponse } from '@/types/api'
 
-interface QuizQuestion {
+/** Raw AI-generated question before answer-index normalisation. */
+interface RawAIQuestion {
   question: string
   options: [string, string, string, string]
   answer: 'A' | 'B' | 'C' | 'D'
 }
 
-// Sanitize input to prevent prompt injection
-function sanitizeFilesSummary(input: string): string {
-  if (!input || typeof input !== 'string') {
-    return ''
-  }
-
-  let sanitized = input
-    // Remove markdown syntax
-    .replace(/[#*_`~\[\]]/g, '')
-    // Remove role-play signals
-    .replace(/\b(User|System|Assistant|AI|Human):\s*/gi, '')
-    // Remove script tags and HTML
-    .replace(/<[^>]*>/g, '')
-    // Remove control characters except basic whitespace
-    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
-    // Remove unusual punctuation that could be used for injection
-    .replace(/[{}|\\^`]/g, '')
-    // Normalize whitespace
-    .replace(/\s+/g, ' ')
-    .trim()
-
-  // Truncate to max 3000 characters
-  if (sanitized.length > 3000) {
-    sanitized = sanitized.substring(0, 3000) + '...'
-  }
-
-  return sanitized
-}
-
-// Validate request parameters
-function validateRequest(body: unknown): QuizRequest | null {
-  if (!body || typeof body !== 'object') {
-    return null
-  }
-
-  const requestBody = body as Record<string, unknown>
-  const { filesSummary, numQuestions = 10, format = 'short', timeLimit = 20 } = requestBody
-
-  // Validate filesSummary
-  if (!filesSummary || typeof filesSummary !== 'string' || filesSummary.trim().length === 0) {
-    return null
-  }
-
-  // Validate numQuestions
-  const validNumQuestions = Math.max(1, Math.min(20, Number(numQuestions) || 10))
-
-  // Validate format
-  const validFormat = format === 'long' ? 'long' : 'short'
-
-  // Validate timeLimit
-  const validTimeLimit = Math.max(10, Math.min(120, Number(timeLimit) || 20))
-
-  return {
-    filesSummary: sanitizeFilesSummary(filesSummary),
-    numQuestions: validNumQuestions,
-    format: validFormat,
-    timeLimit: validTimeLimit,
-  }
-}
-
 // Construct secure prompt for DeepSeek
-function constructPrompt(request: QuizRequest): string {
+function constructPrompt(request: AdvancedRouteRequestInput): string {
   const { filesSummary, numQuestions, format } = request
 
   const formatInstruction =
@@ -132,7 +72,7 @@ Generate the questions now:`
 }
 
 // Parse and validate AI response
-function parseAIResponse(response: string): QuizQuestion[] | null {
+function parseAIResponse(response: string): RawAIQuestion[] | null {
   try {
     // Try to extract JSON from response if it's wrapped in other text
     const jsonMatch = response.match(/\[[\s\S]*\]/)
@@ -144,7 +84,7 @@ function parseAIResponse(response: string): QuizQuestion[] | null {
       return null
     }
 
-    const questions: QuizQuestion[] = []
+    const questions: RawAIQuestion[] = []
 
     for (const item of parsed) {
       if (!item || typeof item !== 'object') continue
@@ -189,7 +129,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     return serverErrorResponse('Service configuration error')
   }
 
-  // Parse and validate request
+  // Parse and validate request with Zod
   let body
   try {
     body = await request.json()
@@ -197,20 +137,15 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     return validationErrorResponse('Invalid JSON in request body')
   }
 
-  const validatedRequest = validateRequest(body)
-  if (!validatedRequest) {
+  const result = advancedRouteRequestSchema.safeParse(body)
+  if (!result.success) {
     return validationErrorResponse(
-      'Invalid request parameters. Required: filesSummary (string)',
-      'filesSummary'
+      getFirstError(result.error),
+      result.error.issues[0]?.path[0]?.toString()
     )
   }
 
-  if (validatedRequest.filesSummary.length === 0) {
-    return validationErrorResponse(
-      'Files summary cannot be empty after sanitization',
-      'filesSummary'
-    )
-  }
+  const validatedRequest = result.data
 
   // Construct prompt
   const prompt = constructPrompt(validatedRequest)
@@ -255,7 +190,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     }
   }
 
-  const aiResponse = await openRouterResponse.json()
+  const aiResponse: OpenRouterResponse = await openRouterResponse.json()
 
   if (!aiResponse.choices || !aiResponse.choices[0] || !aiResponse.choices[0].message) {
     logger.error('Invalid AI response structure:', aiResponse)

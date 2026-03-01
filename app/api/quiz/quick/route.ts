@@ -22,6 +22,7 @@ import {
   withErrorHandling,
 } from '@/lib/apiResponse'
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
+import { quickQuizRequestSchema, getFirstError } from '@/lib/validation'
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
   const rateLimited = rateLimit(request, RATE_LIMITS.quiz)
@@ -29,19 +30,18 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
 
   const supabase = getSupabaseClient()
 
-  // Parse the request body
+  // Parse and validate request body with Zod
   const body = await request.json()
-  const { category, difficulty } = body
+  const result = quickQuizRequestSchema.safeParse(body)
 
-  // Validate category parameter
-  if (!category || typeof category !== 'string' || category.trim().length === 0) {
+  if (!result.success) {
     return validationErrorResponse(
-      'Category is required and must be a non-empty string',
-      'category'
+      getFirstError(result.error),
+      result.error.issues[0]?.path[0]?.toString()
     )
   }
 
-  const trimmedCategory = category.trim()
+  const { category: trimmedCategory, difficulty } = result.data
 
   // Query Supabase for questions matching the category (+ optional difficulty)
   let query = supabase
@@ -50,7 +50,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     .ilike('category', `%${trimmedCategory}%`) // Case-insensitive partial match
 
   // Filter by difficulty when provided (skip for 'classic' which means mixed)
-  if (difficulty && typeof difficulty === 'string' && difficulty !== 'classic') {
+  if (difficulty && difficulty !== 'classic') {
     query = query.eq('difficulty', difficulty)
   }
 

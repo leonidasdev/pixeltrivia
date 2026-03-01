@@ -278,7 +278,7 @@ describe('Validation Schemas', () => {
       const result = schema.safeParse({ name: 'A' })
       if (!result.success) {
         const message = getFirstError(result.error)
-        expect(message).toBe('Name too short')
+        expect(message).toBe('name: Name too short')
       }
     })
 

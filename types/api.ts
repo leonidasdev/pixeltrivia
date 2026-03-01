@@ -75,3 +75,19 @@ export interface PaginationMetadata {
   /** Total number of pages */
   totalPages: number
 }
+
+// ============================================================================
+// External API Response Types
+// ============================================================================
+
+/**
+ * Response shape from the OpenRouter chat completions API.
+ * Used by both custom and advanced quiz generation routes.
+ */
+export interface OpenRouterResponse {
+  choices: {
+    message: {
+      content: string
+    }
+  }[]
+}

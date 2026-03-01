@@ -120,12 +120,26 @@ export const knowledgeLevelSchema = z.enum([
 export const categorySchema = z.string().min(1).max(100)
 
 /**
- * Quick quiz request
+ * Quick quiz request (POST body)
  */
 export const quickQuizSchema = z.object({
   difficulty: knowledgeLevelSchema,
   category: categorySchema,
   questionCount: rangedNumberSchema(1, 50).optional().default(10),
+})
+
+/**
+ * Quick quiz route request — only category is required, difficulty is optional.
+ */
+export const quickQuizRequestSchema = z.object({
+  category: z
+    .string({
+      required_error: 'Category is required',
+      invalid_type_error: 'Category must be a string',
+    })
+    .trim()
+    .min(1, 'Category is required'),
+  difficulty: knowledgeLevelSchema.optional(),
 })
 
 /**
@@ -151,6 +165,37 @@ export const advancedQuizSchema = z.object({
   numQuestions: rangedNumberSchema(1, 100).optional().default(20),
   timePerQuestion: rangedNumberSchema(5, 120).optional().default(30),
   enableHints: z.boolean().optional().default(false),
+})
+
+/**
+ * Advanced quiz route request — file-based AI generation.
+ * Clamps numeric values to valid ranges (matching original behavior).
+ */
+export const advancedRouteRequestSchema = z.object({
+  filesSummary: z
+    .string()
+    .trim()
+    .min(1, 'Files summary is required')
+    .max(3000, 'Files summary must be 3000 characters or less')
+    .transform(val =>
+      val
+        .replace(/[#*_`~\[\]]/g, '')
+        .replace(/\b(User|System|Assistant|AI|Human):\s*/gi, '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+        .replace(/[{}|\\^`]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+    ),
+  numQuestions: z.coerce
+    .number()
+    .default(10)
+    .transform(v => Math.max(1, Math.min(20, v))),
+  format: z.enum(['short', 'long']).optional().default('short'),
+  timeLimit: z.coerce
+    .number()
+    .default(20)
+    .transform(v => Math.max(10, Math.min(120, v))),
 })
 
 // ============================================================================
@@ -206,8 +251,10 @@ export type JoinRoomInput = z.infer<typeof joinRoomSchema>
 export type LeaveRoomInput = z.infer<typeof leaveRoomSchema>
 export type StartGameInput = z.infer<typeof startGameSchema>
 export type QuickQuizInput = z.infer<typeof quickQuizSchema>
+export type QuickQuizRequestInput = z.infer<typeof quickQuizRequestSchema>
 export type CustomQuizInput = z.infer<typeof customQuizSchema>
 export type AdvancedQuizInput = z.infer<typeof advancedQuizSchema>
+export type AdvancedRouteRequestInput = z.infer<typeof advancedRouteRequestSchema>
 export type SubmitAnswerInput = z.infer<typeof submitAnswerSchema>
 export type GenerateQuestionsInput = z.infer<typeof generateQuestionsSchema>
 
@@ -254,5 +301,8 @@ export function formatZodErrors(error: z.ZodError): Record<string, string[]> {
  * Get first error message from Zod error
  */
 export function getFirstError(error: z.ZodError): string {
-  return error.issues[0]?.message || 'Validation failed'
+  const issue = error.issues[0]
+  if (!issue) return 'Validation failed'
+  const path = issue.path.join('.')
+  return path ? `${path}: ${issue.message}` : issue.message
 }

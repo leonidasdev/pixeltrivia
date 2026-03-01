@@ -19,30 +19,9 @@ import {
   withErrorHandling,
 } from '@/lib/apiResponse'
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
-
-// Types for the API
-interface CustomQuizRequest {
-  knowledgeLevel: string
-  context: string
-  numQuestions: number
-}
-
-interface QuizQuestion {
-  id: string
-  question: string
-  options: string[]
-  correctAnswer: number
-  category: string
-  difficulty: string
-}
-
-interface OpenRouterResponse {
-  choices: {
-    message: {
-      content: string
-    }
-  }[]
-}
+import { customQuizSchema, getFirstError } from '@/lib/validation'
+import type { CustomQuizQuestion } from '@/types/quiz'
+import type { OpenRouterResponse } from '@/types/api'
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
   const rateLimited = rateLimit(request, RATE_LIMITS.aiGeneration)
@@ -54,21 +33,18 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     throw new Error('OpenRouter API key not configured')
   }
 
-  // Parse and validate request body
-  const body: CustomQuizRequest = await request.json()
-  const { knowledgeLevel, context, numQuestions } = body
+  // Parse and validate request body with Zod
+  const body = await request.json()
+  const result = customQuizSchema.safeParse(body)
 
-  // Validate input parameters
-  if (!knowledgeLevel || typeof knowledgeLevel !== 'string') {
+  if (!result.success) {
     return validationErrorResponse(
-      'Knowledge level is required and must be a string',
-      'knowledgeLevel'
+      getFirstError(result.error),
+      result.error.issues[0]?.path[0]?.toString()
     )
   }
 
-  if (typeof numQuestions !== 'number' || numQuestions < 1 || numQuestions > 50) {
-    return validationErrorResponse('Number of questions must be between 1 and 50', 'numQuestions')
-  }
+  const { knowledgeLevel, context, numQuestions } = result.data
 
   // Construct prompt for DeepSeek
   const basePrompt = `Generate exactly ${numQuestions} trivia questions for the ${knowledgeLevel} level.`
@@ -184,7 +160,7 @@ Requirements:
   }
 
   // Format questions with IDs and validation
-  const formattedQuestions: QuizQuestion[] = parsedResponse.questions.map(
+  const formattedQuestions: CustomQuizQuestion[] = parsedResponse.questions.map(
     (q: AIQuestion, index: number) => {
       // Validate question structure
       if (!q.question || !Array.isArray(q.options) || q.options.length !== 4) {
