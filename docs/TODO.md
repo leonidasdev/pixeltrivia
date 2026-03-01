@@ -9,8 +9,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 110 |
-| Tests | 1,906 |
+| Test Suites | 112 |
+| Tests | 1,946 |
 | Coverage (Statements) | ~88% |
 | Coverage (Branches) | ~82% |
 | Coverage (Functions) | ~89% |
@@ -84,17 +84,23 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
 
 ### P1 — Code Quality
 
-- [ ] **Adopt `GamePageLayout` consistently** — 7 game pages bypass it and reinvent layout
-  structure (play, leaderboard, achievements, select, stats, mode, lobby). Extract a
-  `ListPageLayout` variant for leaderboard/achievements (nearly identical layout code).
+- [x] **Adopt `GamePageLayout` consistently** — assessed all 13 game pages. 5 simple
+  pages (quick, custom, advanced, join, create) already use it. Remaining 8 pages have
+  custom layouts (swipe refs, tab systems, filter controls, gameplay UIs) that don't map
+  to GamePageLayout's API without scope creep. Keeping direct composition for those.
+  *(assessed session 14)*
 - [x] **Extract multiplayer session helpers** — `saveMultiplayerSession()`,
   `loadMultiplayerSession()`, `clearMultiplayerSession()` added to `lib/gameApi.ts`. All
   multiplayer pages updated. *(commit b8b8eaf)*
-- [ ] **Move duplicated types to `types/`** — `app/api/quiz/custom/route.ts` declares
-  `CustomQuizRequest`, `QuizQuestion`, and `OpenRouterResponse` locally instead of importing
-  from `types/quiz.ts`.
-- [ ] **Use Zod in API routes** — Zod is a dependency and `lib/validation.ts` defines schemas,
-  but API routes still use manual `if` checks for validation. Wire up the existing Zod schemas.
+- [x] **Move duplicated types to `types/`** — removed local `CustomQuizRequest` and
+  `QuizQuestion` from `quiz/custom/route.ts` (now imports from `types/quiz`). Added shared
+  `OpenRouterResponse` to `types/api.ts`. Renamed `advanced/route.ts` local types for
+  clarity (`QuizRequest` → `AdvancedRouteRequest`, `QuizQuestion` → `RawAIQuestion`).
+  *(commit 6b1c919)*
+- [x] **Use Zod in API routes** — replaced manual if/typeof validation with Zod `safeParse()`
+  in `quiz/custom` (uses `customQuizSchema`), `quiz/quick` (new `quickQuizRequestSchema`),
+  and `quiz/advanced` (new `advancedRouteRequestSchema` with sanitization transforms).
+  Enhanced `getFirstError()` to include field path. *(commit 6b1c919)*
 - [x] **Fix 9 `exhaustive-deps` ESLint suppressions** — fixed 5 (play/page.tsx timer/history
   effects, lobby/play error effects). Remaining 4 kept with detailed comments explaining why
   deps are intentionally excluded (unstable timer ref, mount-only effects). *(commit b8b8eaf)*
@@ -119,7 +125,8 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
   `Scoreboard.tsx` now have test files. *(commit 57ad683)*
 - [x] **Add tests for UI components** — `AnswerFeedback.tsx`, `ScorePopup.tsx`,
   `PixelTimer.tsx`, `PageTransition.tsx` now have test files. *(commit 57ad683)*
-- [ ] **Add tests for stats components** — `StatsOverview.tsx`, `StatsChart.tsx` have no test files.
+- [x] **Add tests for stats components** — added `StatsOverview.test.tsx` (21 tests) and
+  `StatsChart.test.tsx` (19 tests: ModeChart, CategoryChart, StatsCharts). *(commit 20ad139)*
 - [ ] **Expand E2E coverage** — current Playwright specs cover home, game-flow, and
   leaderboard. Missing: actual gameplay (answering questions, timer, scoring), custom/advanced
   generation flow, multiplayer (create, join, lobby, play), and stats page.
@@ -137,8 +144,9 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
   and GameHistoryList. *(commit 1b13826)*
 - [x] **Add `aria-label` to icon-only buttons** — leaderboard sort buttons now have
   `aria-label` matching their function. *(commit 1b13826)*
-- [ ] **Add `role="tab"` / `role="tabpanel"`** to tab UIs in leaderboard and
-  achievements pages. (stats/page.tsx already correct.)
+- [x] **Add `role="tab"` / `role="tabpanel"`** to tab UIs in leaderboard and
+  achievements pages. Added `role="tablist"`, `aria-selected`, `aria-controls`, and
+  `role="tabpanel"` with `aria-labelledby`. *(commit 859c942)*
 
 ### P4 — Performance
 
@@ -149,9 +157,9 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
   `AchievementCard`, `Stat`, and `HistoryRow` with `memo()`. *(commit 0212161)*
 - [x] **Memoize expensive derived values** — added `useMemo` to `summary` in play/page.tsx,
   `grade` in ResultsScreen.tsx, `getPersonalRecords()` in LeaderboardPage. *(commit 0212161)*
-- [ ] **Extract repeated Tailwind class strings** — long identical `className` strings appear
-  2-3 times in custom, play, create, leaderboard, and achievements pages. Extract into shared
-  constants or `@apply` utilities.
+- [x] **Extract repeated Tailwind class strings** — added `.focus-ring` and `.pixel-panel`
+  CSS utility classes to `globals.css` via `@apply`. Replaced 15 inline focus-ring and 11
+  inline pixel-panel occurrences across 8 files. *(commit 8721634)*
 
 ### P5 — Dependencies
 
