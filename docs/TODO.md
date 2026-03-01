@@ -10,7 +10,7 @@
 | Metric | Value |
 |--------|-------|
 | Test Suites | 103 |
-| Tests | 1,821 |
+| Tests | 1,822 |
 | Coverage (Statements) | 86.21% |
 | Coverage (Branches) | 80.14% |
 | Coverage (Functions) | 89.36% |
@@ -69,46 +69,45 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
 
 ### P0 — Critical / Architecture
 
-- [ ] **Refactor `play/page.tsx` (557 lines)** — extract `ResultsScreen`, `QuestionCard`,
-  `AnswerOptions`, `ProgressHeader` into `app/components/game/` sub-components. This file is
-  the hardest to maintain in the project.
-- [ ] **Deduplicate question display** — solo `play/page.tsx` (L420-495) and multiplayer
-  `GameQuestion.tsx` (L155-261) share nearly identical question card, answer options, image
-  display, and difficulty badge code. Extract a shared `QuestionCard` component.
-- [ ] **Extract `startGameSession()` utility** — quick, custom, and advanced pages all repeat
-  the same 4-step pattern: call API, build session object, `localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, ...)`,
-  `router.push('/game/play')`. Move to a shared helper in `lib/` or `hooks/`.
-- [ ] **Use `withErrorHandling` wrapper in API routes** — `lib/apiResponse.ts` exports a
-  `withErrorHandling()` wrapper but no API route uses it. Every route has its own try/catch
-  with manual error formatting. Adopt the wrapper to reduce duplication.
+- [x] **Refactor `play/page.tsx` (557 lines)** — extracted `ResultsScreen` to
+  `app/components/game/ResultsScreen.tsx`, shared question styles to `questionStyles.ts`,
+  barrel export via `index.ts`. Page reduced ~110 lines. *(commit b8b8eaf)*
+- [x] **Deduplicate question display** — extracted shared `OPTION_COLORS`, `getTimerColor`,
+  `getTimerAnimation`, `getOptionStyle` into `app/components/game/questionStyles.ts`. Used by
+  both `play/page.tsx` and `GameQuestion.tsx`. *(commit b8b8eaf)*
+- [x] **Extract `saveGameSession()` utility** — added `saveGameSession()`,
+  `saveMultiplayerSession()`, `loadMultiplayerSession()`, `clearMultiplayerSession()` to
+  `lib/gameApi.ts`. Used by all solo/multiplayer game pages. *(commit b8b8eaf)*
+- [x] **Use `withErrorHandling` wrapper in API routes** — all 11 API routes now wrapped.
+  Generalized with generic type param for dynamic route params. Added SyntaxError -> 400
+  handling. Preserved ExternalAPIError 502 in quiz/custom. *(commit b8b8eaf)*
 
 ### P1 — Code Quality
 
 - [ ] **Adopt `GamePageLayout` consistently** — 7 game pages bypass it and reinvent layout
   structure (play, leaderboard, achievements, select, stats, mode, lobby). Extract a
   `ListPageLayout` variant for leaderboard/achievements (nearly identical layout code).
-- [ ] **Extract multiplayer session helpers** — `saveMultiplayerSession()` and
-  `loadMultiplayerSession()` to replace the 5+ scattered `localStorage.getItem/setItem` calls
-  for `playerId`, `roomCode`, `isHost` across create, join, lobby, and play pages.
+- [x] **Extract multiplayer session helpers** — `saveMultiplayerSession()`,
+  `loadMultiplayerSession()`, `clearMultiplayerSession()` added to `lib/gameApi.ts`. All
+  multiplayer pages updated. *(commit b8b8eaf)*
 - [ ] **Move duplicated types to `types/`** — `app/api/quiz/custom/route.ts` declares
   `CustomQuizRequest`, `QuizQuestion`, and `OpenRouterResponse` locally instead of importing
   from `types/quiz.ts`.
 - [ ] **Use Zod in API routes** — Zod is a dependency and `lib/validation.ts` defines schemas,
   but API routes still use manual `if` checks for validation. Wire up the existing Zod schemas.
-- [ ] **Fix 9 `exhaustive-deps` ESLint suppressions** — potential stale closure bugs in
-  `useMultiplayerGame.ts` (2), `play/page.tsx` (4), `play/[code]/page.tsx` (1),
-  `lobby/[code]/page.tsx` (1), `leaderboard/page.tsx` (1). Refactor with refs or extract
-  stable callbacks.
-- [ ] **Fix `useGameState.submitAnswer` stale closure** — reads `gameState` directly (L143)
-  before the functional updater, accessing a potentially stale closure. Use `useRef` for game
-  state or restructure to read inside the updater.
-- [ ] **Fix JSON parse error inconsistency** — `/api/quiz/quick` catches `SyntaxError` for bad
-  JSON, but `/api/room/create` silently swallows parse failures with an empty `catch {}`.
-  Standardize error handling.
-- [ ] **Add `displayName` to `forwardRef` components** — `PixelButton` and `PixelInput` use
-  `forwardRef` but don't set `displayName`, hurting React DevTools debugging.
-- [ ] **Report to Sentry from `error.tsx`** — route error boundary logs via `logger.error` but
-  doesn't call `Sentry.captureException(error)`. Route-level errors may be missed in Sentry.
+- [x] **Fix 9 `exhaustive-deps` ESLint suppressions** — fixed 5 (play/page.tsx timer/history
+  effects, lobby/play error effects). Remaining 4 kept with detailed comments explaining why
+  deps are intentionally excluded (unstable timer ref, mount-only effects). *(commit b8b8eaf)*
+- [x] **Fix `useGameState.submitAnswer` stale closure** — added `useRef` pattern:
+  `gameStateRef.current = gameState` synced on every render. `submitAnswer`, `getCurrentQuestion`,
+  `getSummary` now read from ref. *(commit b8b8eaf)*
+- [x] **Fix JSON parse error inconsistency** — `withErrorHandling` now catches `SyntaxError`
+  globally (returns 400). `room/create` inner try/catch documented for backward compat.
+  *(commit b8b8eaf)*
+- [x] **Add `displayName` to `forwardRef` components** — already done in prior session
+  (commit 5052c48).
+- [x] **Report to Sentry from `error.tsx`** — added `Sentry.captureException(error)` to both
+  `error.tsx` and `global-error.tsx` via `useEffect`. *(commit b8b8eaf)*
 
 ### P2 — Testing
 
