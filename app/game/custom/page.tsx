@@ -15,8 +15,10 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import type { CustomGameConfig } from '@/app/components/CustomGameConfigurator'
 import { generateCustomQuiz, type CustomQuizRequest } from '@/lib/customQuizApi'
+import { STORAGE_KEYS } from '@/constants/game'
 import { logger } from '@/lib/logger'
 import { getErrorMessage } from '@/lib/errors'
+import { ToastContainer, useToast, GamePageLayout } from '@/app/components/ui'
 
 const CustomGameConfigurator = dynamic(() => import('@/app/components/CustomGameConfigurator'), {
   loading: () => (
@@ -27,7 +29,6 @@ const CustomGameConfigurator = dynamic(() => import('@/app/components/CustomGame
     </div>
   ),
 })
-import { ToastContainer, useToast, GamePageLayout } from '@/app/components/ui'
 
 export default function CustomGamePage() {
   const router = useRouter()
@@ -57,8 +58,14 @@ export default function CustomGamePage() {
       logger.debug('Generated questions:', response.data)
 
       if (response.data) {
-        sessionStorage.setItem('customGameQuestions', JSON.stringify(response.data))
-        sessionStorage.setItem('customGameConfig', JSON.stringify(config))
+        // Store as a game session compatible with the play page
+        const gameSession = {
+          questions: response.data,
+          category: config.context || 'Custom',
+          difficulty: config.knowledgeLevel,
+          mode: 'custom',
+        }
+        localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, JSON.stringify(gameSession))
       }
 
       toast.success(

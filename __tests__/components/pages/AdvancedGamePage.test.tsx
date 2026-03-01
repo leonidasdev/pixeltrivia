@@ -155,7 +155,7 @@ describe('AdvancedGamePage', () => {
 
       // Verify questions were stored in localStorage
       await waitFor(() => {
-        const stored = localStorage.getItem(STORAGE_KEYS.GENERATED_QUESTIONS)
+        const stored = localStorage.getItem(STORAGE_KEYS.CURRENT_GAME_SESSION)
         expect(stored).not.toBeNull()
       })
     })

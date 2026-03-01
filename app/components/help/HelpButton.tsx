@@ -28,18 +28,10 @@ export function HelpButton() {
     setIsModalOpen(false)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      handleOpenModal()
-    }
-  }
-
   return (
     <>
       <button
         onClick={handleOpenModal}
-        onKeyDown={handleKeyDown}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className={`

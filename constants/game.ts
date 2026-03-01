@@ -206,6 +206,8 @@ export const STORAGE_KEYS = {
   PLAYER_AVATAR: `${STORAGE_PREFIX}player_avatar`,
   /** Player volume level */
   PLAYER_VOLUME: `${STORAGE_PREFIX}player_volume`,
+  /** Current game session for the play page (JSON) */
+  CURRENT_GAME_SESSION: `${STORAGE_PREFIX}current_session`,
   /** Advanced game configuration (JSON) */
   ADVANCED_CONFIG: `${STORAGE_PREFIX}advanced_config`,
   /** AI-generated questions (JSON) */

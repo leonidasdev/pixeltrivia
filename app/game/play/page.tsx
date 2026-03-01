@@ -37,6 +37,7 @@ import {
   DEFAULT_TIME_LIMIT,
   TIME_WARNING_THRESHOLD,
   TIME_CRITICAL_THRESHOLD,
+  STORAGE_KEYS,
 } from '@/constants/game'
 
 // ============================================================================
@@ -71,6 +72,7 @@ export default function PlayPage() {
   const [lastAnswerCorrect, setLastAnswerCorrect] = useState<boolean | null>(null)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [historySaved, setHistorySaved] = useState(false)
+  const [gameMode, setGameMode] = useState<'quick' | 'custom' | 'advanced' | 'multiplayer'>('quick')
 
   // Current question
   const currentQuestion = game.getCurrentQuestion()
@@ -99,7 +101,7 @@ export default function PlayPage() {
   // ── Bootstrap: read session from localStorage ──
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('currentGameSession')
+      const raw = localStorage.getItem(STORAGE_KEYS.CURRENT_GAME_SESSION)
       if (!raw) {
         toast.error('No game session found. Start a new game first.')
         router.push('/')
@@ -110,6 +112,7 @@ export default function PlayPage() {
         questions: Question[]
         category: string
         difficulty: string
+        mode?: 'quick' | 'custom' | 'advanced' | 'multiplayer'
       }
 
       if (!session.questions?.length) {
@@ -117,6 +120,8 @@ export default function PlayPage() {
         router.push('/')
         return
       }
+
+      if (session.mode) setGameMode(session.mode)
 
       game.startGame(
         session.questions,
@@ -155,7 +160,7 @@ export default function PlayPage() {
     if (summary) {
       const profile = getProfile()
       addHistoryEntry({
-        mode: 'quick',
+        mode: gameMode,
         category: game.category,
         difficulty: game.difficulty,
         score: summary.finalScore,
@@ -170,7 +175,7 @@ export default function PlayPage() {
     setHistorySaved(true)
 
     // Cleanup session
-    localStorage.removeItem('currentGameSession')
+    localStorage.removeItem(STORAGE_KEYS.CURRENT_GAME_SESSION)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game.state])
 
@@ -342,7 +347,7 @@ export default function PlayPage() {
             <div className="flex justify-center">
               <ShareButton
                 result={{
-                  mode: 'quick',
+                  mode: gameMode,
                   score: summary.finalScore,
                   correctAnswers: summary.correctAnswers,
                   totalQuestions: summary.totalQuestions,

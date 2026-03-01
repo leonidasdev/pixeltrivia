@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from 'react'
 import type { CustomGameConfig, KnowledgeLevel } from '@/types/game'
 import { KNOWLEDGE_LEVELS } from '@/constants/difficulties'

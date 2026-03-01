@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+'use client'
+
 import React, { useState, useMemo } from 'react'
 import { GAME_CATEGORIES } from '@/constants/categories'
 import { getRecommendedDifficulty } from '@/lib/adaptiveDifficulty'

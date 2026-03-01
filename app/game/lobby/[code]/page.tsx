@@ -49,13 +49,7 @@ function LobbyContent({ params }: LobbyPageProps) {
   }, [])
 
   // Room state with real-time updates
-  const {
-    room,
-    isLoading,
-    error,
-    isRealtimeConnected,
-    refresh: _refresh,
-  } = useRoom({
+  const { room, isLoading, error, isRealtimeConnected } = useRoom({
     roomCode: roomCode.toUpperCase(),
     playerId,
   })

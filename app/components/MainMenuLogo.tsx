@@ -27,16 +27,9 @@ export default function MainMenuLogo() {
     router.push('/')
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      handleLogoClick()
-    }
-  }
   return (
     <button
       onClick={handleLogoClick}
-      onKeyDown={handleKeyDown}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`

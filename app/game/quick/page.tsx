@@ -14,6 +14,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { fetchQuestions, createGameSession } from '@/lib/gameApi'
+import { STORAGE_KEYS } from '@/constants/game'
+import { logger } from '@/lib/logger'
+import { getErrorMessage } from '@/lib/errors'
+import { ToastContainer, useToast, GamePageLayout, LoadingOverlay } from '@/app/components/ui'
+import { useSound } from '@/hooks/useSound'
 
 const QuickGameSelector = dynamic(() => import('@/app/components/QuickGameSelector'), {
   loading: () => (
@@ -22,10 +27,6 @@ const QuickGameSelector = dynamic(() => import('@/app/components/QuickGameSelect
     </div>
   ),
 })
-import { logger } from '@/lib/logger'
-import { getErrorMessage } from '@/lib/errors'
-import { ToastContainer, useToast, GamePageLayout, LoadingOverlay } from '@/app/components/ui'
-import { useSound } from '@/hooks/useSound'
 
 export default function QuickGamePage() {
   const router = useRouter()
@@ -52,7 +53,7 @@ export default function QuickGamePage() {
       logger.debug('Game session created:', gameSession)
 
       // Store game session in localStorage for the game screen
-      localStorage.setItem('currentGameSession', JSON.stringify(gameSession))
+      localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, JSON.stringify(gameSession))
 
       // Navigate to game screen
       router.push('/game/play')

@@ -34,8 +34,8 @@ export default function AdvancedGamePage() {
       try {
         const config = JSON.parse(savedConfig)
         setGameConfig(config)
-      } catch (error) {
-        logger.error('Failed to parse advanced game config', error)
+      } catch (err) {
+        logger.error('Failed to parse advanced game config', err)
         router.push('/game/mode')
         return
       }
@@ -89,12 +89,22 @@ export default function AdvancedGamePage() {
 
       const result = await response.json()
 
-      localStorage.setItem(STORAGE_KEYS.GENERATED_QUESTIONS, JSON.stringify(result.data.questions))
+      // Store as a game session compatible with the play page
+      const gameSession = {
+        questions: result.data.questions,
+        category: 'Advanced',
+        difficulty: 'medium',
+        mode: 'advanced',
+      }
+      localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, JSON.stringify(gameSession))
       localStorage.setItem(STORAGE_KEYS.GAME_METADATA, JSON.stringify(result.data.metadata))
 
       toast.success(`Generated ${result.data.questions.length} questions from your documents!`)
-    } catch (error) {
-      setError(getErrorMessage(error, 'Failed to generate quiz. Please try again.'))
+
+      // Navigate to the play page
+      router.push('/game/play')
+    } catch (err) {
+      setError(getErrorMessage(err, 'Failed to generate quiz. Please try again.'))
     } finally {
       setIsGenerating(false)
     }

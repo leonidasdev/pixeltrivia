@@ -66,33 +66,6 @@ describe('BackButton', () => {
       screen.getByRole('button', { name: /go back/i }).click()
       expect(mockBack).toHaveBeenCalledTimes(1)
     })
-
-    it('calls router.back() on Enter key', () => {
-      mockUsePathname.mockReturnValue('/game/mode')
-      render(<BackButton />)
-
-      const button = screen.getByRole('button', { name: /go back/i })
-      fireEvent.keyDown(button, { key: 'Enter' })
-      expect(mockBack).toHaveBeenCalledTimes(1)
-    })
-
-    it('calls router.back() on Space key', () => {
-      mockUsePathname.mockReturnValue('/game/mode')
-      render(<BackButton />)
-
-      const button = screen.getByRole('button', { name: /go back/i })
-      fireEvent.keyDown(button, { key: ' ' })
-      expect(mockBack).toHaveBeenCalledTimes(1)
-    })
-
-    it('does not navigate on other keys', () => {
-      mockUsePathname.mockReturnValue('/game/mode')
-      render(<BackButton />)
-
-      const button = screen.getByRole('button', { name: /go back/i })
-      fireEvent.keyDown(button, { key: 'Tab' })
-      expect(mockBack).not.toHaveBeenCalled()
-    })
   })
 
   describe('Hover state', () => {

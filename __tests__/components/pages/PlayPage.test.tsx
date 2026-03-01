@@ -81,6 +81,7 @@ jest.mock('@/lib/scoring', () => ({
 
 import PlayPage from '@/app/game/play/page'
 import { addHistoryEntry } from '@/lib/storage'
+import { STORAGE_KEYS } from '@/constants/game'
 
 // ── Test data ──
 
@@ -105,7 +106,7 @@ const makeSession = (count = 3) => ({
 })
 
 function storeSession(session = makeSession()) {
-  localStorage.setItem('currentGameSession', JSON.stringify(session))
+  localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, JSON.stringify(session))
 }
 
 // ── Suite ──
@@ -132,14 +133,14 @@ describe('PlayPage', () => {
     })
 
     it('redirects if session JSON is invalid', () => {
-      localStorage.setItem('currentGameSession', 'not-json!!!')
+      localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, 'not-json!!!')
       render(<PlayPage />)
       expect(mockPush).toHaveBeenCalledWith('/')
     })
 
     it('redirects if session has no questions', () => {
       localStorage.setItem(
-        'currentGameSession',
+        STORAGE_KEYS.CURRENT_GAME_SESSION,
         JSON.stringify({ questions: [], category: 'X', difficulty: 'medium' })
       )
       render(<PlayPage />)
@@ -198,7 +199,7 @@ describe('PlayPage', () => {
     it('renders image when question has imageUrl', () => {
       const session = makeSession(1)
       session.questions[0].imageUrl = 'https://example.com/test.png'
-      localStorage.setItem('currentGameSession', JSON.stringify(session))
+      localStorage.setItem(STORAGE_KEYS.CURRENT_GAME_SESSION, JSON.stringify(session))
       render(<PlayPage />)
       const img = screen.getByAltText('Question illustration')
       expect(img).toBeInTheDocument()
@@ -399,7 +400,7 @@ describe('PlayPage', () => {
 
     it('clears localStorage session', () => {
       playThrough()
-      expect(localStorage.getItem('currentGameSession')).toBeNull()
+      expect(localStorage.getItem(STORAGE_KEYS.CURRENT_GAME_SESSION)).toBeNull()
     })
 
     it('shows share button', () => {

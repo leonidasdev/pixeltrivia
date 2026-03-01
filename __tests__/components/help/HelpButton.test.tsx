@@ -75,29 +75,6 @@ describe('HelpButton', () => {
     })
   })
 
-  describe('Keyboard interaction', () => {
-    it('opens modal on Enter key', () => {
-      render(<HelpButton />)
-      const button = screen.getByRole('button', { name: /help/i })
-      fireEvent.keyDown(button, { key: 'Enter' })
-      expect(screen.getByTestId('help-modal')).toBeInTheDocument()
-    })
-
-    it('opens modal on Space key', () => {
-      render(<HelpButton />)
-      const button = screen.getByRole('button', { name: /help/i })
-      fireEvent.keyDown(button, { key: ' ' })
-      expect(screen.getByTestId('help-modal')).toBeInTheDocument()
-    })
-
-    it('does not open modal on other keys', () => {
-      render(<HelpButton />)
-      const button = screen.getByRole('button', { name: /help/i })
-      fireEvent.keyDown(button, { key: 'Tab' })
-      expect(screen.queryByTestId('help-modal')).not.toBeInTheDocument()
-    })
-  })
-
   describe('Hover behavior', () => {
     it('applies hover styles on mouseEnter', () => {
       render(<HelpButton />)

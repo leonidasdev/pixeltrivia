@@ -56,6 +56,7 @@ jest.mock('next/navigation', () => ({
 
 import CustomGamePage from '@/app/game/custom/page'
 import { generateCustomQuiz } from '@/lib/customQuizApi'
+import { STORAGE_KEYS } from '@/constants/game'
 
 describe('CustomGamePage', () => {
   beforeEach(() => {
@@ -120,7 +121,7 @@ describe('CustomGamePage', () => {
       })
     })
 
-    it('stores generated questions in session storage', async () => {
+    it('stores generated questions in localStorage', async () => {
       const mockQuestions = [
         { id: '1', question: 'Test?', options: ['A', 'B', 'C', 'D'], correctAnswer: 0 },
       ]
@@ -133,7 +134,7 @@ describe('CustomGamePage', () => {
       screen.getByText('Start Custom Game').click()
 
       await waitFor(() => {
-        expect(sessionStorage.getItem('customGameQuestions')).toBeTruthy()
+        expect(localStorage.getItem(STORAGE_KEYS.CURRENT_GAME_SESSION)).toBeTruthy()
       })
     })
 

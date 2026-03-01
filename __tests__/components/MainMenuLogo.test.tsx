@@ -85,24 +85,6 @@ describe('MainMenuLogo', () => {
       fireEvent.click(screen.getByRole('button'))
       expect(mockPush).toHaveBeenCalledWith('/')
     })
-
-    it('should navigate on Enter key', () => {
-      render(<MainMenuLogo />)
-      fireEvent.keyDown(screen.getByRole('button'), { key: 'Enter' })
-      expect(mockPush).toHaveBeenCalledWith('/')
-    })
-
-    it('should navigate on Space key', () => {
-      render(<MainMenuLogo />)
-      fireEvent.keyDown(screen.getByRole('button'), { key: ' ' })
-      expect(mockPush).toHaveBeenCalledWith('/')
-    })
-
-    it('should not navigate on other keys', () => {
-      render(<MainMenuLogo />)
-      fireEvent.keyDown(screen.getByRole('button'), { key: 'Tab' })
-      expect(mockPush).not.toHaveBeenCalled()
-    })
   })
 
   describe('Hover State', () => {
