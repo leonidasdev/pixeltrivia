@@ -547,29 +547,19 @@ export default function GamePage() {
 - Multiplayer invite links and room code sharing
 - Testing infrastructure (1850 tests, 104 suites, 86%+ coverage)
 - CI/CD pipeline (GitHub Actions + Husky + Lighthouse CI)
-- Security hardening (validation, rate limiting on all routes, middleware, CSP)
-- Structured logging via `lib/logger` with request ID tracing
-- Standardized API responses via `lib/apiResponse` helpers
+- Security hardening (validation, rate limiting, middleware, CSP)
+- Structured logging with request ID tracing
+- Standardized API responses
 - API response caching with SWR
 - Usage analytics (privacy-first, localStorage)
 - Stats dashboard (history, charts, overview)
 - File upload processing (PDF, DOCX, TXT, MD parsing)
-- Toast notification system (replaces browser alerts)
-- Skip navigation link for keyboard/screen reader accessibility
-- `prefers-reduced-motion` support for all animations
+- Toast notification system
+- Accessibility (skip nav, `prefers-reduced-motion`, ARIA)
 - PWA support (manifest.json, viewport, apple web app metadata)
 - Sentry error tracking (gated on DSN env var)
 - Database consolidation (single `schema.sql` source of truth)
 - Comprehensive documentation
-- **Phase 24 Code Refactoring:**
-  - `GamePageLayout` used by all 5 game pages (quick, custom, advanced, join, create)
-  - `usePlayerSettings` hook used by mode, select, join, create pages
-  - `getErrorMessage()` utility for safe error extraction
-  - `buildPlayerUrl()` utility for player URL construction
-  - `GameModeCard` reusable component with `GAME_MODES` data
-  - DRY logger refactoring (`generateRequestId`/`getRequestId` exported from `lib/logger.ts`)
-  - Dev/prod scripts (`dev:debug`, `validate`, `db:seed`)
-  - CI/CD type errors resolved (18 fixes across 11 files)
 
 ### Planned
 - User authentication
@@ -636,4 +626,4 @@ When working on this codebase:
 
 ---
 
-*Last updated: Phase 24 — Session 2 (March 2, 2026)*
+*Last updated: March 1, 2026*

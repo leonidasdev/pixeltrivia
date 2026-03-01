@@ -117,27 +117,32 @@ app/
 │   ├── BackButton.tsx
 │   ├── MainMenuLogo.tsx
 │   ├── ErrorBoundary.tsx
-    ├── help/                # Help system (context-aware)
+│   ├── Footer.tsx
+│   ├── help/                # Help system (context-aware)
 │   │   ├── HelpButton.tsx
 │   │   ├── HelpModal.tsx
-│   │   └── HelpContext.tsx
+│   │   ├── HelpContext.tsx
+│   │   └── index.ts
 │   ├── multiplayer/         # Multiplayer components
 │   │   ├── PlayerList.tsx
 │   │   ├── LobbyView.tsx
 │   │   ├── GameQuestion.tsx
 │   │   ├── Scoreboard.tsx
-│   │   └── HostControls.tsx
+│   │   ├── HostControls.tsx
+│   │   └── index.ts
 │   ├── stats/               # Statistics components
 │   │   ├── StatsOverview.tsx
+│   │   ├── StatsChart.tsx
 │   │   ├── GameHistoryList.tsx
-│   │   └── charts/
+│   │   └── index.ts
 │   └── ui/                  # Reusable UI library
 │       ├── Toast.tsx, Modal.tsx, LoadingSpinner.tsx
 │       ├── PixelButton.tsx, PixelCard.tsx, PixelInput.tsx, PixelBadge.tsx
 │       ├── AnimatedBackground.tsx, GamePageLayout.tsx, PageHeader.tsx
 │       ├── PlayerDisplay.tsx, PixelConfetti.tsx, ScorePopup.tsx
-│       ├── AnswerFeedback.tsx, PixelTimer.tsx
-│       └── PageTransition.tsx
+│       ├── AnswerFeedback.tsx, PixelTimer.tsx, GameModeCard.tsx
+│       ├── ShareButton.tsx, PageTransition.tsx
+│       └── index.ts
 │
 └── game/                    # Game pages
     ├── mode/page.tsx        # Mode selection
@@ -157,7 +162,8 @@ app/
 
 ```
 lib/
-├── errors.ts          # 15+ custom error classes
+├── index.ts           # Re-exports
+├── errors.ts          # Custom error classes
 ├── apiResponse.ts     # Standardized API responses
 ├── validation.ts      # Zod schemas for all inputs
 ├── security.ts        # Security middleware (Next.js)
@@ -165,20 +171,25 @@ lib/
 ├── rateLimit.ts       # Rate limiting (in-memory + Redis)
 ├── logger.ts          # Structured logging utility
 ├── storage.ts         # Typed localStorage wrapper
-├── supabase.ts        # Supabase client (DbRoom, DbPlayer types)
+├── supabase.ts        # Supabase server client (service role key)
+├── supabaseClient.ts  # Supabase client-side (Realtime)
 ├── roomApi.ts         # Room management API
 ├── roomCode.ts        # Room code generation
 ├── gameApi.ts         # Game session management
 ├── quickQuizApi.ts    # Quick quiz API client
 ├── customQuizApi.ts   # Custom quiz API client
 ├── multiplayerApi.ts  # Multiplayer API client
+├── apiFetch.ts        # Typed fetch wrapper
+├── apiCache.ts        # SWR-based API response caching
 ├── scoring.ts         # Unified scoring logic
 ├── soundManager.ts    # Web Audio API sound engine
 ├── fileParser.ts      # File upload parsing (PDF, DOCX, TXT, MD)
 ├── leaderboard.ts     # Local leaderboard system
 ├── achievements.ts    # Achievement system (20 achievements, 4 tiers)
-├── apiCache.ts        # SWR-based API response caching
+├── adaptiveDifficulty.ts # Per-category difficulty adjustment
 ├── analytics.ts       # Client-side usage analytics
+├── session.ts         # Session management
+├── share.ts           # Share results (Web Share API + clipboard)
 └── utils.ts           # Shared utilities (generateId, formatDuration)
 ```
 
@@ -217,7 +228,9 @@ hooks/
 ├── useSound.ts        # Sound effects hook
 ├── useRoom.ts         # Room state + Supabase Realtime
 ├── useMultiplayerGame.ts # Multiplayer game state machine
-└── useGameHistory.ts  # Game history storage and stats
+├── useGameHistory.ts  # Game history storage and stats
+├── useHoveredCard.ts  # Card hover/focus state management
+└── useSwipe.ts        # Touch swipe gesture detection
 ```
 
 ---
@@ -272,8 +285,8 @@ All interactive components follow these patterns:
 5. **Layout Reuse** - `GamePageLayout` for consistent page structure (background, header, content)
 6. **Player Settings** - `usePlayerSettings` hook for name, avatar, volume across pages
 7. **Error Messages** - `getErrorMessage()` for safe error extraction in catch blocks
-5. **Reduced Motion** - Respects `prefers-reduced-motion` system preference
-4. **Error Boundaries** - Graceful error handling with retry options
+8. **Reduced Motion** - Respects `prefers-reduced-motion` system preference
+9. **Error Boundaries** - Graceful error handling with retry options
 
 ---
 
@@ -486,9 +499,8 @@ All API routes are rate-limited via `lib/rateLimit.ts`:
 ### Scalability Path
 
 1. **Redis for Rate Limiting** - Move from in-memory to distributed cache
-2. **WebSockets** - Real-time multiplayer with Supabase Realtime
-3. **Edge Functions** - Move AI generation to Supabase Edge Functions
-4. **CDN Caching** - Cache static question pools at edge
+2. **Edge Functions** - Move AI generation to Supabase Edge Functions
+3. **CDN Caching** - Cache static question pools at edge
 
 ### Monitoring (Implemented)
 
@@ -499,4 +511,4 @@ All API routes are rate-limited via `lib/rateLimit.ts`:
 
 ---
 
-*Last updated: March 1, 2026 (Phase 24)*
+*Last updated: March 1, 2026*

@@ -138,7 +138,7 @@ npm run db:types
 
 ### Seed data
 
-The seed data is embedded in `database/schema.sql` and includes 150+ questions across 40 categories.
+The seed data is in `database/seed.sql` and includes 150+ questions across 40 categories.
 
 ---
 

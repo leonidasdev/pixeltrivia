@@ -561,10 +561,11 @@ const customQuiz = await fetch('/api/quiz/custom', {
 
 PixelTrivia provides client libraries in `lib/`:
 
-- [quickQuizApi.ts](../lib/quickQuizApi.ts) - Quick play API client
-- [customQuizApi.ts](../lib/customQuizApi.ts) - Custom quiz API client
-- [roomApi.ts](../lib/roomApi.ts) - Room management API client
-- [gameApi.ts](../lib/gameApi.ts) - Game session API client
+- [quickQuizApi.ts](../../lib/quickQuizApi.ts) - Quick play API client
+- [customQuizApi.ts](../../lib/customQuizApi.ts) - Custom quiz API client
+- [roomApi.ts](../../lib/roomApi.ts) - Room management API client
+- [gameApi.ts](../../lib/gameApi.ts) - Game session API client
+- [multiplayerApi.ts](../../lib/multiplayerApi.ts) - Multiplayer operations client
 
 **Example Usage:**
 
