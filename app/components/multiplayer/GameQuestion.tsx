@@ -200,7 +200,7 @@ export function GameQuestion({
 
       {/* Keyboard shortcut hint */}
       {!hasAnswered && !isRevealing && !isLoading && (
-        <p className="text-center font-pixel text-[10px] text-gray-600 hidden md:block">
+        <p className="text-center font-pixel text-xs text-gray-600 hidden md:block">
           Press 1-4 or A-D to answer
         </p>
       )}

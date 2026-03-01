@@ -97,7 +97,7 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
           )}
 
           {achievement.unlocked && achievement.unlockedAt && (
-            <p className="font-pixel-body text-[10px] text-gray-500 mt-1">
+            <p className="font-pixel-body text-xs text-gray-500 mt-1">
               Unlocked {new Date(achievement.unlockedAt).toLocaleDateString()}
             </p>
           )}
@@ -116,7 +116,7 @@ function SummaryBar() {
   return (
     <div className="pixel-border bg-gray-800 bg-opacity-80 p-4 mb-6">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-pixel text-sm text-cyan-400">Progress</h3>
+        <h2 className="font-pixel text-sm text-cyan-400">Progress</h2>
         <span className="font-pixel text-sm text-white">
           {summary.unlocked}/{summary.total} ({summary.percentage}%)
         </span>
@@ -143,7 +143,7 @@ function SummaryBar() {
           const data = summary.byTier[t]
           return (
             <div key={t} className="text-center">
-              <div className={`font-pixel text-[10px] ${tier.color}`}>
+              <div className={`font-pixel text-xs ${tier.color}`}>
                 {tier.label.toUpperCase()}
               </div>
               <div className="font-pixel text-sm text-white">
@@ -196,7 +196,7 @@ export default function AchievementsPage() {
           <div className="flex items-center gap-4 mb-6">
             <button
               onClick={handleBack}
-              className="pixel-border bg-gray-800 hover:bg-gray-700 text-white font-pixel text-xs px-3 py-2 transition-colors"
+              className="pixel-border bg-gray-800 hover:bg-gray-700 text-white font-pixel text-xs px-3 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
               aria-label="Go back"
             >
               ← BACK
@@ -217,7 +217,7 @@ export default function AchievementsPage() {
                   playSound('select')
                   setActiveFilter(tab.id)
                 }}
-                className={`font-pixel text-[10px] px-2 py-1.5 transition-colors ${
+                className={`font-pixel text-xs px-2 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400 ${
                   activeFilter === tab.id
                     ? 'bg-yellow-600 text-white'
                     : 'bg-gray-800 text-gray-400 hover:bg-gray-700'

@@ -139,7 +139,7 @@ export default function AdvancedGamePage() {
           <div className="space-y-4">
             {/* Files */}
             <div>
-              <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Uploaded Documents:</h3>
+              <h3 className="text-cyan-300 font-pixel text-xs mb-2">Uploaded Documents:</h3>
               {gameConfig.files.length > 0 ? (
                 <div className="space-y-2">
                   {gameConfig.files.map(file => (
@@ -152,7 +152,7 @@ export default function AdvancedGamePage() {
                         <div className="text-white font-pixel-body text-base font-medium">
                           {file.name}
                         </div>
-                        <div className="text-gray-400 font-pixel text-[8px]">
+                        <div className="text-gray-400 font-pixel text-xs">
                           {(file.size / 1024).toFixed(1)} KB
                         </div>
                       </div>
@@ -167,13 +167,13 @@ export default function AdvancedGamePage() {
             {/* Time and Format */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Time Per Question:</h3>
+                <h3 className="text-cyan-300 font-pixel text-xs mb-2">Time Per Question:</h3>
                 <p className="text-white font-pixel-body text-xl">
                   {gameConfig.timePerQuestion} seconds
                 </p>
               </div>
               <div>
-                <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Question Format:</h3>
+                <h3 className="text-cyan-300 font-pixel text-xs mb-2">Question Format:</h3>
                 <p className="text-white font-pixel-body text-xl capitalize">
                   {gameConfig.questionFormat === 'short' ? 'Short Questions' : 'Longer Questions'}
                 </p>
@@ -185,7 +185,7 @@ export default function AdvancedGamePage() {
         <section className="w-full max-w-lg">
           {error && (
             <div className="mb-4 p-4 bg-red-900 bg-opacity-30 border-4 border-red-600 pixel-border">
-              <h4 className="text-red-300 font-pixel text-[10px] mb-2">Error</h4>
+              <h4 className="text-red-300 font-pixel text-xs mb-2">Error</h4>
               <p className="text-red-200 font-pixel-body text-base">{error}</p>
             </div>
           )}

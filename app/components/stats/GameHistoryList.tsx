@@ -100,7 +100,7 @@ function HistoryRow({ entry, onDelete }: HistoryRowProps) {
       {/* Main row */}
       <button
         onClick={() => setShowDetails(!showDetails)}
-        className="w-full p-3 text-left flex items-center justify-between gap-3 hover:bg-white hover:bg-opacity-5 transition-colors"
+        className="w-full p-3 text-left flex items-center justify-between gap-3 hover:bg-white hover:bg-opacity-5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
         aria-expanded={showDetails}
         aria-label={`Game details: ${entry.mode} - ${entry.category}`}
       >
@@ -134,23 +134,23 @@ function HistoryRow({ entry, onDelete }: HistoryRowProps) {
         <div className="px-3 pb-3 border-t border-gray-700 border-opacity-50 pt-3">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2">
             <div className="text-center">
-              <div className="font-pixel text-[10px] text-gray-500">CORRECT</div>
+              <div className="font-pixel text-xs text-gray-500">CORRECT</div>
               <div className="font-pixel-body text-sm text-white">
                 {entry.correctAnswers}/{entry.totalQuestions}
               </div>
             </div>
             <div className="text-center">
-              <div className="font-pixel text-[10px] text-gray-500">DURATION</div>
+              <div className="font-pixel text-xs text-gray-500">DURATION</div>
               <div className="font-pixel-body text-sm text-white">
                 {formatDuration(entry.duration)}
               </div>
             </div>
             <div className="text-center">
-              <div className="font-pixel text-[10px] text-gray-500">STREAK</div>
+              <div className="font-pixel text-xs text-gray-500">STREAK</div>
               <div className="font-pixel-body text-sm text-orange-400">x{entry.streak || 0}</div>
             </div>
             <div className="text-center">
-              <div className="font-pixel text-[10px] text-gray-500">RATING</div>
+              <div className="font-pixel text-xs text-gray-500">RATING</div>
               <div className="font-pixel-body text-sm">
                 {badge.emoji} {badge.label}
               </div>
@@ -170,7 +170,7 @@ function HistoryRow({ entry, onDelete }: HistoryRowProps) {
                   e.stopPropagation()
                   onDelete(entry.id)
                 }}
-                className="font-pixel text-[10px] text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors"
+                className="font-pixel text-xs text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
                 aria-label="Delete this game entry"
               >
                 DELETE
@@ -240,7 +240,7 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
             <button
               key={mode}
               onClick={() => setFilterMode(mode)}
-              className={`font-pixel text-[10px] px-2 py-1 pixel-border transition-colors ${
+              className={`font-pixel text-xs px-2 py-1 pixel-border transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400 ${
                 filterMode === mode
                   ? 'bg-cyan-600 text-white border-cyan-400'
                   : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
@@ -256,7 +256,7 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
           <select
             value={sortBy}
             onChange={e => setSortBy(e.target.value as SortField)}
-            className="font-pixel text-[10px] bg-gray-800 text-gray-300 pixel-border px-2 py-1 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="font-pixel text-xs bg-gray-800 text-gray-300 pixel-border px-2 py-1 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             aria-label="Sort by"
           >
             <option value="date">NEWEST</option>
@@ -267,7 +267,7 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
           {onClearAll && (
             <button
               onClick={() => setShowConfirmClear(true)}
-              className="font-pixel text-[10px] text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors"
+              className="font-pixel text-xs text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
               aria-label="Clear all history"
             >
               CLEAR
@@ -301,13 +301,13 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
                 onClearAll?.()
                 setShowConfirmClear(false)
               }}
-              className="font-pixel text-xs bg-red-600 hover:bg-red-500 text-white pixel-border px-4 py-2 transition-colors"
+              className="font-pixel text-xs bg-red-600 hover:bg-red-500 text-white pixel-border px-4 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
             >
               YES, DELETE ALL
             </button>
             <button
               onClick={() => setShowConfirmClear(false)}
-              className="font-pixel text-xs bg-gray-600 hover:bg-gray-500 text-white pixel-border px-4 py-2 transition-colors"
+              className="font-pixel text-xs bg-gray-600 hover:bg-gray-500 text-white pixel-border px-4 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
             >
               CANCEL
             </button>

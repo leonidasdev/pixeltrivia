@@ -92,7 +92,7 @@ function JoinGameContent() {
         <div>
           <label
             htmlFor="playerName"
-            className="block font-pixel text-[10px] text-cyan-300 mb-2 uppercase tracking-wider text-left"
+            className="block font-pixel text-xs text-cyan-300 mb-2 uppercase tracking-wider text-left"
           >
             Your Name
           </label>
@@ -113,7 +113,7 @@ function JoinGameContent() {
         <div>
           <label
             htmlFor="roomCode"
-            className="block font-pixel text-[10px] text-cyan-300 mb-2 uppercase tracking-wider text-left"
+            className="block font-pixel text-xs text-cyan-300 mb-2 uppercase tracking-wider text-left"
           >
             Room Code
           </label>

@@ -66,19 +66,19 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
             <h3 className="text-sm font-pixel text-white mb-3">Game Modes</h3>
             <div className="space-y-3">
               <div className="p-3 bg-blue-900/30 pixel-border border-4 border-blue-700">
-                <h4 className="font-pixel text-[10px] text-blue-300">Quick Game</h4>
+                <h4 className="font-pixel text-xs text-blue-300">Quick Game</h4>
                 <p className="text-blue-100 font-pixel-body text-base">
                   Fast-paced trivia with preset questions and immediate results.
                 </p>
               </div>
               <div className="p-3 bg-purple-900/30 pixel-border border-4 border-purple-700">
-                <h4 className="font-pixel text-[10px] text-purple-300">Custom Game</h4>
+                <h4 className="font-pixel text-xs text-purple-300">Custom Game</h4>
                 <p className="text-purple-100 font-pixel-body text-base">
                   Create or join multiplayer rooms with custom settings and topics.
                 </p>
               </div>
               <div className="p-3 bg-emerald-900/30 pixel-border border-4 border-emerald-700">
-                <h4 className="font-pixel text-[10px] text-emerald-300">Advanced Game</h4>
+                <h4 className="font-pixel text-xs text-emerald-300">Advanced Game</h4>
                 <p className="text-emerald-100 font-pixel-body text-base">
                   AI-powered questions generated from your uploaded files and documents.
                 </p>
@@ -95,7 +95,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
               Jump straight into a trivia game with curated questions across various topics.
             </p>
             <div className="space-y-2">
-              <h4 className="font-pixel text-[10px] text-blue-300">Features:</h4>
+              <h4 className="font-pixel text-xs text-blue-300">Features:</h4>
               <ul className="list-disc list-inside space-y-1 text-blue-100 font-pixel-body text-base">
                 <li>Preset question packs covering popular topics</li>
                 <li>Multiple difficulty levels (Easy, Medium, Hard)</li>
@@ -115,7 +115,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
               Create private rooms or join existing ones for multiplayer trivia sessions.
             </p>
             <div className="space-y-2">
-              <h4 className="font-pixel text-[10px] text-purple-300">Features:</h4>
+              <h4 className="font-pixel text-xs text-purple-300">Features:</h4>
               <ul className="list-disc list-inside space-y-1 text-purple-100 font-pixel-body text-base">
                 <li>Private room codes for controlled access</li>
                 <li>Customizable timer settings and round limits</li>
@@ -135,7 +135,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
               Upload your own documents and let AI generate custom trivia questions.
             </p>
             <div className="space-y-2">
-              <h4 className="font-pixel text-[10px] text-emerald-300">Features:</h4>
+              <h4 className="font-pixel text-xs text-emerald-300">Features:</h4>
               <ul className="list-disc list-inside space-y-1 text-emerald-100 font-pixel-body text-base">
                 <li>AI-powered question generation from uploaded content</li>
                 <li>Support for various file formats (PDF, DOCX, TXT)</li>
@@ -173,7 +173,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`
-              px-4 py-2 font-pixel text-[10px] capitalize transition-colors border-b-2
+              px-4 py-2 font-pixel text-xs capitalize transition-colors border-b-2
               ${
                 activeTab === tab
                   ? 'text-white border-blue-400 bg-blue-900/30'

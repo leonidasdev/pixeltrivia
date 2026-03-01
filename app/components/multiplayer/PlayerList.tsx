@@ -75,7 +75,7 @@ export function PlayerList({
               </span>
               {player.isHost && (
                 <span
-                  className="px-2 py-0.5 font-pixel text-[8px] font-bold bg-yellow-500 text-black pixel-border"
+                  className="px-2 py-0.5 font-pixel text-xs font-bold bg-yellow-500 text-black pixel-border"
                   style={{ borderWidth: '2px' }}
                 >
                   HOST
@@ -83,7 +83,7 @@ export function PlayerList({
               )}
               {player.id === currentPlayerId && !player.isHost && (
                 <span
-                  className="px-2 py-0.5 font-pixel text-[8px] font-bold bg-cyan-500 text-black pixel-border"
+                  className="px-2 py-0.5 font-pixel text-xs font-bold bg-cyan-500 text-black pixel-border"
                   style={{ borderWidth: '2px' }}
                 >
                   YOU
@@ -108,14 +108,14 @@ export function PlayerList({
             <div className="flex-shrink-0">
               {player.hasAnswered ? (
                 <span
-                  className="w-6 h-6 pixel-border bg-green-500 flex items-center justify-center font-pixel text-[8px]"
+                  className="w-6 h-6 pixel-border bg-green-500 flex items-center justify-center font-pixel text-xs"
                   style={{ borderWidth: '2px' }}
                 >
                   OK
                 </span>
               ) : (
                 <span
-                  className="w-6 h-6 pixel-border bg-gray-600 animate-pulse flex items-center justify-center font-pixel text-[8px] text-gray-400"
+                  className="w-6 h-6 pixel-border bg-gray-600 animate-pulse flex items-center justify-center font-pixel text-xs text-gray-400"
                   style={{ borderWidth: '2px' }}
                 >
                   •

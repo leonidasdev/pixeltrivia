@@ -106,7 +106,7 @@ function CreateGameContent() {
         <div>
           <label
             htmlFor="playerName"
-            className="block font-pixel text-[10px] text-cyan-300 mb-2 uppercase tracking-wider text-left"
+            className="block font-pixel text-xs text-cyan-300 mb-2 uppercase tracking-wider text-left"
           >
             Your Name
           </label>
@@ -128,7 +128,7 @@ function CreateGameContent() {
           <div>
             <label
               htmlFor="maxPlayers"
-              className="block font-pixel text-[10px] text-cyan-300 mb-1 uppercase"
+              className="block font-pixel text-xs text-cyan-300 mb-1 uppercase"
             >
               Max Players
             </label>
@@ -149,7 +149,7 @@ function CreateGameContent() {
           <div>
             <label
               htmlFor="timeLimit"
-              className="block font-pixel text-[10px] text-cyan-300 mb-1 uppercase"
+              className="block font-pixel text-xs text-cyan-300 mb-1 uppercase"
             >
               Time per Question
             </label>
@@ -170,7 +170,7 @@ function CreateGameContent() {
           <div className="col-span-2">
             <label
               htmlFor="questionCount"
-              className="block font-pixel text-[10px] text-cyan-300 mb-1 uppercase"
+              className="block font-pixel text-xs text-cyan-300 mb-1 uppercase"
             >
               Number of Questions
             </label>

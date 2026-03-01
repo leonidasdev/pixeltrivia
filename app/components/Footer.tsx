@@ -19,7 +19,7 @@ export default function Footer({ hint, className = '' }: FooterProps) {
   return (
     <footer className={`text-center text-gray-400 text-sm ${className}`}>
       {hint && <p>{hint}</p>}
-      <p className="font-pixel text-[8px] mt-1 opacity-75">&copy; 2026 PixelTrivia</p>
+      <p className="font-pixel text-xs mt-1 opacity-75">&copy; 2026 PixelTrivia</p>
     </footer>
   )
 }

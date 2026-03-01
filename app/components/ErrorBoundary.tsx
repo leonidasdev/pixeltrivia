@@ -169,7 +169,7 @@ export function PageErrorFallback({
 
         {process.env.NODE_ENV === 'development' && (
           <div className="mb-6 text-left bg-gray-800 pixel-border p-4">
-            <p className="font-pixel text-[8px] text-gray-400 mb-2">Error Details:</p>
+            <p className="font-pixel text-xs text-gray-400 mb-2">Error Details:</p>
             <p className="text-red-300 font-pixel-body text-base break-all">{error.message}</p>
             {error.digest && <p className="text-gray-500 text-xs mt-2">Digest: {error.digest}</p>}
           </div>

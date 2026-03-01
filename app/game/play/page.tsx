@@ -297,6 +297,7 @@ export default function PlayPage() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      <h1 className="sr-only">Trivia Game</h1>
       <AnimatedBackground />
 
       {/* Feedback overlays */}
@@ -418,7 +419,7 @@ export default function PlayPage() {
 
           {/* Keyboard hint */}
           {!showCorrectReveal && (
-            <p className="text-center font-pixel text-[10px] text-gray-600 hidden md:block">
+            <p className="text-center font-pixel text-xs text-gray-600 hidden md:block">
               Press 1-4 or A-D to answer
             </p>
           )}
@@ -455,7 +456,7 @@ export default function PlayPage() {
                 </PixelButton>
               </div>
 
-              <p className="text-center font-pixel text-[10px] text-gray-600 hidden md:block">
+              <p className="text-center font-pixel text-xs text-gray-600 hidden md:block">
                 Press Enter or Space to continue
               </p>
             </div>

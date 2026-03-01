@@ -35,7 +35,7 @@ export function HostControls({
     <div className="bg-yellow-900/20 border-4 border-yellow-600 p-4 pixel-border">
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-pixel text-[10px] text-yellow-400 uppercase tracking-wider pixel-text-shadow">
+          <p className="font-pixel text-xs text-yellow-400 uppercase tracking-wider pixel-text-shadow">
             Host Controls
           </p>
           <p className="font-pixel-body text-base text-gray-300 mt-1">

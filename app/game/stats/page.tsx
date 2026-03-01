@@ -103,17 +103,17 @@ export default function StatsPage() {
             {/* Quick stat badges */}
             {stats.totalGames > 0 && (
               <div className="flex flex-wrap justify-center gap-2 mt-4">
-                <span className="font-pixel text-[10px] bg-green-900 bg-opacity-50 text-green-400 pixel-border px-3 py-1">
+                <span className="font-pixel text-xs bg-green-900 bg-opacity-50 text-green-400 pixel-border px-3 py-1">
                   G {stats.totalGames} GAMES
                 </span>
-                <span className="font-pixel text-[10px] bg-yellow-900 bg-opacity-50 text-yellow-400 pixel-border px-3 py-1">
+                <span className="font-pixel text-xs bg-yellow-900 bg-opacity-50 text-yellow-400 pixel-border px-3 py-1">
                   * {stats.totalScore.toLocaleString()} PTS
                 </span>
-                <span className="font-pixel text-[10px] bg-cyan-900 bg-opacity-50 text-cyan-400 pixel-border px-3 py-1">
+                <span className="font-pixel text-xs bg-cyan-900 bg-opacity-50 text-cyan-400 pixel-border px-3 py-1">
                   T {Math.round(stats.averageAccuracy)}% AVG
                 </span>
                 {stats.currentWinStreak > 0 && (
-                  <span className="font-pixel text-[10px] bg-orange-900 bg-opacity-50 text-orange-400 pixel-border px-3 py-1">
+                  <span className="font-pixel text-xs bg-orange-900 bg-opacity-50 text-orange-400 pixel-border px-3 py-1">
                     F {stats.currentWinStreak} STREAK
                   </span>
                 )}
@@ -130,7 +130,7 @@ export default function StatsPage() {
               onClick={() => handleTabChange(tab.id)}
               role="tab"
               aria-selected={activeTab === tab.id}
-              className={`flex-1 font-pixel text-xs py-3 px-2 pixel-border text-center transition-all duration-200 ${
+              className={`flex-1 font-pixel text-xs py-3 px-2 pixel-border text-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400 ${
                 activeTab === tab.id
                   ? 'bg-cyan-600 text-white border-cyan-400 pixel-shadow'
                   : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
@@ -166,13 +166,13 @@ export default function StatsPage() {
         <div className="flex flex-wrap justify-center gap-3 w-full pt-4">
           <button
             onClick={handlePlayAgain}
-            className="font-pixel text-sm bg-green-600 hover:bg-green-500 text-white border-4 border-green-800 pixel-border px-6 py-3 pixel-glow-hover transition-all duration-200 hover:scale-105 active:scale-95"
+            className="font-pixel text-sm bg-green-600 hover:bg-green-500 text-white border-4 border-green-800 pixel-border px-6 py-3 pixel-glow-hover transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-400"
           >
             PLAY AGAIN
           </button>
           <button
             onClick={handleBack}
-            className="font-pixel text-sm bg-gray-600 hover:bg-gray-500 text-white border-4 border-gray-800 pixel-border px-6 py-3 transition-all duration-200 hover:scale-105 active:scale-95"
+            className="font-pixel text-sm bg-gray-600 hover:bg-gray-500 text-white border-4 border-gray-800 pixel-border px-6 py-3 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-400"
           >
             ← BACK
           </button>

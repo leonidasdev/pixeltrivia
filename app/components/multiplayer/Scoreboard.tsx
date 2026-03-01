@@ -103,7 +103,7 @@ export function Scoreboard({
                 >
                   {player.name}
                   {isCurrentPlayer && (
-                    <span className="ml-2 font-pixel text-[8px] text-cyan-400 font-normal">
+                    <span className="ml-2 font-pixel text-xs text-cyan-400 font-normal">
                       (you)
                     </span>
                   )}

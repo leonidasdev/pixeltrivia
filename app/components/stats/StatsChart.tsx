@@ -99,11 +99,11 @@ function PixelBar({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           {emoji && <span className="text-sm">{emoji}</span>}
-          <span className="font-pixel text-[10px] text-gray-300 uppercase truncate max-w-[120px]">
+          <span className="font-pixel text-xs text-gray-300 uppercase truncate max-w-[120px]">
             {label}
           </span>
         </div>
-        <span className="font-pixel text-[10px] text-gray-400">{displayValue ?? value}</span>
+        <span className="font-pixel text-xs text-gray-400">{displayValue ?? value}</span>
       </div>
       <div className="w-full h-4 bg-gray-800 pixel-border overflow-hidden">
         <div
@@ -148,7 +148,7 @@ export function ModeChart({ modeBreakdown }: ModeChartProps) {
 
       {/* Games per mode */}
       <div className="space-y-3">
-        <h4 className="font-pixel text-[10px] text-gray-500 uppercase">Games Played</h4>
+        <h4 className="font-pixel text-xs text-gray-500 uppercase">Games Played</h4>
         {entries.map(([mode, stats]) => {
           const config = MODE_CONFIG[mode] || {
             emoji: '>',
@@ -172,7 +172,7 @@ export function ModeChart({ modeBreakdown }: ModeChartProps) {
 
       {/* Best score per mode */}
       <div className="space-y-3">
-        <h4 className="font-pixel text-[10px] text-gray-500 uppercase">Best Scores</h4>
+        <h4 className="font-pixel text-xs text-gray-500 uppercase">Best Scores</h4>
         {entries.map(([mode, stats]) => {
           const config = MODE_CONFIG[mode] || {
             emoji: '>',
