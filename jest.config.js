@@ -32,13 +32,13 @@ const customJestConfig = {
     '!**/node_modules/**',
   ],
 
-  // Coverage thresholds — set to realistic values, increase as coverage improves
+  // Coverage thresholds — raised to protect against regressions
   coverageThreshold: {
     global: {
-      branches: 55,
-      functions: 64,
-      lines: 61,
-      statements: 60,
+      branches: 75,
+      functions: 85,
+      lines: 85,
+      statements: 83,
     },
   },
 }

@@ -168,7 +168,16 @@ export default function PlayPage() {
 
     // Cleanup session
     localStorage.removeItem(STORAGE_KEYS.CURRENT_GAME_SESSION)
-  }, [game.state, game.getSummary, game.category, game.difficulty, game.streak, historySaved, playSound, gameMode])
+  }, [
+    game.state,
+    game.getSummary,
+    game.category,
+    game.difficulty,
+    game.streak,
+    historySaved,
+    playSound,
+    gameMode,
+  ])
 
   // ── Handlers ──
 
