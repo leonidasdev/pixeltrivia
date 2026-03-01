@@ -3,7 +3,7 @@
  *
  * Central export point for all multiplayer UI components.
  *
- * @module components/multiplayer
+ * @module app/components/multiplayer
  * @since 1.1.0
  */
 

@@ -362,11 +362,19 @@ describe('functionName', () => {
 | File | Purpose |
 |------|---------|
 | `README.md` | Project overview |
+| `CHANGELOG.md` | Release history |
 | `docs/architecture.md` | System design |
 | `docs/development-guide.md` | Setup guide |
 | `docs/api-reference.md` | API reference |
+| `docs/api-testing-guide.md` | Manual API testing |
+| `docs/api-versioning.md` | Versioning strategy |
 | `docs/database-guide.md` | Database schema |
+| `docs/deployment-guide.md` | Deployment & hosting |
+| `docs/monitoring.md` | Observability & alerts |
+| `docs/runbook.md` | Operational runbook |
 | `docs/testing-guide.md` | Testing guide |
+| `docs/AUDIT.md` | Code quality audit |
+| `docs/TODO.md` | Roadmap & task tracker |
 | `docs/CLAUDE.md` | AI assistant context |
 
 ---
@@ -412,4 +420,4 @@ Include:
 
 Thank you for contributing to PixelTrivia!
 
-*Last updated: February 27, 2026*
+*Last updated: March 1, 2026*

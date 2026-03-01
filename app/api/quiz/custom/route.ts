@@ -1,3 +1,13 @@
+/**
+ * Custom Quiz API — POST /api/quiz/custom
+ *
+ * Generates AI-powered quiz questions via OpenRouter based
+ * on a user-provided topic and knowledge level.
+ *
+ * @module api/quiz/custom
+ * @since 1.0.0
+ */
+
 import { type NextRequest } from 'next/server'
 import { logger } from '@/lib/logger'
 import {

@@ -5,7 +5,7 @@
  * Allows advancing to the next question, pausing, etc.
  * Styled with pixel-art aesthetic for retro game feel.
  *
- * @module components/multiplayer/HostControls
+ * @module app/components/multiplayer/HostControls
  * @since 1.1.0
  */
 

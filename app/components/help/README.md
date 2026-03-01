@@ -24,15 +24,11 @@ This directory contains the context-aware help system for PixelTrivia.
 
 ## Features
 
-✨ **Smart Context Awareness**: Help tabs become available only after users visit corresponding game mode sections
-
-🎮 **Pixel-Art Theming**: Consistent with retro game aesthetic using custom CSS utilities
-
-♿ **Full Accessibility**: Keyboard navigation, ARIA labels, focus management
-
-📱 **Mobile Responsive**: Optimized layout for all screen sizes
-
-🚀 **Performance**: Lazy loading of help content, efficient context tracking
+- **Smart Context Awareness** — Help tabs become available only after users visit the corresponding game mode sections.
+- **Pixel-Art Theming** — Consistent with the retro game aesthetic using custom CSS utilities.
+- **Full Accessibility** — Keyboard navigation, ARIA labels, and focus management.
+- **Mobile Responsive** — Optimized layout for all screen sizes.
+- **Performance** — Lazy-loaded help content with efficient context tracking.
 
 ## Usage
 

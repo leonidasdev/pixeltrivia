@@ -150,7 +150,6 @@ Monitor these transactions for performance regressions:
 | `POST /api/quiz/advanced` | < 10 000 ms | Document parse + AI gen |
 | `POST /api/room/create` | < 800 ms | Room creation |
 | `POST /api/game/questions` | < 500 ms | Game question fetch |
-| `GET /api/ai/generate-questions` | < 8 000 ms | OpenRouter AI call |
 | `pageload /` | < 2 000 ms | Home page LCP |
 | `pageload /game/play/*` | < 2 500 ms | Game screen hydration |
 

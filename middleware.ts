@@ -10,6 +10,7 @@
 
 import { NextResponse, type NextRequest } from 'next/server'
 import { SECURITY_HEADERS, isAllowedOrigin } from '@/lib/security.core'
+import { logger } from '@/lib/logger'
 
 // ============================================================================
 // Request ID Generation
@@ -85,7 +86,7 @@ function detectSuspiciousPatterns(request: NextRequest): boolean {
   // Check URL
   for (const pattern of suspiciousPatterns) {
     if (pattern.test(url)) {
-      console.warn(`[Security] Blocked suspicious URL pattern: ${url}`)
+      logger.warn(`Blocked suspicious URL pattern: ${url}`)
       return true
     }
   }
@@ -100,7 +101,7 @@ function detectSuspiciousPatterns(request: NextRequest): boolean {
 
   for (const pattern of maliciousAgents) {
     if (pattern.test(userAgent)) {
-      console.warn(`[Security] Blocked suspicious user agent: ${userAgent}`)
+      logger.warn(`Blocked suspicious user agent: ${userAgent}`)
       return true
     }
   }

@@ -1,3 +1,13 @@
+/**
+ * Quick Game Page — /game/quick
+ *
+ * Quick play flow that fetches database questions for a
+ * selected category and starts a game session.
+ *
+ * @module app/game/quick
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useState } from 'react'

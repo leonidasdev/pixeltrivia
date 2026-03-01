@@ -1,3 +1,13 @@
+/**
+ * Game Questions API — GET /api/game/questions
+ *
+ * Fetches questions from the database for gameplay, supporting
+ * category filtering, difficulty levels, and classic mixed mode.
+ *
+ * @module api/game/questions
+ * @since 1.0.0
+ */
+
 import { type NextRequest } from 'next/server'
 import { getSupabaseClient } from '@/lib/supabase'
 import { logger } from '@/lib/logger'

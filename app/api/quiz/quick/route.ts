@@ -1,3 +1,13 @@
+/**
+ * Quick Quiz API — POST /api/quiz/quick
+ *
+ * Fetches randomized database questions filtered by category
+ * and optional difficulty level.
+ *
+ * @module api/quiz/quick
+ * @since 1.0.0
+ */
+
 import { type NextRequest } from 'next/server'
 import { getSupabaseClient } from '@/lib/supabase'
 import { logger } from '@/lib/logger'

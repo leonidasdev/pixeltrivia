@@ -1,12 +1,18 @@
+/**
+ * Route Error Page
+ *
+ * Catches errors in nested route segments and displays
+ * a user-friendly recovery UI.
+ *
+ * @module app/error
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useEffect } from 'react'
 import { logger } from '@/lib/logger'
 
-/**
- * Error page for route segments
- * Catches errors in nested routes and displays a user-friendly message
- */
 export default function Error({
   error,
   reset,

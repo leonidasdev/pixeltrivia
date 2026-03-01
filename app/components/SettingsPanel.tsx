@@ -1,3 +1,13 @@
+/**
+ * Settings Panel
+ *
+ * Player configuration form for avatar selection, volume,
+ * and display name in the main menu.
+ *
+ * @module app/components/SettingsPanel
+ * @since 1.0.0
+ */
+
 import React from 'react'
 import { AVATAR_OPTIONS } from '@/constants/avatars'
 

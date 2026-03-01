@@ -74,9 +74,9 @@ npm run test:e2e:report        # View last HTML report
 Current Jest coverage thresholds (from `jest.config.js`):
 
 | Metric | Threshold |
-|--------|-----------|
+|--------|----------|
 | Statements | 55% |
-| Branches | 50% |
+| Branches | 55% |
 | Functions | 55% |
 | Lines | 55% |
 
@@ -138,7 +138,7 @@ npm run db:types
 
 ### Seed data
 
-The seed data is embedded in `database/schema.sql` and includes 90+ questions across multiple categories.
+The seed data is embedded in `database/schema.sql` and includes 150+ questions across 40 categories.
 
 ---
 

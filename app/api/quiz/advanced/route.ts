@@ -1,3 +1,13 @@
+/**
+ * Advanced Quiz API — POST /api/quiz/advanced
+ *
+ * Generates AI-powered quiz questions from uploaded document
+ * content via OpenRouter.
+ *
+ * @module api/quiz/advanced
+ * @since 1.0.0
+ */
+
 import { type NextRequest } from 'next/server'
 import { logger } from '@/lib/logger'
 import {

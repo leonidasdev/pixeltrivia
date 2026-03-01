@@ -1,3 +1,13 @@
+/**
+ * Main Menu Logo
+ *
+ * Animated pixel-art logo displayed on the home page
+ * and game mode screens.
+ *
+ * @module app/components/MainMenuLogo
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'

@@ -78,48 +78,6 @@ const TEXT_COLOR_MAP: Record<string, string> = {
 }
 
 // ============================================================================
-// Pixel Spinner SVG (currently unused, available for future use)
-// ============================================================================
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _PixelSpinnerSVG({ className }: { className: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 16 16"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Pixel-art style spinner using rectangles */}
-      <g className="animate-spin origin-center">
-        <rect x="7" y="0" width="2" height="4" opacity="0.25" />
-        <rect x="11" y="1" width="2" height="4" opacity="0.375" transform="rotate(45 12 3)" />
-        <rect x="12" y="7" width="4" height="2" opacity="0.5" />
-        <rect x="11" y="11" width="2" height="4" opacity="0.625" transform="rotate(-45 12 13)" />
-        <rect x="7" y="12" width="2" height="4" opacity="0.75" />
-        <rect x="1" y="11" width="2" height="4" opacity="0.875" transform="rotate(45 2 13)" />
-        <rect x="0" y="7" width="4" height="2" opacity="1" />
-        <rect x="1" y="1" width="2" height="4" opacity="0.125" transform="rotate(-45 2 3)" />
-      </g>
-    </svg>
-  )
-}
-
-// ============================================================================
-// Alternative: Dots Spinner
-// ============================================================================
-
-function DotsSpinner({ className }: { className: string }) {
-  return (
-    <div className={`${className} flex items-center justify-center gap-1`}>
-      <span className="w-2 h-2 bg-current animate-bounce" style={{ animationDelay: '0ms' }} />
-      <span className="w-2 h-2 bg-current animate-bounce" style={{ animationDelay: '150ms' }} />
-      <span className="w-2 h-2 bg-current animate-bounce" style={{ animationDelay: '300ms' }} />
-    </div>
-  )
-}
-
-// ============================================================================
 // Component
 // ============================================================================
 

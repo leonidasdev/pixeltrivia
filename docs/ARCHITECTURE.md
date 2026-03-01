@@ -117,7 +117,7 @@ app/
 │   ├── BackButton.tsx
 │   ├── MainMenuLogo.tsx
 │   ├── ErrorBoundary.tsx
-│   ├── Help/                # Help system (context-aware)
+    ├── help/                # Help system (context-aware)
 │   │   ├── HelpButton.tsx
 │   │   ├── HelpModal.tsx
 │   │   └── HelpContext.tsx
@@ -145,8 +145,10 @@ app/
     ├── quick/page.tsx       # Quick play
     ├── custom/page.tsx      # Custom game
     ├── advanced/page.tsx    # Advanced settings
+    ├── play/page.tsx        # Single-player gameplay
     ├── create/page.tsx      # Create room
     ├── join/page.tsx        # Join room
+    ├── stats/page.tsx       # Game statistics
     ├── leaderboard/page.tsx # Rankings
     └── achievements/page.tsx # Achievements
 ```
@@ -493,4 +495,4 @@ All API routes are rate-limited via `lib/rateLimit.ts`:
 
 ---
 
-*Last updated: February 28, 2026 (Phase 15)*
+*Last updated: March 1, 2026 (Phase 24)*

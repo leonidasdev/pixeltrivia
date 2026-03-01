@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** March 1, 2026 (Phase 23 — Single-Player Play Page, Image Questions)
+> **Last Updated:** March 1, 2026 (Phase 24 — Code Cleanup & Documentation)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 75+ |
-| Tests | 1405+ |
+| Test Suites | 75 |
+| Tests | 1399 |
 | Coverage (Statements) | ~62.65% |
 | Coverage (Branches) | ~57.12% |
 | Coverage (Functions) | ~66.42% |
@@ -139,6 +139,36 @@
 - [x] Add API versioning strategy documentation — `docs/api-versioning.md` with URL-based strategy, migration guidelines, and implementation checklist
 - [x] Create runbook for common operational tasks — `docs/runbook.md` covering dev, testing, deployment, database, monitoring, and common issues
 - [x] Add changelog — `CHANGELOG.md` with version history from Phase 0 through Phase 18
+
+---
+
+## Phase 24 Completed (Code Cleanup & Documentation)
+
+### Console-to-Logger Migration
+- Replaced all `console.error` / `console.warn` in production code with structured `logger` calls
+- Files migrated: `lib/soundManager.ts`, `app/error.tsx`, `app/components/ErrorBoundary.tsx`, `app/game/custom/page.tsx`, `app/game/advanced/page.tsx`
+
+### Deprecated Code Removal
+- Removed `GameSession` type alias from `lib/gameApi.ts` (replaced by `ActiveGameSession`)
+- Removed `shuffleQuestions()` from `lib/quickQuizApi.ts` (replaced by `shuffleArray()` in `lib/utils.ts`)
+- Removed stale barrel exports from `lib/index.ts`: `createAppError`, `NetworkError`, `CACHE_CONFIGS`
+- Fixed renamed exports: `RoomApiResponse` → `CreateRoomResponse`, `getNewlyUnlockedAchievements` → `checkNewAchievements`, `ALL_ACHIEVEMENTS` → `TOTAL_ACHIEVEMENTS`
+- Removed unused `ValidatedQuestion` type from `lib/validation.ts`
+
+### Dead Code & Stale UI
+- Removed `isCreatingRoom` state from `app/page.tsx` (never set, always false)
+- Replaced "Coming soon" toast on Join Game with actual navigation to `/game/join`
+- Activated commented-out `router.push('/game/play')` in `app/game/custom/page.tsx`
+
+### Test Updates
+- Removed 6 `shuffleQuestions` tests (covered by `shuffleArray` tests in `utils.test.ts`)
+- Updated E2E test for join navigation (toast assertion → navigation assertion)
+- Final count: 75 suites, 1399 tests
+
+### Documentation
+- Updated all 18 markdown files for accuracy, tone, and consistency
+- Marked resolved audit findings in `AUDIT.md`
+- Updated test counts, coverage thresholds, and directory references across all docs
 
 ---
 
@@ -464,4 +494,4 @@ All items below have been completed and verified. See git history for details.
 
 ---
 
-*Last reviewed: February 28, 2026 (Phase 17)*
+*Last reviewed: March 1, 2026 (Phase 24)*

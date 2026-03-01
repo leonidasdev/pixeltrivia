@@ -1,13 +1,12 @@
 /**
- * PixelTrivia Layout Component
+ * Root Layout
  *
- * Enhanced navigation layout featuring:
- * - PixelTrivia Logo: Always visible (except during gameplay), clickable to return to main menu
- * - Back Button: Context-aware navigation using router.back()
- * - Help Button: Smart context-sensitive help system with modal tabs
+ * Application shell providing pixel-art fonts, global styles,
+ * navigation (logo, back button, help), and metadata.
+ * Navigation hides during active gameplay to reduce clutter.
  *
- * Navigation hides during active gameplay (/play routes) to avoid UI clutter.
- * Layout uses flexbox for responsive positioning and pixel-art theming.
+ * @module app/layout
+ * @since 1.0.0
  */
 import type { Metadata, Viewport } from 'next'
 import { Press_Start_2P, VT323 } from 'next/font/google'

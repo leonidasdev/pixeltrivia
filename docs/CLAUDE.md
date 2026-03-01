@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (1405+ tests, 75 suites) |
+| **Testing** | Jest + React Testing Library (1399 tests, 75 suites) |
 
 ---
 
@@ -329,9 +329,9 @@ All API routes use `lib/apiResponse.ts` helpers for consistent response envelope
 ## Testing Overview
 
 ### Test Statistics
-- **1405+ tests** across 75+ test suites
+- **1399 tests** across 75 test suites
 - **100% passing** on CI
-- **Coverage thresholds**: branches ≥55%, functions ≥64%, lines ≥61%, statements ≥60%
+- **Coverage thresholds**: branches ≥55%, functions ≥55%, lines ≥55%, statements ≥55%
 
 ### Test Commands
 ```bash

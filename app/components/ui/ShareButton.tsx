@@ -4,7 +4,7 @@
  * A pixel-art styled button that shares game results via the Web Share API
  * with a clipboard-copy fallback. Shows transient "Copied!" feedback.
  *
- * @module components/ui/ShareButton
+ * @module app/components/ui/ShareButton
  * @since 1.3.0
  */
 

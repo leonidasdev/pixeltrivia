@@ -7,6 +7,27 @@ Version numbers follow the project's internal phase numbering (not semver) until
 
 ---
 
+## [Phase 24] - 2026-03-01
+
+### Changed
+- **Console-to-Logger Migration** — Replaced all `console.error` / `console.warn` in 5 production files with structured `logger` calls from `lib/logger.ts`
+- **Barrel Export Cleanup** — Removed 3 non-existent exports and fixed 3 renamed exports in `lib/index.ts`
+- **Home Page Cleanup** — Removed unused `isCreatingRoom` state; replaced "Coming soon" toast with actual `/game/join` navigation
+- **Custom Game Flow** — Activated previously commented-out navigation to `/game/play`
+- **Documentation Overhaul** — Updated all 18 markdown files for accuracy, consistent tone, and current test counts
+
+### Removed
+- Deprecated `GameSession` type alias from `lib/gameApi.ts` (use `ActiveGameSession`)
+- Deprecated `shuffleQuestions()` from `lib/quickQuizApi.ts` (use `shuffleArray()` from `lib/utils.ts`)
+- Unused `ValidatedQuestion` type from `lib/validation.ts`
+- 6 redundant `shuffleQuestions` tests (covered by `shuffleArray` tests)
+
+### Fixed
+- Stale barrel exports in `lib/index.ts` that referenced non-existent or renamed symbols
+- E2E test for join game updated from toast assertion to navigation assertion
+
+---
+
 ## [Phase 23] - 2026-03-01
 
 ### Added
@@ -19,7 +40,7 @@ Version numbers follow the project's internal phase numbering (not semver) until
 - `app/game/quick/page.tsx`: navigates to `/game/play` after session creation (was previously commented out with a toast placeholder)
 - API routes (`/api/game/questions`, `/api/quiz/quick`) now select and return `image_url` from Supabase
 - `QuickGamePage.test.tsx`: updated assertion from toast text to `router.push('/game/play')` navigation
-- Test suite: 75 suites, 1405 tests (up from 74 suites, 1367 tests)
+- Test suite: 75 suites, 1405 tests (up from 74 suites, 1367 tests; later reduced to 1399 in Phase 24 cleanup)
 
 ### Fixed
 - `GameQuestion` keyboard handler referenced `question.answers` (non-existent) instead of `question.options`

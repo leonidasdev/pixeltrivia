@@ -1,3 +1,13 @@
+/**
+ * Game Mode Page — /game/mode
+ *
+ * Game mode selection screen where players choose between
+ * solo play and multiplayer.
+ *
+ * @module app/game/mode
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useState, useEffect, Suspense } from 'react'

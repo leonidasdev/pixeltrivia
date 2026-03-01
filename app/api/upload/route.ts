@@ -1,12 +1,11 @@
 /**
- * File Upload API Route
+ * File Upload API — POST /api/upload
  *
  * Accepts multipart form data with document files (PDF, DOCX, TXT, MD),
- * extracts text content, and returns it for use in quiz generation.
+ * extracts text content, and returns parsed results for quiz generation.
  *
- * POST /api/upload
- *   - Body: multipart/form-data with field "files" (one or more files)
- *   - Returns: { success, data: { files: ParsedFile[], errors } }
+ * @module api/upload
+ * @since 1.0.0
  */
 
 import { type NextRequest } from 'next/server'

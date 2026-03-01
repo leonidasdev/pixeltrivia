@@ -5,7 +5,7 @@
  * Shows podium positions, scores, and answer statistics.
  * Styled with pixel-art aesthetic for retro game feel.
  *
- * @module components/multiplayer/Scoreboard
+ * @module app/components/multiplayer/Scoreboard
  * @since 1.1.0
  */
 

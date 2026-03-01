@@ -5,7 +5,7 @@
  * with their avatars, scores, and status indicators.
  * Styled with pixel-art aesthetic for retro game feel.
  *
- * @module components/multiplayer/PlayerList
+ * @module app/components/multiplayer/PlayerList
  * @since 1.1.0
  */
 

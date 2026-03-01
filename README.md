@@ -7,7 +7,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ecf8e?logo=supabase)
-![Tests](https://img.shields.io/badge/Tests-1405%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-1399%20passing-brightgreen)
 
 **A retro-styled trivia game with AI-powered question generation**
 
@@ -169,7 +169,7 @@ npm run test:coverage
 npm run typecheck
 ```
 
-**Test Coverage:** 1405+ tests across 75 test suites (unit, component, page, hook, integration)
+**Test Coverage:** 1399 tests across 75 test suites (unit, component, page, hook, integration)
 
 ## Scripts
 

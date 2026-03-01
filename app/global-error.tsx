@@ -1,11 +1,17 @@
+/**
+ * Global Error Page
+ *
+ * Top-level error boundary for the Next.js App Router.
+ * Catches errors that escape individual route segments.
+ *
+ * @module app/global-error
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { PageErrorFallback } from './components/ErrorBoundary'
 
-/**
- * Global error page for Next.js App Router
- * Catches errors in route segments and displays a fallback UI
- */
 export default function GlobalError({
   error,
   reset,

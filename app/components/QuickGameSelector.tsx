@@ -1,3 +1,13 @@
+/**
+ * Quick Game Selector
+ *
+ * Category and difficulty picker for Quick Game mode.
+ * Shows adaptive difficulty recommendations per category.
+ *
+ * @module app/components/QuickGameSelector
+ * @since 1.0.0
+ */
+
 import React, { useState, useMemo } from 'react'
 import { GAME_CATEGORIES } from '@/constants/categories'
 import { getRecommendedDifficulty } from '@/lib/adaptiveDifficulty'

@@ -1,3 +1,13 @@
+/**
+ * Advanced Game Page — /game/advanced
+ *
+ * Advanced quiz flow that loads document-based AI-generated
+ * questions from a previously configured session.
+ *
+ * @module app/game/advanced
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useEffect, useState } from 'react'

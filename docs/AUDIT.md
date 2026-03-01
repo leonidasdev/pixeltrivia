@@ -1,8 +1,9 @@
 # PixelTrivia Professional Codebase Audit
 
-> **Date:** 2025-01-XX
+> **Date:** February 28, 2026 (initial audit); updated March 1, 2026 (Phase 24)
 > **Scope:** 71 files across `lib/`, `hooks/`, `constants/`, `types/`, `app/`, and config files
 > **Methodology:** Full manual read, cross-file pattern analysis, categorized finding report
+> **Status:** Most critical findings resolved in Phases 15–24. Remaining items noted inline.
 
 ---
 
@@ -51,10 +52,10 @@ The project convention (established by `lib/logger.ts`, `hooks/useGameState.ts`,
 | `app/global-error.tsx` | Inline function JSDoc only |
 | `app/not-found.tsx` | Inline function JSDoc only |
 | `app/globals.css` | No header comment |
-| `app/components/Help/HelpButton.tsx` | No header |
-| `app/components/Help/HelpContext.tsx` | No header |
-| `app/components/Help/HelpModal.tsx` | No header |
-| `app/components/Help/index.ts` | No header |
+| `app/components/help/HelpButton.tsx` | ✅ Added (Phase 15) |
+| `app/components/help/HelpContext.tsx` | ✅ Added (Phase 15) |
+| `app/components/help/HelpModal.tsx` | ✅ Added (Phase 15) |
+| `app/components/help/index.ts` | ✅ Added (Phase 15) |
 | `app/components/AdvancedGameConfigurator.tsx` | No header |
 | `app/components/BackButton.tsx` | No header |
 | `app/components/CustomGameConfigurator.tsx` | No header |
@@ -87,18 +88,20 @@ The project has a dedicated `logger` module (`lib/logger.ts`) and its documentat
 
 **Files violating this rule** (using raw `console.error` in production code):
 
-| File | Line(s) |
-|------|---------|
-| `lib/apiResponse.ts` | L297 |
-| `lib/gameApi.ts` | L61 |
-| `lib/quickQuizApi.ts` | L46 |
-| `lib/customQuizApi.ts` | L46 |
-| `lib/rateLimit.ts` | L299 |
-| `app/error.tsx` | L19 |
-| `app/components/ErrorBoundary.tsx` | L41-42 |
-| `app/game/quick/page.tsx` | L52 |
-| `app/game/custom/page.tsx` | L53 |
-| `app/game/advanced/page.tsx` | L36 |
+> **Resolution (Phase 24):** All files listed below have been migrated to `logger` from `lib/logger.ts`.
+
+| File | Line(s) | Status |
+|------|---------|--------|
+| `lib/apiResponse.ts` | L297 | ✅ Resolved |
+| `lib/gameApi.ts` | L61 | ✅ Resolved |
+| `lib/quickQuizApi.ts` | L46 | ✅ Resolved |
+| `lib/customQuizApi.ts` | L46 | ✅ Resolved |
+| `lib/rateLimit.ts` | L299 | ✅ Resolved |
+| `app/error.tsx` | L19 | ✅ Resolved (Phase 24) |
+| `app/components/ErrorBoundary.tsx` | L41-42 | ✅ Resolved (Phase 24) |
+| `app/game/quick/page.tsx` | L52 | ✅ Resolved |
+| `app/game/custom/page.tsx` | L53 | ✅ Resolved (Phase 24) |
+| `app/game/advanced/page.tsx` | L36 | ✅ Resolved (Phase 24) |
 
 ---
 
@@ -138,13 +141,17 @@ The barrel export style differs between directories. This is a minor inconsisten
 
 ### 2.3 `'use client'` Directive
 
-**Files using React hooks (`useState`, `useEffect`, etc.) without `'use client'`:**
+> **Resolution (Phase 15):** `'use client'` added to `AdvancedGameConfigurator.tsx`.
+
+**Files using React hooks (`useState`, `useEffect`, etc.) without `'use client'`:** (all resolved)
 
 | File | Uses |
 |------|------|
 | `app/components/AdvancedGameConfigurator.tsx` | `useState` (L2) |
 
 ### 2.4 Deprecated API Usage
+
+> **Resolution (Phase 8):** All `substr()` calls replaced with `substring()` across the codebase.
 
 `String.prototype.substr()` is deprecated in favour of `substring()` or `slice()`.
 
@@ -163,7 +170,9 @@ The barrel export style differs between directories. This is a minor inconsisten
 
 ### 3.1 Type Duplication
 
-`ApiSuccessResponse`, `ApiErrorResponse`, and `ApiResponse` are defined in two places:
+> **Resolution (Phase 16):** `lib/apiResponse.ts` now imports types from `types/api.ts`. No longer duplicated.
+
+`ApiSuccessResponse`, `ApiErrorResponse`, and `ApiResponse` were defined in two places:
 - `types/api.ts` (L18, L32, L51) -- canonical type definitions
 - `lib/apiResponse.ts` (L23, L39, L51) -- re-defined with identical structure
 
@@ -171,7 +180,9 @@ If one is updated without the other, consumers will get type mismatches. `lib/ap
 
 ### 3.2 Storage Key Duplication
 
-Two separate `STORAGE_KEYS` objects exist with different key formats:
+> **Resolution (Phase 16):** `STORAGE_KEYS` consolidated into `constants/game.ts`. `lib/storage.ts` now imports from there.
+
+Two separate `STORAGE_KEYS` objects existed with different key formats:
 
 | Location | Prefix Format | Keys |
 |----------|---------------|------|
@@ -182,7 +193,9 @@ The two sets are complementary (non-overlapping keys) but having them in separat
 
 ### 3.3 Category Data Duplication
 
-`GAME_CATEGORIES` is defined in:
+> **Resolution (Phase 16):** `QuickGameSelector.tsx` now imports from `constants/categories.ts`.
+
+`GAME_CATEGORIES` was defined in:
 - `constants/categories.ts` L51 -- the canonical source
 - `app/components/QuickGameSelector.tsx` L9 -- a separate inline copy
 
@@ -190,18 +203,24 @@ Key differences: QuickGameSelector uses `'college-level'` while constants uses `
 
 ### 3.4 Knowledge Level Duplication
 
-`KNOWLEDGE_LEVELS` is defined in:
+> **Resolution (Phase 16):** `CustomGameConfigurator.tsx` now imports from `constants/difficulties.ts`.
+
+`KNOWLEDGE_LEVELS` was defined in:
 - `constants/difficulties.ts` L37 -- canonical, with full `KnowledgeLevelConfig` objects
 - `app/components/CustomGameConfigurator.tsx` L13 -- separate inline copy
 
 ### 3.5 Utility Function Duplication
 
-| Function | Duplicate Locations |
+> **Resolution (Phase 16):** `formatDuration()` extracted to `lib/utils.ts`. `generateId()` extracted to `lib/utils.ts`. Both used across all files.
+
+| Function | Duplicate Locations (before fix) |
 |----------|-------------------|
 | `formatDuration(seconds)` | `StatsOverview.tsx` L30, `GameHistoryList.tsx` L67 |
 | `generateSessionId` pattern | `useQuizSession.ts` L91, `gameApi.ts` L98, `quickQuizApi.ts` L114, `storage.ts` L327 |
 
 ### 3.6 Room Code Constant Duplication
+
+> **Resolution (Phase 16):** `lib/roomCode.ts` now imports from `constants/game.ts`.
 
 | Constant | Location 1 | Location 2 |
 |----------|-----------|-----------|
@@ -210,7 +229,9 @@ Key differences: QuickGameSelector uses `'college-level'` while constants uses `
 
 ### 3.7 Scoring Logic Fragmentation
 
-Score calculation is implemented in four separate places with different formulas:
+> **Resolution (Phase 8):** Score calculation centralized in `lib/scoring.ts`.
+
+Score calculation was implemented in four separate places with different formulas:
 
 | File | Formula | Max Bonus / Question |
 |------|---------|---------------------|
@@ -223,7 +244,9 @@ This will produce inconsistent scores for identical gameplay across modes.
 
 ### 3.8 HelpModal Does Not Use Shared Modal
 
-`app/components/Help/HelpModal.tsx` implements its own modal with escape-key handling, scroll lock, backdrop, and `border-2` styling. It should use `<Modal>` from `ui/Modal.tsx` for consistency.
+> **Resolution (Phase 15):** `HelpModal` refactored to use `<Modal>` from `ui/Modal.tsx`.
+
+`app/components/help/HelpModal.tsx` previously implemented its own modal.
 
 ---
 
@@ -235,7 +258,9 @@ This will produce inconsistent scores for identical gameplay across modes.
 
 ### 4.2 Default Profile Static Date
 
-`lib/storage.ts` L129-130: `new Date()` is evaluated once at module parse time. Every user who gets this default will have the same timestamp. Should be a factory function.
+> **Resolution (Phase 15):** `DEFAULT_PROFILE` converted to factory function `createDefaultProfile()`.
+
+`lib/storage.ts` previously had `new Date()` evaluated once at module parse time.
 
 ### 4.3 CSP Contains `unsafe-eval` and `unsafe-inline`
 
@@ -254,11 +279,15 @@ Allowed origins are hardcoded in both `middleware.ts` and `lib/security.core.ts`
 
 ### 4.6 ESLint Ignored During Builds
 
-`next.config.js` has `ignoreDuringBuilds: true`, which masks lint errors in CI/production.
+> **Resolution (Phase 11):** `next.config.js` now has `ignoreDuringBuilds: false`, ESLint runs during production builds.
+
+`next.config.js` previously had `ignoreDuringBuilds: true`.
 
 ### 4.7 Low Coverage Thresholds
 
-Current thresholds in `jest.config.js`: branches 12%, functions 15%, lines 15%, statements 15%. These are low and should be raised incrementally.
+> **Resolution (Phase 20):** Thresholds raised to branches 55%, functions/lines/statements 55%+. Actual coverage exceeds 60% across all metrics.
+
+Current thresholds in `jest.config.js` were previously set very low.
 
 ---
 
@@ -266,11 +295,15 @@ Current thresholds in `jest.config.js`: branches 12%, functions 15%, lines 15%, 
 
 ### 5.1 `border-3` Is Not a Standard Tailwind Class
 
-Tailwind CSS provides `border`, `border-2`, `border-4`, `border-8` by default. `border-3` requires custom configuration which is not present. 14 occurrences across components render as default 1px borders.
+> **Resolution (Phase 15):** Custom `borderWidth: { 3: '3px' }` added to `tailwind.config.js`.
+
+Tailwind CSS provides `border`, `border-2`, `border-4`, `border-8` by default. `border-3` requires custom configuration.
 
 ### 5.2 `bg-brown-500` Is Not a Standard Tailwind Color
 
-`constants/avatars.ts` L42 uses `bg-brown-500` which has no effect. Replace with `bg-amber-700` or add a custom color.
+> **Resolution (Phase 15):** Replaced with `bg-amber-700`.
+
+`constants/avatars.ts` previously used `bg-brown-500` which had no effect.
 
 ### 5.3 Dynamic Tailwind Classes
 
@@ -287,7 +320,9 @@ Several components construct class names dynamically (e.g., `` `bg-${color}` ``)
 
 ### 5.5 `rounded-lg` vs Sharp Corners
 
-The pixel-art aesthetic uses square corners via `pixel-border`. Several components mix in `rounded-lg`, which is inconsistent with the design language.
+> **Resolution (Phase 15):** Removed `rounded-lg` / `rounded-md` from 22 pixel-art components (14 files). Kept on range sliders and circular elements.
+
+The pixel-art aesthetic uses square corners via `pixel-border`. Several components previously mixed in `rounded-lg`.
 
 ### 5.6 Font Class Usage
 
@@ -314,50 +349,50 @@ Two font families are configured: `font-pixel` (Press Start 2P) for headings and
 
 ## 7. Actionable Recommendations
 
-### Priority 1 -- Critical (Fix Immediately)
+### Priority 1 — Critical (All Resolved)
 
-| # | Action | Files Affected |
-|---|--------|---------------|
-| 1 | Unify `STORAGE_KEYS` into a single source, import everywhere | `lib/storage.ts`, `constants/game.ts`, `app/game/join/page.tsx` |
-| 2 | Remove duplicate `ApiResponse` types from `lib/apiResponse.ts`, import from `types/api.ts` | `lib/apiResponse.ts`, `types/api.ts` |
-| 3 | Unify `GAME_CATEGORIES`, fix `'college-level'` mismatch | `QuickGameSelector.tsx`, `constants/categories.ts` |
-| 4 | Standardize scoring by extracting `calculateScore()` to `lib/scoring.ts` | 3 files |
-| 5 | Add `borderWidth: { 3: '3px' }` to `tailwind.config.js` or replace all `border-3` | `tailwind.config.js` + 14 references |
-| 6 | Replace `bg-brown-500` with `bg-amber-700` | `constants/avatars.ts`, `tailwind.config.js` |
-| 7 | Replace remaining `console.error` with `logger` in production files | 10 files |
+| # | Action | Status |
+|---|--------|--------|
+| 1 | Unify `STORAGE_KEYS` into a single source | ✅ Resolved (Phase 16) |
+| 2 | Remove duplicate `ApiResponse` types from `lib/apiResponse.ts` | ✅ Resolved (Phase 16) |
+| 3 | Unify `GAME_CATEGORIES`, fix `'college-level'` mismatch | ✅ Resolved (Phase 16) |
+| 4 | Standardize scoring by extracting `calculateScore()` to `lib/scoring.ts` | ✅ Resolved (Phase 8) |
+| 5 | Add `borderWidth: { 3: '3px' }` to `tailwind.config.js` | ✅ Resolved (Phase 15) |
+| 6 | Replace `bg-brown-500` with `bg-amber-700` | ✅ Resolved (Phase 15) |
+| 7 | Replace remaining `console.error` with `logger` in production files | ✅ Resolved (Phase 24) |
 
-### Priority 2 -- Important
+### Priority 2 — Important (Mostly Resolved)
 
-| # | Action | Files Affected |
-|---|--------|---------------|
-| 8 | Add module-level JSDoc headers to all 27 files listed in section 1.1 | 27 files |
-| 9 | Remove test functions from production (`testQuestionFetching`, `testRoomCreation`) | `lib/gameApi.ts`, `lib/roomApi.ts` |
-| 10 | Make `DEFAULT_PROFILE` a factory function to avoid stale dates | `lib/storage.ts` |
-| 11 | Replace deprecated `substr()` with `substring()` | 7 files |
-| 12 | Add `'use client'` to `AdvancedGameConfigurator.tsx` | 1 file |
-| 13 | Extract `formatDuration()` to `lib/formatters.ts` | 2 files |
-| 14 | Extract `generateId()` to `lib/utils.ts` | 5 files |
-| 15 | Add Tailwind `safelist` for dynamic avatar color classes | `tailwind.config.js` |
-| 16 | Refactor `HelpModal` to use `ui/Modal` | 1 file |
+| # | Action | Status |
+|---|--------|--------|
+| 8 | Add module-level JSDoc headers to all files | Partial — 27 files remain |
+| 9 | Remove test functions from production | ✅ Resolved |
+| 10 | Make `DEFAULT_PROFILE` a factory function | ✅ Resolved (Phase 15) |
+| 11 | Replace deprecated `substr()` with `substring()` | ✅ Resolved (Phase 8) |
+| 12 | Add `'use client'` to `AdvancedGameConfigurator.tsx` | ✅ Resolved (Phase 15) |
+| 13 | Extract `formatDuration()` to shared utility | ✅ Resolved (Phase 16) |
+| 14 | Extract `generateId()` to `lib/utils.ts` | ✅ Resolved (Phase 16) |
+| 15 | Add Tailwind `safelist` for dynamic avatar color classes | ✅ Resolved (Phase 15) |
+| 16 | Refactor `HelpModal` to use `ui/Modal` | ✅ Resolved (Phase 15) |
 
-### Priority 3 -- Improvement
+### Priority 3 — Improvement (Partially Addressed)
 
-| # | Action |
-|---|--------|
-| 17 | Consolidate security headers into one location |
-| 18 | Consolidate CORS allowed origins |
-| 19 | Replace in-memory rate limiter with Redis/Upstash |
-| 20 | Remove CSP `unsafe-eval`/`unsafe-inline` in production |
-| 21 | Standardize border widths (`border-4` everywhere) |
-| 22 | Remove `rounded-lg` from pixel-art components |
-| 23 | Standardize font class usage across all game pages |
-| 24 | Create shared `<Footer>` component |
-| 25 | Enable ESLint during builds |
-| 26 | Raise coverage thresholds incrementally |
-| 27 | Standardize barrel export style |
-| 28 | Import `KNOWLEDGE_LEVELS` in `CustomGameConfigurator.tsx` from constants |
-| 29 | Import room code constants in `lib/roomCode.ts` from `constants/game.ts` |
+| # | Action | Status |
+|---|--------|--------|
+| 17 | Consolidate security headers into one location | Open |
+| 18 | Consolidate CORS allowed origins | Open |
+| 19 | Replace in-memory rate limiter with Redis/Upstash | Open |
+| 20 | Remove CSP `unsafe-eval`/`unsafe-inline` in production | Open |
+| 21 | Standardize border widths (`border-4` everywhere) | ✅ Resolved (Phase 15) |
+| 22 | Remove `rounded-lg` from pixel-art components | ✅ Resolved (Phase 15) |
+| 23 | Standardize font class usage across all game pages | ✅ Resolved (Phase 9) |
+| 24 | Create shared `<Footer>` component | ✅ Resolved (Phase 15) |
+| 25 | Enable ESLint during builds | ✅ Resolved (Phase 11) |
+| 26 | Raise coverage thresholds incrementally | ✅ Resolved (Phase 20) |
+| 27 | Standardize barrel export style | ✅ Resolved (Phase 16) |
+| 28 | Import `KNOWLEDGE_LEVELS` in `CustomGameConfigurator.tsx` | ✅ Resolved (Phase 16) |
+| 29 | Import room code constants from `constants/game.ts` | ✅ Resolved (Phase 16) |
 
 ---
 
-*End of audit.*
+*End of audit. Last updated: March 1, 2026 (Phase 24)*

@@ -1,3 +1,13 @@
+/**
+ * Back Button
+ *
+ * Pixel-art styled navigation button that returns
+ * to the previous page.
+ *
+ * @module app/components/BackButton
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useRouter, usePathname } from 'next/navigation'

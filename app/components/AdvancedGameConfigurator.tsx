@@ -1,3 +1,13 @@
+/**
+ * Advanced Game Configurator
+ *
+ * Configuration interface for advanced quiz mode with
+ * document upload and AI-powered question generation.
+ *
+ * @module app/components/AdvancedGameConfigurator
+ * @since 1.0.0
+ */
+
 'use client'
 
 import React, { useState } from 'react'

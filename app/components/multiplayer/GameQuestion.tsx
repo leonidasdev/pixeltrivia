@@ -5,7 +5,7 @@
  * Shows timer, answer feedback, and reveals correct answer.
  * Styled with pixel-art aesthetic for retro game feel.
  *
- * @module components/multiplayer/GameQuestion
+ * @module app/components/multiplayer/GameQuestion
  * @since 1.1.0
  */
 

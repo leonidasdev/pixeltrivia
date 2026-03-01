@@ -137,7 +137,8 @@ curl -X POST http://localhost:3000/api/quiz/quick \
         "options": ["Sonic", "Super Mario Bros", "Zelda", "Metroid"],
         "correctAnswer": 1,
         "category": "Gaming",
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "imageUrl": null
       }
     ],
     "totalQuestions": 10
@@ -326,7 +327,8 @@ curl "http://localhost:3000/api/game/questions?category=science&difficulty=high-
         "correctAnswer": 0,
         "category": "Science",
         "difficulty": "medium",
-        "timeLimit": 30
+        "timeLimit": 30,
+        "imageUrl": null
       }
     ],
     "totalQuestions": 10,
@@ -580,4 +582,4 @@ console.log(`Room code: ${room.roomCode}`);
 
 ---
 
-*Last updated: February 27, 2026*
+*Last updated: March 1, 2026*

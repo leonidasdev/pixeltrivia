@@ -1,3 +1,13 @@
+/**
+ * Custom Game Page — /game/custom
+ *
+ * Custom quiz flow that generates AI-powered questions
+ * based on user-specified topic and difficulty.
+ *
+ * @module app/game/custom
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useState } from 'react'

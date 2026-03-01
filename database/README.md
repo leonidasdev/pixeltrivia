@@ -54,22 +54,15 @@ psql "postgresql://postgres:PASSWORD@HOST:5432/postgres" -f database/seed.sql
 
 ## Seed Data
 
-The `seed.sql` file contains 90+ sample trivia questions across 12 categories:
+The seed data is embedded in `schema.sql` and includes 150+ sample trivia questions across 40 categories and 5 difficulty levels:
 
-| Category | Count |
-|----------|-------|
-| Geography | 10 |
-| Science | 12 |
-| History | 8 |
-| Art | 3 |
-| Literature | 3 |
-| Mathematics | 6 |
-| Animals | 6 |
-| Music | 4 |
-| Sports | 4 |
-| Food | 4 |
-| Colors & Shapes | 3 |
-| Technology | 5 |
+| Difficulty | Description |
+|------------|-------------|
+| Elementary | Simple, foundational questions |
+| Middle School | Intermediate difficulty |
+| High School | Standard academic level |
+| College | Advanced / university level |
+| Classic | General knowledge, mixed difficulty |
 
 ## Environment Variables
 

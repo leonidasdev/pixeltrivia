@@ -297,23 +297,15 @@ Enable in Vercel Dashboard:
 
 ### Error Tracking
 
-Recommended: Add Sentry for error tracking
+Sentry is configured for error tracking across client, server, and edge:
 
-```bash
-npm install @sentry/nextjs
-```
+- `sentry.client.config.ts` — Browser errors and web vitals
+- `sentry.server.config.ts` — Server-side errors and API traces
+- `sentry.edge.config.ts` — Edge middleware errors
 
-Configure in `sentry.client.config.ts`:
+All configs are gated on the `SENTRY_DSN` environment variable. Source maps are uploaded automatically during CI builds when `SENTRY_AUTH_TOKEN` is set.
 
-```typescript
-import * as Sentry from '@sentry/nextjs';
-
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  tracesSampleRate: 0.1,
-  environment: process.env.NODE_ENV,
-});
-```
+See [docs/monitoring.md](monitoring.md) for alert rules and dashboard configuration.
 
 ### Health Checks
 
@@ -471,4 +463,4 @@ Before going live:
 
 ---
 
-*Last updated: February 27, 2026*
+*Last updated: March 1, 2026*

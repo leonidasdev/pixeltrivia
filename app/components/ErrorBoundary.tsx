@@ -1,3 +1,13 @@
+/**
+ * Error Boundary
+ *
+ * React error boundary that catches rendering errors
+ * and displays a recovery UI with retry support.
+ *
+ * @module app/components/ErrorBoundary
+ * @since 1.0.0
+ */
+
 'use client'
 
 import React, { Component, type ErrorInfo, type ReactNode } from 'react'

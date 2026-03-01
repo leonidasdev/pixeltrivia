@@ -24,11 +24,11 @@ Comprehensive guide to testing in PixelTrivia.
 
 PixelTrivia uses a comprehensive testing setup with:
 
-- **488 tests** total (488 Jest + Playwright E2E)
+- **1399 tests** total (Jest unit/component + Playwright E2E)
 - **Jest 30** as the unit/component test runner
 - **Playwright** for E2E testing (Chromium + Firefox)
 - **React Testing Library** for component tests
-- **Coverage thresholds**: branches ≥12%, functions/lines/statements ≥15%
+- **Coverage thresholds**: branches ≥55%, functions/lines/statements ≥55%
 
 Tests run automatically:
 - On every commit (via Husky pre-commit hooks)
@@ -105,24 +105,90 @@ This generates:
 ```
 __tests__/                         # Jest unit & component tests
 ├── components/                    # Component tests
+│   ├── AdvancedGameConfigurator.test.tsx
+│   ├── BackButton.test.tsx
 │   ├── CustomGameConfigurator.test.tsx
+│   ├── ErrorBoundary.test.tsx
+│   ├── MainMenuLogo.test.tsx
+│   ├── Modal.test.tsx
+│   ├── PixelStyleConsistency.test.tsx
 │   ├── QuickGameSelector.test.tsx
 │   ├── SettingsPanel.test.tsx
-│   └── Help/
-│       └── HelpModal.test.tsx
+│   ├── Toast.test.tsx
+│   ├── stats.test.tsx
+│   ├── help/                      # Help system tests
+│   │   ├── HelpButton.test.tsx
+│   │   ├── HelpContext.test.tsx
+│   │   └── HelpModal.test.tsx
+│   ├── multiplayer/               # Multiplayer component tests
+│   │   ├── GameQuestion.test.tsx
+│   │   ├── LobbyView.test.tsx
+│   │   └── MultiplayerComponents.test.tsx
+│   ├── pages/                     # Page-level component tests
+│   │   ├── AdvancedGamePage.test.tsx
+│   │   ├── CustomGamePage.test.tsx
+│   │   ├── GameModePage.test.tsx
+│   │   ├── GameSelectPage.test.tsx
+│   │   ├── HomePage.test.tsx
+│   │   ├── JoinGamePage.test.tsx
+│   │   ├── PlayPage.test.tsx
+│   │   └── QuickGamePage.test.tsx
+│   └── ui/                        # UI primitive tests
+│       ├── PixelBadge.test.tsx
+│       ├── PixelButton.test.tsx
+│       ├── PixelCard.test.tsx
+│       ├── PixelInput.test.tsx
+│       └── VisualEffects.test.tsx
+├── hooks/                         # Hook tests
+│   ├── createStorage.test.ts
+│   ├── useGameHistory.test.ts
+│   ├── useGameState.test.ts
+│   ├── useLocalStorage.test.ts
+│   ├── usePlayerSettings.test.ts
+│   ├── useQuizSession.test.ts
+│   ├── useSound.test.ts
+│   ├── useSwipe.test.ts
+│   └── useTimer.test.ts
 ├── integration/                   # Integration tests
 │   └── api/
+│       ├── gameQuestions.test.ts
+│       ├── quizAdvanced.test.ts
+│       ├── quizCustom.test.ts
+│       ├── quizQuick.test.ts
+│       ├── roomCreate.test.ts
+│       ├── roomJoin.test.ts
+│       ├── roomState.test.ts
+│       └── upload.test.ts
 └── unit/                          # Unit tests
-    └── lib/
-        ├── errors.test.ts         # Error classes
-        ├── validation.test.ts     # Zod schemas
-        ├── rateLimit.test.ts      # Rate limiting
-        ├── security.test.ts       # Security functions
-        ├── roomCode.test.ts       # Room code utils
-        ├── roomApi.test.ts        # Room API client
-        ├── gameApi.test.ts        # Game API client
-        ├── quickQuizApi.test.ts   # Quick quiz client
-        └── customQuizApi.test.ts  # Custom quiz client
+    ├── middleware.test.ts
+    ├── api/
+    │   └── quizLogic.test.ts
+    └── lib/                       # Library unit tests (25 files)
+        ├── achievements.test.ts
+        ├── adaptiveDifficulty.test.ts
+        ├── analytics.test.ts
+        ├── apiCache.test.ts
+        ├── apiFetch.test.ts
+        ├── apiResponse.test.ts
+        ├── customQuizApi.test.ts
+        ├── errors.test.ts
+        ├── fileParser.test.ts
+        ├── gameApi.test.ts
+        ├── leaderboard.test.ts
+        ├── logger.test.ts
+        ├── multiplayerApi.test.ts
+        ├── quickQuizApi.test.ts
+        ├── rateLimit.test.ts
+        ├── roomApi.test.ts
+        ├── roomCode.test.ts
+        ├── security.test.ts
+        ├── session.test.ts
+        ├── share.test.ts
+        ├── soundManager.test.ts
+        ├── storageHistory.test.ts
+        ├── storageProfileSettings.test.ts
+        ├── utils.test.ts
+        └── validation.test.ts
 
 tests/                             # Playwright E2E tests
 ├── home.spec.ts                   # Home page E2E tests
@@ -500,10 +566,10 @@ Coverage is configured in `jest.config.js`:
   ],
   coverageThreshold: {
     global: {
-      branches: 12,
-      functions: 15,
-      lines: 15,
-      statements: 15,
+      branches: 55,
+      functions: 64,
+      lines: 61,
+      statements: 60,
     },
   },
 }
@@ -521,14 +587,14 @@ start coverage/lcov-report/index.html # Windows
 
 ### Coverage Goals
 
-Current thresholds are set conservatively to establish a baseline. Target coverage:
+Current thresholds (set in `jest.config.js`):
 
-| Metric | Current | Target |
-|--------|---------|--------|
-| Statements | 15% | 60% |
-| Branches | 12% | 50% |
-| Functions | 15% | 60% |
-| Lines | 15% | 60% |
+| Metric | Threshold | Actual |
+|--------|-----------|--------|
+| Statements | 55% | ~63% |
+| Branches | 55% | ~57% |
+| Functions | 55% | ~66% |
+| Lines | 55% | ~63% |
 
 ---
 
@@ -764,4 +830,4 @@ Tests are also validated via lint-staged on commit:
 
 ---
 
-*Last updated: February 27, 2026*
+*Last updated: March 1, 2026*

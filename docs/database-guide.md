@@ -202,6 +202,7 @@ CREATE TABLE questions (
   correct_answer INTEGER NOT NULL,
   category VARCHAR(50),
   difficulty VARCHAR(20) DEFAULT 'medium',
+  image_url TEXT DEFAULT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 ```
@@ -214,6 +215,7 @@ CREATE TABLE questions (
 | `correct_answer` | INTEGER | NOT NULL | Index of correct option |
 | `category` | VARCHAR(50) | - | Question category |
 | `difficulty` | VARCHAR(20) | CHECK constraint | easy/medium/hard |
+| `image_url` | TEXT | DEFAULT NULL | Optional image URL |
 | `created_at` | TIMESTAMPTZ | DEFAULT NOW() | Creation timestamp |
 
 **Options Format (JSONB):**
@@ -564,4 +566,4 @@ Add indexes for frequently filtered columns.
 
 ---
 
-*Last updated: February 27, 2026*
+*Last updated: March 1, 2026*

@@ -75,7 +75,7 @@ This will:
 # Check that all scripts work
 npm run lint      # Should complete without errors
 npm run typecheck # Should complete without errors
-npm test          # Should run 488 tests
+npm test          # Should run 1399+ tests
 ```
 
 ---
@@ -527,4 +527,4 @@ import { withSecurity } from '@/lib/security';
 
 ---
 
-*Last updated: February 28, 2026*
+*Last updated: March 1, 2026*

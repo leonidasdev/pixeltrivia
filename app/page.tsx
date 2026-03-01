@@ -1,3 +1,13 @@
+/**
+ * Home Page
+ *
+ * Main landing page for PixelTrivia with game mode navigation,
+ * settings panel, and player configuration.
+ *
+ * @module app/page
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useState, useEffect } from 'react'

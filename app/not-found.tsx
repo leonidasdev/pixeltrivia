@@ -1,9 +1,14 @@
+/**
+ * 404 Not Found Page
+ *
+ * Custom page displayed when a route does not exist.
+ *
+ * @module app/not-found
+ * @since 1.0.0
+ */
+
 import Link from 'next/link'
 
-/**
- * Custom 404 Not Found page
- * Displayed when a route doesn't exist
- */
 export default function NotFound() {
   return (
     <div className="min-h-[60vh] flex items-center justify-center p-4">

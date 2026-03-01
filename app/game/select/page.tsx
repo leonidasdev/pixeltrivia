@@ -1,3 +1,13 @@
+/**
+ * Game Select Page — /game/select
+ *
+ * Category and configuration selection for a new game.
+ * Supports Quick, Custom, and Advanced game modes.
+ *
+ * @module app/game/select
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useState, useEffect, useCallback, Suspense } from 'react'

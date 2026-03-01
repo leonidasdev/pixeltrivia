@@ -1,3 +1,13 @@
+/**
+ * Toast Notification System
+ *
+ * Provides toast notifications with variant styling (success, error,
+ * warning, info) and auto-dismiss behaviour.
+ *
+ * @module app/components/ui/Toast
+ * @since 1.0.0
+ */
+
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'

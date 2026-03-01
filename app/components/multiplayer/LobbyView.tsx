@@ -5,7 +5,7 @@
  * Shows room code, player list, settings, and start button (host only).
  * Styled with pixel-art aesthetic for retro game feel.
  *
- * @module components/multiplayer/LobbyView
+ * @module app/components/multiplayer/LobbyView
  * @since 1.1.0
  */
 
