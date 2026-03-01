@@ -208,5 +208,47 @@ describe('multiplayerApi', () => {
       expect(response.success).toBe(false)
       expect(response.error).toBe('Network error')
     })
+
+    it('handles non-Error thrown values', async () => {
+      mockFetch.mockRejectedValueOnce('string error')
+
+      const response = await joinRoom({
+        roomCode: 'ABC123',
+        playerName: 'Test',
+        avatar: 'knight',
+      })
+
+      expect(response.success).toBe(false)
+      expect(response.error).toBe('Network error')
+      expect(response.message).toBe('Failed to connect to server')
+    })
+
+    it('uses HTTP status when error field is missing from response', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 503,
+        json: async () => ({ success: false }),
+      })
+
+      const response = await getRoomState('ABC123')
+
+      expect(response.success).toBe(false)
+      expect(response.error).toBe('HTTP 503')
+      expect(response.message).toBe('Request failed')
+    })
+
+    it('handles error response with message but no error field', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 422,
+        json: async () => ({ success: false, message: 'Validation failed' }),
+      })
+
+      const response = await startGame('ABC123', 1)
+
+      expect(response.success).toBe(false)
+      expect(response.error).toBe('HTTP 422')
+      expect(response.message).toBe('Validation failed')
+    })
   })
 })

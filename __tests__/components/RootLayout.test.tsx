@@ -24,7 +24,9 @@ jest.mock('@/app/components/BackButton', () => ({
 
 jest.mock('@/app/components/help', () => ({
   HelpButton: () => <button data-testid="help-button">Help</button>,
-  HelpProvider: ({ children }: { children: React.ReactNode }) => <div data-testid="help-provider">{children}</div>,
+  HelpProvider: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="help-provider">{children}</div>
+  ),
 }))
 
 import RootLayout from '@/app/layout'

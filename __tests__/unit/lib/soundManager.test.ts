@@ -149,4 +149,96 @@ describe('SoundManager', () => {
       expect(mockContext.close).toHaveBeenCalled()
     })
   })
+
+  // ─── Music controls ──────────────────────────────────────
+
+  describe('music volume', () => {
+    it('should set and get music volume', () => {
+      soundManager.musicVolume = 0.6
+      expect(soundManager.musicVolume).toBe(0.6)
+    })
+
+    it('should clamp music volume', () => {
+      soundManager.musicVolume = 2
+      expect(soundManager.musicVolume).toBe(1)
+      soundManager.musicVolume = -1
+      expect(soundManager.musicVolume).toBe(0)
+    })
+
+    it('should toggle music muted', () => {
+      expect(soundManager.musicMuted).toBe(false)
+      soundManager.musicMuted = true
+      expect(soundManager.musicMuted).toBe(true)
+    })
+
+    it('should update musicGain when music volume set after context init', () => {
+      soundManager.play('click') // init context
+      soundManager.musicVolume = 0.4
+      expect(soundManager.musicVolume).toBe(0.4)
+    })
+
+    it('should update musicGain when music muted after context init', () => {
+      soundManager.play('click') // init context
+      soundManager.musicMuted = true
+      expect(soundManager.musicMuted).toBe(true)
+      soundManager.musicMuted = false
+      expect(soundManager.musicMuted).toBe(false)
+    })
+  })
+
+  describe('playMusic / stopMusic', () => {
+    beforeEach(() => {
+      jest.useFakeTimers()
+    })
+
+    afterEach(() => {
+      soundManager.stopMusic()
+      jest.useRealTimers()
+    })
+
+    it('should report currentTrack as null initially', () => {
+      expect(soundManager.currentTrack).toBeNull()
+    })
+
+    it('should play a music track', () => {
+      soundManager.playMusic('menu')
+      expect(soundManager.currentTrack).toBe('menu')
+    })
+
+    it('should stop music', () => {
+      soundManager.playMusic('menu')
+      soundManager.stopMusic()
+      expect(soundManager.currentTrack).toBeNull()
+    })
+
+    it('should not play music when disabled', () => {
+      soundManager.enabled = false
+      soundManager.playMusic('menu')
+      expect(soundManager.currentTrack).toBeNull()
+    })
+
+    it('should switch tracks', () => {
+      soundManager.playMusic('menu')
+      expect(soundManager.currentTrack).toBe('menu')
+      soundManager.playMusic('gameplay')
+      expect(soundManager.currentTrack).toBe('gameplay')
+    })
+
+    it('should auto-loop via interval', () => {
+      soundManager.playMusic('menu')
+      // Advance time to trigger loop interval
+      jest.advanceTimersByTime(10000)
+      expect(mockContext.createOscillator).toHaveBeenCalled()
+    })
+
+    it('should stop music when context is closed during interval', () => {
+      soundManager.playMusic('menu')
+      // Simulate closed context
+      mockContext.state = 'closed'
+      jest.advanceTimersByTime(10000)
+      expect(soundManager.currentTrack).toBeNull()
+      // Reset for cleanup
+      mockContext.state = 'running'
+    })
+  })
 })

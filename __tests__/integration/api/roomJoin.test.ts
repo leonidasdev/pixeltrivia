@@ -117,6 +117,186 @@ describe('/api/room/join', () => {
       expect(body.error).toContain('no longer accepting')
     })
 
+    it('returns error when player count check fails', async () => {
+      const roomData = { code: 'ABC123', status: 'waiting', max_players: 8 }
+
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'rooms') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                single: jest.fn().mockResolvedValue({ data: roomData, error: null }),
+              }),
+            }),
+          }
+        }
+        if (table === 'players') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockResolvedValue({
+                count: null,
+                error: { code: 'DB_ERR', message: 'Count failed' },
+              }),
+            }),
+          }
+        }
+        return {}
+      })
+
+      const response = await POST(
+        createJoinRequest({ roomCode: 'ABC123', playerName: 'Test', avatar: 'knight' })
+      )
+      const body = await response.json()
+
+      expect(response.status).toBe(500)
+      expect(body.success).toBe(false)
+    })
+
+    it('returns error when room is full', async () => {
+      const roomData = { code: 'ABC123', status: 'waiting', max_players: 2 }
+
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'rooms') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                single: jest.fn().mockResolvedValue({ data: roomData, error: null }),
+              }),
+            }),
+          }
+        }
+        if (table === 'players') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockResolvedValue({ count: 2, error: null }),
+            }),
+          }
+        }
+        return {}
+      })
+
+      const response = await POST(
+        createJoinRequest({ roomCode: 'ABC123', playerName: 'Test', avatar: 'knight' })
+      )
+      const body = await response.json()
+
+      expect(response.status).toBe(400)
+      expect(body.success).toBe(false)
+    })
+
+    it('returns error when player name already exists in room', async () => {
+      const roomData = { code: 'ABC123', status: 'waiting', max_players: 8 }
+
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'rooms') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                single: jest.fn().mockResolvedValue({ data: roomData, error: null }),
+              }),
+            }),
+          }
+        }
+        if (table === 'players') {
+          return {
+            select: jest.fn().mockImplementation((...args: unknown[]) => {
+              const selectStr = typeof args[0] === 'string' ? args[0] : ''
+              // Count check
+              if (typeof args[1] === 'object' && args[1] !== null && 'count' in args[1]) {
+                return { eq: jest.fn().mockResolvedValue({ count: 1, error: null }) }
+              }
+              // Duplicate name check
+              if (selectStr === 'id') {
+                return {
+                  eq: jest.fn().mockReturnValue({
+                    eq: jest.fn().mockReturnValue({
+                      single: jest.fn().mockResolvedValue({
+                        data: { id: 99 },
+                        error: null,
+                      }),
+                    }),
+                  }),
+                }
+              }
+              return {}
+            }),
+          }
+        }
+        return {}
+      })
+
+      const response = await POST(
+        createJoinRequest({ roomCode: 'ABC123', playerName: 'Host', avatar: 'knight' })
+      )
+      const body = await response.json()
+
+      expect(response.status).toBe(400)
+      expect(body.success).toBe(false)
+      expect(body.error).toContain('already in the room')
+    })
+
+    it('returns error when player insert fails', async () => {
+      const roomData = {
+        code: 'ABC123',
+        status: 'waiting',
+        max_players: 8,
+        time_limit: 30,
+        total_questions: 10,
+        game_mode: 'quick',
+        category: null,
+        created_at: '2026-01-01T00:00:00Z',
+      }
+
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'rooms') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                single: jest.fn().mockResolvedValue({ data: roomData, error: null }),
+              }),
+            }),
+          }
+        }
+        if (table === 'players') {
+          return {
+            select: jest.fn().mockImplementation((...args: unknown[]) => {
+              if (typeof args[1] === 'object' && args[1] !== null && 'count' in args[1]) {
+                return { eq: jest.fn().mockResolvedValue({ count: 1, error: null }) }
+              }
+              const selectStr = typeof args[0] === 'string' ? args[0] : ''
+              if (selectStr === 'id') {
+                return {
+                  eq: jest.fn().mockReturnValue({
+                    eq: jest.fn().mockReturnValue({
+                      single: jest.fn().mockResolvedValue({ data: null, error: null }),
+                    }),
+                  }),
+                }
+              }
+              return {}
+            }),
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockReturnValue({
+                single: jest.fn().mockResolvedValue({
+                  data: null,
+                  error: { code: 'DB_ERR', message: 'Insert failed' },
+                }),
+              }),
+            }),
+          }
+        }
+        return {}
+      })
+
+      const response = await POST(
+        createJoinRequest({ roomCode: 'ABC123', playerName: 'NewPlayer', avatar: 'knight' })
+      )
+      const body = await response.json()
+
+      expect(response.status).toBe(500)
+      expect(body.success).toBe(false)
+    })
+
     it('joins room successfully', async () => {
       const roomData = {
         code: 'ABC123',

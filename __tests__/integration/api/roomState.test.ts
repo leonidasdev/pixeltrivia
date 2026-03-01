@@ -17,7 +17,7 @@ jest.mock('@/lib/supabase', () => ({
   getSupabaseClient: () => ({ from: mockSupabaseFrom }),
 }))
 
-import { GET, DELETE } from '@/app/api/room/[code]/route'
+import { GET, DELETE, POST, PUT } from '@/app/api/room/[code]/route'
 import { NextRequest } from 'next/server'
 
 function makeParams(code: string) {
@@ -121,17 +121,208 @@ describe('/api/room/[code]', () => {
   })
 
   describe('DELETE - leave room', () => {
-    it('returns validation error when playerId missing', async () => {
-      const request = new NextRequest('http://localhost/api/room/ABC123', {
+    function createDeleteRequest(code: string, body: Record<string, unknown>): NextRequest {
+      return new NextRequest(`http://localhost/api/room/${code}`, {
         method: 'DELETE',
-        body: JSON.stringify({}),
+        body: JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
       })
+    }
+
+    it('returns validation error when playerId missing', async () => {
+      const request = createDeleteRequest('ABC123', {})
       const response = await DELETE(request, makeParams('ABC123'))
       const body = await response.json()
 
       expect(response.status).toBe(400)
       expect(body.success).toBe(false)
+    })
+
+    it('returns validation error for invalid room code', async () => {
+      const request = createDeleteRequest('AB', { playerId: 1 })
+      const response = await DELETE(request, makeParams('AB'))
+      const body = await response.json()
+
+      expect(response.status).toBe(400)
+      expect(body.success).toBe(false)
+    })
+
+    it('returns validation error when playerId is not a number', async () => {
+      const request = createDeleteRequest('ABC123', { playerId: 'notanum' })
+      const response = await DELETE(request, makeParams('ABC123'))
+      const body = await response.json()
+
+      expect(response.status).toBe(400)
+      expect(body.success).toBe(false)
+    })
+
+    it('returns 404 when player not found', async () => {
+      mockSupabaseFrom.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          eq: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              single: jest.fn().mockResolvedValue({ data: null, error: null }),
+            }),
+          }),
+        }),
+      })
+
+      const request = createDeleteRequest('ABC123', { playerId: 999 })
+      const response = await DELETE(request, makeParams('ABC123'))
+      const body = await response.json()
+
+      expect(response.status).toBe(404)
+      expect(body.success).toBe(false)
+    })
+
+    it('host leaving closes the room', async () => {
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'players') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                eq: jest.fn().mockReturnValue({
+                  single: jest.fn().mockResolvedValue({
+                    data: { is_host: true },
+                    error: null,
+                  }),
+                }),
+              }),
+            }),
+          }
+        }
+        if (table === 'rooms') {
+          return {
+            update: jest.fn().mockReturnValue({
+              eq: jest.fn().mockResolvedValue({ error: null }),
+            }),
+          }
+        }
+        return {}
+      })
+
+      const request = createDeleteRequest('ABC123', { playerId: 1 })
+      const response = await DELETE(request, makeParams('ABC123'))
+      const body = await response.json()
+
+      expect(response.status).toBe(200)
+      expect(body.success).toBe(true)
+      expect(body.data.action).toBe('room_closed')
+    })
+
+    it('returns database error when host close fails', async () => {
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'players') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                eq: jest.fn().mockReturnValue({
+                  single: jest.fn().mockResolvedValue({
+                    data: { is_host: true },
+                    error: null,
+                  }),
+                }),
+              }),
+            }),
+          }
+        }
+        if (table === 'rooms') {
+          return {
+            update: jest.fn().mockReturnValue({
+              eq: jest.fn().mockResolvedValue({
+                error: { code: 'DB_ERR', message: 'Update failed' },
+              }),
+            }),
+          }
+        }
+        return {}
+      })
+
+      const request = createDeleteRequest('ABC123', { playerId: 1 })
+      const response = await DELETE(request, makeParams('ABC123'))
+      const body = await response.json()
+
+      expect(response.status).toBe(500)
+      expect(body.success).toBe(false)
+    })
+
+    it('non-host player leaves the room', async () => {
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'players') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                eq: jest.fn().mockReturnValue({
+                  single: jest.fn().mockResolvedValue({
+                    data: { is_host: false },
+                    error: null,
+                  }),
+                }),
+              }),
+            }),
+            delete: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                eq: jest.fn().mockResolvedValue({ error: null }),
+              }),
+            }),
+          }
+        }
+        return {}
+      })
+
+      const request = createDeleteRequest('ABC123', { playerId: 2 })
+      const response = await DELETE(request, makeParams('ABC123'))
+      const body = await response.json()
+
+      expect(response.status).toBe(200)
+      expect(body.success).toBe(true)
+      expect(body.data.action).toBe('player_left')
+    })
+
+    it('returns database error when non-host leave fails', async () => {
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'players') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                eq: jest.fn().mockReturnValue({
+                  single: jest.fn().mockResolvedValue({
+                    data: { is_host: false },
+                    error: null,
+                  }),
+                }),
+              }),
+            }),
+            delete: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                eq: jest.fn().mockResolvedValue({
+                  error: { code: 'DB_ERR', message: 'Delete failed' },
+                }),
+              }),
+            }),
+          }
+        }
+        return {}
+      })
+
+      const request = createDeleteRequest('ABC123', { playerId: 2 })
+      const response = await DELETE(request, makeParams('ABC123'))
+      const body = await response.json()
+
+      expect(response.status).toBe(500)
+      expect(body.success).toBe(false)
+    })
+  })
+
+  describe('POST/PUT - method not allowed', () => {
+    it('POST returns 405', async () => {
+      const response = POST()
+      expect(response.status).toBe(405)
+    })
+
+    it('PUT returns 405', async () => {
+      const response = PUT()
+      expect(response.status).toBe(405)
     })
   })
 })

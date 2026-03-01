@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** March 2, 2026 (Phase 24 — Code Cleanup, Refactoring & Coverage)
+> **Last Updated:** March 2, 2026 (Phase 24 — Code Cleanup, Refactoring & Coverage, Session 2)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,12 +10,12 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 95 |
-| Tests | 1651 |
-| Coverage (Statements) | ~80.41% |
-| Coverage (Branches) | ~73.17% |
-| Coverage (Functions) | ~84.22% |
-| Coverage (Lines) | ~82.64% |
+| Test Suites | 104 |
+| Tests | 1850 |
+| Coverage (Statements) | ~86.27% |
+| Coverage (Branches) | ~80.15% |
+| Coverage (Functions) | ~89.36% |
+| Coverage (Lines) | ~88.48% |
 | TypeScript Errors | 0 |
 | ESLint Errors | 0 |
 
@@ -200,6 +200,31 @@
 - **Round 3** (4 files, 58 tests): roomAnswer, roomQuestion, roomStart, roomNext API route integration tests
 - Final: 95 suites, 1651 tests, 0 TypeScript errors
 - Coverage: Stmts 80.41%, Branch 73.17%, Funcs 84.22%, Lines 82.64%
+
+### Test Coverage Boost Session 2 (80% → 86%)
+- **DRY refactoring**: Exported `generateRequestId`/`getRequestId` from `lib/logger.ts`; removed duplicate implementation from `middleware.ts` (~12 lines)
+- **New test files** (7 files):
+  - `securityCore.test.ts` — validateEnvVars, checkForExposedSecrets, isAllowedOrigin, ALLOWED_ORIGINS, CSP directives
+  - `supabaseClient.test.ts` — singleton pattern, env var checks, isRealtimeAvailable
+  - `rateLimitUpstash.test.ts` — Upstash store activation, write-behind SET/DEL, Redis failure handling
+  - `AnimatedBackground.test.tsx` — presets, custom sparkles, gradients, delay branches, PageBackground, SparklesOverlay
+  - `PixelConfetti.test.tsx` — canvas rendering, animation lifecycle, particle drawing, cleanup
+  - `GamePageLayout.test.tsx` — background modes, noSparkles, centerContent, maxWidth, padding, header
+  - `GameHistoryList.test.tsx` — filtering, sorting, expand/collapse, delete, clear all, accuracy badges, date formatting
+  - `PageHeader.test.tsx` — back button, onBack callback, rightContent, centered, custom size
+  - `LoadingSpinner.test.tsx` — sizes, colours, labels, LoadingOverlay transparent mode
+- **Extended test files** (6 files):
+  - `BackButton.test.tsx` — keyboard Enter/Space, hover states
+  - `logger.test.ts` — generateRequestId (UUID, fallback), getRequestId (header priority)
+  - `roomCreate.test.ts` — code collision retry, host player insert failure
+  - `roomJoin.test.ts` — count error, room full, duplicate name, player insert error
+  - `multiplayerApi.test.ts` — non-Error thrown, missing error field, message-only
+  - `quickQuizApi.test.ts` — fetchQuickQuiz branches (category/difficulty/errors)
+  - `soundManager.test.ts` — music volume, mute, playMusic, stopMusic, track switching, auto-loop, closed context
+  - `apiCache.test.ts` — useApiCache, useCachedQuestions (key generation, difficulty, encoding, null params)
+- **Refactoring**: Marked `clearAllRateLimits`/`getRateLimitState` as `@internal` test-only exports
+- Final: 104 suites, 1850 tests, 0 TypeScript errors
+- Coverage: Stmts 86.27%, Branch 80.15%, Funcs 89.36%, Lines 88.48%
 
 ---
 
@@ -525,4 +550,4 @@ All items below have been completed and verified. See git history for details.
 
 ---
 
-*Last reviewed: March 1, 2026 (Phase 24)*
+*Last reviewed: March 2, 2026 (Phase 24 — Session 2)*

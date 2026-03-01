@@ -412,14 +412,16 @@ export function rateLimit(
 // ============================================================================
 
 /**
- * Clear all rate limit entries (for testing)
+ * Clear all rate limit entries.
+ * @internal Test-only utility — not used in production code.
  */
 export function clearAllRateLimits(): void {
   rateLimitStore.clear()
 }
 
 /**
- * Get current rate limit state for an identifier (for testing)
+ * Get current rate limit state for an identifier.
+ * @internal Test-only utility — not used in production code.
  */
 export function getRateLimitState(identifier: string, name?: string): RateLimitEntry | undefined {
   const key = `${name || 'default'}:${identifier}`

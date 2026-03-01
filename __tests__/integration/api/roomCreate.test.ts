@@ -160,6 +160,108 @@ describe('/api/room/create', () => {
       expect(response.status).toBe(500)
       expect(body.success).toBe(false)
     })
+
+    it('retries when room code already exists (collision)', async () => {
+      let attempt = 0
+      const mockSelectRooms = jest.fn().mockReturnValue({
+        eq: jest.fn().mockReturnValue({
+          single: jest.fn().mockImplementation(() => {
+            attempt++
+            if (attempt === 1) {
+              // First attempt: code already exists
+              return Promise.resolve({ data: { code: 'AAA111' }, error: null })
+            }
+            // Second attempt: code is unique
+            return Promise.resolve({
+              data: null,
+              error: { code: 'PGRST116', message: 'No rows found' },
+            })
+          }),
+        }),
+      })
+
+      const mockInsertRoom = jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: { code: 'BBB222', created_at: '2026-01-01', status: 'waiting' },
+            error: null,
+          }),
+        }),
+      })
+
+      const mockInsertPlayer = jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: { id: 1, room_code: 'BBB222', name: 'TestHost', is_host: true },
+            error: null,
+          }),
+        }),
+      })
+
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'rooms') return { select: mockSelectRooms, insert: mockInsertRoom }
+        if (table === 'players') return { insert: mockInsertPlayer }
+        return {}
+      })
+
+      const response = await POST(createPostRequest({ playerName: 'TestHost', avatar: 'knight' }))
+      const body = await response.json()
+
+      expect(response.status).toBe(201)
+      expect(body.success).toBe(true)
+      expect(attempt).toBe(2)
+    })
+
+    it('returns error when host player insert fails and cleans up room', async () => {
+      const mockDeleteRoom = jest.fn().mockReturnValue({
+        eq: jest.fn().mockResolvedValue({ error: null }),
+      })
+
+      const mockSelectRooms = jest.fn().mockReturnValue({
+        eq: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: null,
+            error: { code: 'PGRST116', message: 'No rows found' },
+          }),
+        }),
+      })
+
+      const mockInsertRoom = jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: { code: 'CCC333', created_at: '2026-01-01', status: 'waiting' },
+            error: null,
+          }),
+        }),
+      })
+
+      mockSupabaseFrom.mockImplementation((table: string) => {
+        if (table === 'rooms') {
+          return { select: mockSelectRooms, insert: mockInsertRoom, delete: mockDeleteRoom }
+        }
+        if (table === 'players') {
+          return {
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockReturnValue({
+                single: jest.fn().mockResolvedValue({
+                  data: null,
+                  error: { code: 'DB_ERR', message: 'Player insert failed' },
+                }),
+              }),
+            }),
+          }
+        }
+        return {}
+      })
+
+      const response = await POST(createPostRequest({ playerName: 'TestHost', avatar: 'knight' }))
+      const body = await response.json()
+
+      expect(response.status).toBe(500)
+      expect(body.success).toBe(false)
+      // Verify room cleanup was attempted
+      expect(mockDeleteRoom).toHaveBeenCalled()
+    })
   })
 
   describe('Method not allowed', () => {

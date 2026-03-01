@@ -262,4 +262,129 @@ describe('Logger', () => {
       expect(output).toContain('API POST /api/quiz failed')
     })
   })
+
+  // ============================================================================
+  // Request ID Utilities
+  // ============================================================================
+
+  describe('generateRequestId', () => {
+    it('returns a string ID', () => {
+      jest.isolateModules(() => {
+        const { generateRequestId } = require('@/lib/logger')
+        const id = generateRequestId()
+        expect(typeof id).toBe('string')
+        expect(id.length).toBeGreaterThan(0)
+      })
+    })
+
+    it('returns UUID when crypto.randomUUID is available', () => {
+      const originalCrypto = globalThis.crypto
+      Object.defineProperty(globalThis, 'crypto', {
+        value: { randomUUID: () => '550e8400-e29b-41d4-a716-446655440000' },
+        writable: true,
+        configurable: true,
+      })
+
+      jest.isolateModules(() => {
+        const { generateRequestId } = require('@/lib/logger')
+        expect(generateRequestId()).toBe('550e8400-e29b-41d4-a716-446655440000')
+      })
+
+      Object.defineProperty(globalThis, 'crypto', {
+        value: originalCrypto,
+        writable: true,
+        configurable: true,
+      })
+    })
+
+    it('returns fallback ID when crypto.randomUUID is not available', () => {
+      const originalCrypto = globalThis.crypto
+      Object.defineProperty(globalThis, 'crypto', {
+        value: {},
+        writable: true,
+        configurable: true,
+      })
+
+      jest.isolateModules(() => {
+        const { generateRequestId } = require('@/lib/logger')
+        const id = generateRequestId()
+        expect(id).toMatch(/^req_[a-z0-9]+_[a-z0-9]+$/)
+      })
+
+      Object.defineProperty(globalThis, 'crypto', {
+        value: originalCrypto,
+        writable: true,
+        configurable: true,
+      })
+    })
+
+    it('returns fallback ID when crypto is undefined', () => {
+      const originalCrypto = globalThis.crypto
+      // @ts-expect-error - intentionally removing crypto for testing
+      delete globalThis.crypto
+
+      jest.isolateModules(() => {
+        const { generateRequestId } = require('@/lib/logger')
+        const id = generateRequestId()
+        expect(id).toMatch(/^req_[a-z0-9]+_[a-z0-9]+$/)
+      })
+
+      Object.defineProperty(globalThis, 'crypto', {
+        value: originalCrypto,
+        writable: true,
+        configurable: true,
+      })
+    })
+  })
+
+  describe('getRequestId', () => {
+    function makeRequest(headers: Record<string, string> = {}) {
+      return {
+        headers: {
+          get: (name: string) => headers[name] ?? null,
+        },
+      } as unknown as Request
+    }
+
+    it('extracts x-request-id header', () => {
+      jest.isolateModules(() => {
+        const { getRequestId } = require('@/lib/logger')
+        expect(getRequestId(makeRequest({ 'x-request-id': 'existing-req-id' }))).toBe(
+          'existing-req-id'
+        )
+      })
+    })
+
+    it('extracts x-correlation-id header', () => {
+      jest.isolateModules(() => {
+        const { getRequestId } = require('@/lib/logger')
+        expect(getRequestId(makeRequest({ 'x-correlation-id': 'corr-123' }))).toBe('corr-123')
+      })
+    })
+
+    it('extracts x-trace-id header', () => {
+      jest.isolateModules(() => {
+        const { getRequestId } = require('@/lib/logger')
+        expect(getRequestId(makeRequest({ 'x-trace-id': 'trace-456' }))).toBe('trace-456')
+      })
+    })
+
+    it('generates new ID when no tracing headers exist', () => {
+      jest.isolateModules(() => {
+        const { getRequestId } = require('@/lib/logger')
+        const id = getRequestId(makeRequest())
+        expect(typeof id).toBe('string')
+        expect(id.length).toBeGreaterThan(0)
+      })
+    })
+
+    it('generates new ID when no request is provided', () => {
+      jest.isolateModules(() => {
+        const { getRequestId } = require('@/lib/logger')
+        const id = getRequestId()
+        expect(typeof id).toBe('string')
+        expect(id.length).toBeGreaterThan(0)
+      })
+    })
+  })
 })

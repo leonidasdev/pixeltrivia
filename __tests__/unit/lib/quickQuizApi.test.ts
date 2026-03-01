@@ -8,9 +8,19 @@ import {
   createQuickQuizSession,
   recordAnswer,
   calculateQuizResults,
+  fetchQuickQuiz,
   type QuickQuizQuestion,
   type QuickQuizSession,
 } from '@/lib/quickQuizApi'
+
+// Mock logger
+jest.mock('@/lib/logger', () => ({
+  logger: { info: jest.fn(), error: jest.fn(), warn: jest.fn(), debug: jest.fn() },
+}))
+
+// Mock fetch
+const mockFetch = jest.fn()
+global.fetch = mockFetch
 
 describe('quickQuizApi', () => {
   // Sample test questions
@@ -450,6 +460,95 @@ describe('quickQuizApi', () => {
       expect(results.accuracy).toBe(0)
       expect(results.totalTime).toBe(0)
       expect(results.averageTime).toBe(0)
+    })
+  })
+
+  describe('fetchQuickQuiz', () => {
+    beforeEach(() => {
+      mockFetch.mockClear()
+    })
+
+    it('returns error for empty category', async () => {
+      const result = await fetchQuickQuiz('')
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('Category is required')
+      expect(mockFetch).not.toHaveBeenCalled()
+    })
+
+    it('returns error for whitespace-only category', async () => {
+      const result = await fetchQuickQuiz('   ')
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('Category is required')
+    })
+
+    it('fetches quiz without difficulty', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: sampleQuestions }),
+      })
+
+      const result = await fetchQuickQuiz('Science')
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/quiz/quick',
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({ category: 'Science' }),
+        })
+      )
+      expect(result.success).toBe(true)
+    })
+
+    it('fetches quiz with difficulty parameter', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: sampleQuestions }),
+      })
+
+      const result = await fetchQuickQuiz('History', 'hard')
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/quiz/quick',
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({ category: 'History', difficulty: 'hard' }),
+        })
+      )
+      expect(result.success).toBe(true)
+    })
+
+    it('handles fetch error gracefully', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network failure'))
+
+      const result = await fetchQuickQuiz('Science')
+      expect(result.success).toBe(false)
+    })
+
+    it('handles HTTP error responses', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: async () => ({ success: false, error: 'Server error' }),
+      })
+
+      const result = await fetchQuickQuiz('Science')
+      expect(result.success).toBe(false)
+    })
+
+    it('trims category before sending', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: [] }),
+      })
+
+      await fetchQuickQuiz('  Math  ')
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/quiz/quick',
+        expect.objectContaining({
+          body: JSON.stringify({ category: 'Math' }),
+        })
+      )
     })
   })
 })

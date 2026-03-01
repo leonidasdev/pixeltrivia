@@ -44,9 +44,17 @@ jest.mock('@/app/components/ui', () => ({
       info: jest.fn(),
     },
   }),
-  GamePageLayout: ({ children, header }: { children: React.ReactNode; header: { title: string; icon: string } }) => (
+  GamePageLayout: ({
+    children,
+    header,
+  }: {
+    children: React.ReactNode
+    header: { title: string; icon: string }
+  }) => (
     <div data-testid="game-layout">
-      <h1>{header.icon} {header.title}</h1>
+      <h1>
+        {header.icon} {header.title}
+      </h1>
       {children}
     </div>
   ),

@@ -10,21 +10,30 @@ import {
   IMMUTABLE_SWR_CONFIG,
   invalidateCache,
   primeCache,
+  useApiCache,
+  useCachedQuestions,
 } from '@/lib/apiCache'
 
 // Mock fetch
 const mockFetch = jest.fn()
 global.fetch = mockFetch
 
-// Mock swr mutate — use jest.fn inline to avoid hoisting issues
-jest.mock('swr', () => ({
-  __esModule: true,
-  default: jest.fn(),
-  mutate: jest.fn(),
-}))
+// Mock swr — jest.fn inline to avoid hoisting issues
+const mockUseSWR = jest.fn(() => ({ data: undefined, error: undefined, isLoading: true }))
+jest.mock('swr', () => {
+  const fn = jest.fn(() => ({ data: undefined, error: undefined, isLoading: true }))
+  return {
+    __esModule: true,
+    default: fn,
+    mutate: jest.fn(),
+    _getMockUseSWR: () => fn,
+  }
+})
 
 // Import after mock setup
 import { mutate as mockMutate } from 'swr'
+import swr from 'swr'
+const swrDefault = swr as unknown as jest.Mock
 
 describe('apiCache', () => {
   beforeEach(() => {
@@ -109,6 +118,74 @@ describe('apiCache', () => {
       const data = { questions: [{ id: 1 }] }
       await primeCache('/api/test', data)
       expect(mockMutate).toHaveBeenCalledWith('/api/test', data, { revalidate: false })
+    })
+  })
+
+  // ─── Hook Wrappers (verify SWR is called correctly) ──────
+
+  describe('useApiCache', () => {
+    it('should call useSWR with key and default config', () => {
+      useApiCache('/api/test')
+      expect(swrDefault).toHaveBeenCalledWith(
+        '/api/test',
+        expect.any(Function),
+        expect.objectContaining({
+          revalidateOnFocus: true,
+        })
+      )
+    })
+
+    it('should call useSWR with null key to skip', () => {
+      useApiCache(null)
+      expect(swrDefault).toHaveBeenCalledWith(null, expect.any(Function), expect.any(Object))
+    })
+
+    it('should merge custom config', () => {
+      useApiCache('/api/test', { errorRetryCount: 0 })
+      expect(swrDefault).toHaveBeenCalledWith(
+        '/api/test',
+        expect.any(Function),
+        expect.objectContaining({
+          errorRetryCount: 0,
+        })
+      )
+    })
+  })
+
+  describe('useCachedQuestions', () => {
+    it('should generate key with category and count', () => {
+      useCachedQuestions({ category: 'Science', count: 10 })
+      expect(swrDefault).toHaveBeenCalledWith(
+        expect.stringContaining('category=Science'),
+        expect.any(Function),
+        expect.objectContaining({ revalidateOnFocus: false })
+      )
+    })
+
+    it('should include difficulty when provided', () => {
+      useCachedQuestions({ category: 'Science', count: 10, difficulty: 'hard' })
+      expect(swrDefault).toHaveBeenCalledWith(
+        expect.stringContaining('difficulty=hard'),
+        expect.any(Function),
+        expect.any(Object)
+      )
+    })
+
+    it('should not include difficulty when omitted', () => {
+      useCachedQuestions({ category: 'Art', count: 5 })
+      const key = swrDefault.mock.calls[swrDefault.mock.calls.length - 1][0]
+      expect(key).not.toContain('difficulty')
+    })
+
+    it('should pass null key when params is null', () => {
+      useCachedQuestions(null)
+      expect(swrDefault).toHaveBeenCalledWith(null, expect.any(Function), expect.any(Object))
+    })
+
+    it('should encode special characters in category', () => {
+      useCachedQuestions({ category: 'Science & Nature', count: 10 })
+      const key = swrDefault.mock.calls[swrDefault.mock.calls.length - 1][0]
+      expect(key).toContain('Science%20%26%20Nature')
     })
   })
 })

@@ -54,7 +54,7 @@ const MIN_LOG_LEVEL = isDevelopment ? 'debug' : 'info'
  * Generate a unique request ID.
  * Uses crypto.randomUUID when available, falls back to timestamp-based ID.
  */
-function generateRequestId(): string {
+export function generateRequestId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID()
   }
@@ -65,7 +65,7 @@ function generateRequestId(): string {
  * Extract or generate a request ID from an incoming request.
  * Checks standard tracing headers first, generates a new ID if none found.
  */
-function getRequestId(request?: Request): string {
+export function getRequestId(request?: Request): string {
   if (request) {
     const existing =
       request.headers.get('x-request-id') ||

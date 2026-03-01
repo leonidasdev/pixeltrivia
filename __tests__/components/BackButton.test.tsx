@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 
 // We need to mock usePathname per test
 const mockBack = jest.fn()
@@ -65,6 +65,53 @@ describe('BackButton', () => {
 
       screen.getByRole('button', { name: /go back/i }).click()
       expect(mockBack).toHaveBeenCalledTimes(1)
+    })
+
+    it('calls router.back() on Enter key', () => {
+      mockUsePathname.mockReturnValue('/game/mode')
+      render(<BackButton />)
+
+      const button = screen.getByRole('button', { name: /go back/i })
+      fireEvent.keyDown(button, { key: 'Enter' })
+      expect(mockBack).toHaveBeenCalledTimes(1)
+    })
+
+    it('calls router.back() on Space key', () => {
+      mockUsePathname.mockReturnValue('/game/mode')
+      render(<BackButton />)
+
+      const button = screen.getByRole('button', { name: /go back/i })
+      fireEvent.keyDown(button, { key: ' ' })
+      expect(mockBack).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not navigate on other keys', () => {
+      mockUsePathname.mockReturnValue('/game/mode')
+      render(<BackButton />)
+
+      const button = screen.getByRole('button', { name: /go back/i })
+      fireEvent.keyDown(button, { key: 'Tab' })
+      expect(mockBack).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('Hover state', () => {
+    it('applies hover class on mouseEnter and removes on mouseLeave', () => {
+      mockUsePathname.mockReturnValue('/game/mode')
+      render(<BackButton />)
+
+      const button = screen.getByRole('button', { name: /go back/i })
+
+      // Initial state — no scale-110 in static classes
+      expect(button.className).toContain('hover:scale-110')
+
+      // Hover
+      fireEvent.mouseEnter(button)
+      expect(button.className).toContain('scale-110')
+
+      // Un-hover
+      fireEvent.mouseLeave(button)
+      expect(button.className).toContain('hover:scale-110')
     })
   })
 

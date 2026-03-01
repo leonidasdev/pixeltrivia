@@ -28,8 +28,7 @@ function mockChain(result: unknown) {
     chain[m] = jest.fn(() => chain)
   }
   chain.single = jest.fn().mockResolvedValue(result)
-  ;(chain as any).then = (res: any, rej?: any) =>
-    Promise.resolve(result).then(res, rej)
+  ;(chain as any).then = (res: any, rej?: any) => Promise.resolve(result).then(res, rej)
   return chain
 }
 
@@ -100,9 +99,7 @@ function setupAdvance(overrides?: {
   // Create table objects OUTSIDE the callback so mockReturnValueOnce
   // tracking persists across multiple from() calls to the same table.
   const playersTable = {
-    select: jest.fn()
-      .mockReturnValueOnce(playerHostChain)
-      .mockReturnValueOnce(playersListChain),
+    select: jest.fn().mockReturnValueOnce(playerHostChain).mockReturnValueOnce(playersListChain),
     update: jest.fn(() => playerResetChain),
   }
   const roomsTable = {
@@ -110,9 +107,7 @@ function setupAdvance(overrides?: {
     update: jest.fn(() => roomUpdateChain),
   }
   const gameQuestionsTable = {
-    select: jest.fn()
-      .mockReturnValueOnce(currentQChain)
-      .mockReturnValueOnce(nextQChain),
+    select: jest.fn().mockReturnValueOnce(currentQChain).mockReturnValueOnce(nextQChain),
   }
 
   mockSupabaseFrom.mockImplementation((table: string) => {

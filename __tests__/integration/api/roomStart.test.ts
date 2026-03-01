@@ -32,8 +32,7 @@ function mockChain(result: unknown) {
     chain[m] = jest.fn(() => chain)
   }
   chain.single = jest.fn().mockResolvedValue(result)
-  ;(chain as any).then = (res: any, rej?: any) =>
-    Promise.resolve(result).then(res, rej)
+  ;(chain as any).then = (res: any, rej?: any) => Promise.resolve(result).then(res, rej)
   return chain
 }
 
@@ -92,9 +91,7 @@ function setupHappyPath(overrides?: {
   // Create table objects OUTSIDE the callback so mockReturnValueOnce
   // tracking persists across multiple from() calls to the same table.
   const playersTable = {
-    select: jest.fn()
-      .mockReturnValueOnce(playerHostChain)
-      .mockReturnValueOnce(playerCountChain),
+    select: jest.fn().mockReturnValueOnce(playerHostChain).mockReturnValueOnce(playerCountChain),
     update: jest.fn(() => playerResetChain),
   }
   const roomsTable = {

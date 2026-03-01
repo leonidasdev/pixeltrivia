@@ -29,8 +29,7 @@ function mockChain(result: unknown) {
   }
   chain.single = jest.fn().mockResolvedValue(result)
   // Make chain thenable so `await chain.update().eq()` works
-  ;(chain as any).then = (res: any, rej?: any) =>
-    Promise.resolve(result).then(res, rej)
+  ;(chain as any).then = (res: any, rej?: any) => Promise.resolve(result).then(res, rej)
   return chain
 }
 

@@ -27,8 +27,7 @@ function mockChain(result: unknown) {
     chain[m] = jest.fn(() => chain)
   }
   chain.single = jest.fn().mockResolvedValue(result)
-  ;(chain as any).then = (res: any, rej?: any) =>
-    Promise.resolve(result).then(res, rej)
+  ;(chain as any).then = (res: any, rej?: any) => Promise.resolve(result).then(res, rej)
   return chain
 }
 
@@ -81,9 +80,7 @@ function setupHappyPath(overrides?: {
   // Create table objects OUTSIDE the callback so mockReturnValueOnce
   // tracking persists across multiple from('players') calls.
   const playersTable = {
-    select: jest.fn()
-      .mockReturnValueOnce(playerSingleChain)
-      .mockReturnValueOnce(playersListChain),
+    select: jest.fn().mockReturnValueOnce(playerSingleChain).mockReturnValueOnce(playersListChain),
   }
 
   mockSupabaseFrom.mockImplementation((table: string) => {

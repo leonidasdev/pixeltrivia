@@ -10,26 +10,11 @@
 
 import { NextResponse, type NextRequest } from 'next/server'
 import { SECURITY_HEADERS, isAllowedOrigin } from '@/lib/security.core'
-import { logger } from '@/lib/logger'
+import { logger, generateRequestId } from '@/lib/logger'
 
 // ============================================================================
-// Request ID Generation
+// CORS
 // ============================================================================
-
-/**
- * Generate a unique request ID for tracing.
- * Uses crypto.randomUUID when available, falls back to timestamp-based ID.
- */
-function generateRequestId(): string {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID()
-  }
-  return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`
-}
-
-/**
- * Apply CORS headers for API routes
- */
 function applyCorsHeaders(response: NextResponse, request: NextRequest): void {
   const origin = request.headers.get('origin')
 
