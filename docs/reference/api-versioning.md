@@ -75,7 +75,7 @@ app/
 [ ] Add Sunset header to deprecated versions
 [ ] Update lib/apiFetch.ts to accept optional version parameter
 [ ] Update client-side API modules (gameApi, quickQuizApi, etc.)
-[ ] Document version differences in docs/api-reference.md
+[ ] Document version differences in docs/reference/api-reference.md
 [ ] Add version negotiation tests
 ```
 
@@ -120,6 +120,6 @@ export async function apiFetch<T>(
 
 ## References
 
-- [docs/api-reference.md](api-reference.md) — Full endpoint documentation
-- [lib/apiFetch.ts](../lib/apiFetch.ts) — Client-side API fetch utility
-- [lib/apiResponse.ts](../lib/apiResponse.ts) — Server-side response builders
+- [API Reference](api-reference.md) — Full endpoint documentation
+- [lib/apiFetch.ts](../../lib/apiFetch.ts) — Client-side API fetch utility
+- [lib/apiResponse.ts](../../lib/apiResponse.ts) — Server-side response builders

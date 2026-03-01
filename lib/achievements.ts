@@ -236,7 +236,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     category: 'dedication',
     check: h => {
       const modes = new Set(h.map(e => e.mode))
-      const target = ['quick', 'custom', 'advanced']
+      const target = ['quick', 'custom', 'advanced'] as const
       const found = target.filter(m => modes.has(m)).length
       return { unlocked: found >= 3, progress: found / 3 }
     },

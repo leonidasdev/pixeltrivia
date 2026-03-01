@@ -14,8 +14,8 @@ import {
 import type { GameHistoryEntry, DetailedStats } from '@/lib/storage'
 
 // Mock storage module
-const mockGetHistory = jest.fn(() => [] as GameHistoryEntry[])
-const mockGetDetailedStats = jest.fn(() => ({
+const mockGetHistory = jest.fn<GameHistoryEntry[], []>(() => [])
+const mockGetDetailedStats = jest.fn<DetailedStats, []>(() => ({
   totalGames: 0,
   totalScore: 0,
   averageScore: 0,
@@ -35,8 +35,8 @@ const mockGetDetailedStats = jest.fn(() => ({
   currentWinStreak: 0,
 }))
 jest.mock('@/lib/storage', () => ({
-  getHistory: (...args: unknown[]) => mockGetHistory(...args),
-  getDetailedStats: (...args: unknown[]) => mockGetDetailedStats(...args),
+  getHistory: () => mockGetHistory(),
+  getDetailedStats: () => mockGetDetailedStats(),
 }))
 
 // Mock constants

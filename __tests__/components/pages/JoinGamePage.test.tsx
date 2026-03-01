@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 
 import JoinGamePage from '@/app/game/join/page'
 
@@ -20,7 +20,7 @@ describe('JoinGamePage', () => {
   describe('Rendering', () => {
     it('renders the page title', () => {
       render(<JoinGamePage />)
-      expect(screen.getByText('JOIN GAME ROOM')).toBeInTheDocument()
+      expect(screen.getByText(/join game room/i)).toBeInTheDocument()
     })
 
     it('renders room code input with label', () => {
@@ -91,11 +91,14 @@ describe('JoinGamePage', () => {
     it('disables join button when name is empty', () => {
       render(<JoinGamePage />)
       const codeInput = screen.getByLabelText(/room code/i)
+      const nameInput = screen.getByLabelText(/your name/i)
 
+      // Clear any name pre-filled by usePlayerSettings
+      fireEvent.change(nameInput, { target: { value: '' } })
       fireEvent.change(codeInput, { target: { value: 'ABC123' } })
 
       // Name is empty, so button should still be disabled
-      const joinBtn = screen.getByRole('button')
+      const joinBtn = screen.getByRole('button', { name: /join room/i })
       expect(joinBtn).toBeDisabled()
     })
   })
@@ -107,11 +110,13 @@ describe('JoinGamePage', () => {
       expect(nameInput).toBeInTheDocument()
     })
 
-    it('loads saved name from localStorage', () => {
-      localStorage.setItem('pixeltrivia_player_name', 'SavedPlayer')
+    it('loads saved name from localStorage', async () => {
+      localStorage.setItem('pixeltrivia_player_name', JSON.stringify('SavedPlayer'))
       render(<JoinGamePage />)
       const nameInput = screen.getByLabelText(/your name/i)
-      expect(nameInput).toHaveValue('SavedPlayer')
+      await waitFor(() => {
+        expect(nameInput).toHaveValue('SavedPlayer')
+      })
     })
   })
 })

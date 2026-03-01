@@ -65,7 +65,7 @@ function generateRequestId(): string {
  * Extract or generate a request ID from an incoming request.
  * Checks standard tracing headers first, generates a new ID if none found.
  */
-export function getRequestId(request?: Request): string {
+function getRequestId(request?: Request): string {
   if (request) {
     const existing =
       request.headers.get('x-request-id') ||

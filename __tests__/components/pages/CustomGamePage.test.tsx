@@ -67,7 +67,7 @@ describe('CustomGamePage', () => {
   describe('Rendering', () => {
     it('renders the page title', () => {
       render(<CustomGamePage />)
-      expect(screen.getByText('CUSTOM GAME')).toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 1, name: /custom game/i })).toBeInTheDocument()
     })
 
     it('renders AI-powered subtitle', () => {

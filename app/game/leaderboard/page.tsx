@@ -198,7 +198,7 @@ export default function LeaderboardPage() {
   return (
     <PageTransition>
       <main className="min-h-screen text-white relative">
-        <SparklesOverlay density="low" />
+        <SparklesOverlay preset="minimal" />
 
         <div className="relative z-10 max-w-2xl mx-auto px-4 py-6 min-h-screen flex flex-col">
           {/* Header */}

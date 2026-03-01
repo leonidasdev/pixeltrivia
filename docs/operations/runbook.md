@@ -238,8 +238,8 @@ npm run dev
 
 ## References
 
-- [docs/development-guide.md](development-guide.md) — Full development setup
-- [docs/deployment-guide.md](deployment-guide.md) — Detailed deployment instructions
-- [docs/api-reference.md](api-reference.md) — API endpoint documentation
-- [docs/testing-guide.md](testing-guide.md) — Testing strategy and patterns
-- [docs/architecture.md](architecture.md) — System architecture overview
+- [Development Guide](../guides/development-guide.md) — Full development setup
+- [Deployment Guide](../guides/deployment-guide.md) — Detailed deployment instructions
+- [API Reference](../reference/api-reference.md) — API endpoint documentation
+- [Testing Guide](../guides/testing-guide.md) — Testing strategy and patterns
+- [Architecture](../reference/architecture.md) — System architecture overview

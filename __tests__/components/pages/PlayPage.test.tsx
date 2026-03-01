@@ -94,6 +94,7 @@ const makeSession = (count = 3) => ({
     category: 'Science',
     difficulty: 'medium',
     timeLimit: 30,
+    imageUrl: undefined as string | undefined,
   })),
   category: 'Science',
   difficulty: 'medium',

@@ -57,8 +57,8 @@ describe('GameModePage', () => {
   describe('Player info', () => {
     it('shows player name from defaults', () => {
       render(<GameModePage />)
-      // Default name from mock useSearchParams (empty) falls back to localStorage or "Player1234"
-      expect(screen.getByText('Player1234')).toBeInTheDocument()
+      // Default name from usePlayerSettings hook → 'Player'
+      expect(screen.getByText('Player')).toBeInTheDocument()
     })
   })
 

@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "validate": "npm run typecheck && npm run lint && npm run test:ci",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -21,6 +23,7 @@
     "typecheck": "tsc --noEmit",
     "analyze": "ANALYZE=true next build",
     "db:types": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > types/supabase.ts",
+    "db:seed": "npx supabase db reset && psql $DATABASE_URL -f database/seed.sql",
     "prepare": "husky"
   },
   "lint-staged": {

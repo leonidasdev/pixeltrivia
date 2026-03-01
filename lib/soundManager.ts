@@ -36,7 +36,7 @@ export type SoundEffect =
   | 'navigate'
 
 /** Available background music tracks */
-export type MusicTrack = 'menu' | 'gameplay' | 'results'
+type MusicTrack = 'menu' | 'gameplay' | 'results'
 
 export interface SoundOptions {
   /** Volume override (0-1), defaults to global volume */

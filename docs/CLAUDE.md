@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (1399 tests, 75 suites) |
+| **Testing** | Jest + React Testing Library (1651 tests, 95 suites) |
 
 ---
 
@@ -97,7 +97,8 @@ pixeltrivia/
 │   │       ├── ScorePopup.tsx      # Floating score indicator (+100)
 │   │       ├── AnswerFeedback.tsx  # Correct/wrong/timeout overlay
 │   │       ├── PixelTimer.tsx      # Timer with urgency states
-│   │       └── PageTransition.tsx  # Entrance animations + StaggerChildren
+│   │       ├── PageTransition.tsx  # Entrance animations + StaggerChildren
+│   │       └── GameModeCard.tsx   # Reusable game mode card + GAME_MODES data
 │   ├── game/                 # Game pages
 │   │   ├── quick/            # Quick play mode
 │   │   ├── custom/           # Custom game mode
@@ -167,22 +168,28 @@ pixeltrivia/
 │   ├── useSound.ts           # Sound effects hook (wraps soundManager)
 │   ├── useRoom.ts            # Room state + Supabase Realtime subscription
 │   ├── useMultiplayerGame.ts # Multiplayer game state machine
+│   ├── useHoveredCard.ts     # Card hover/focus state management
 │   └── useGameHistory.ts     # Game history storage and stats
 │
 ├── database/
-│   ├── schema.sql            # PostgreSQL schema for Supabase
-│   └── migration-multiplayer.sql  # Multiplayer schema additions
+│   ├── schema.sql            # Complete PostgreSQL schema (single source of truth)
+│   └── seed.sql              # Sample trivia questions
 │
 ├── docs/                     # Documentation
-│   ├── architecture.md       # System architecture
-│   ├── development-guide.md  # Development guide
-│   ├── deployment-guide.md   # Deployment guide
-│   ├── api-reference.md      # API reference
-│   ├── database-guide.md     # Database schema
-│   ├── testing-guide.md      # Testing guide
-│   ├── api-testing-guide.md  # API testing examples
+│   ├── guides/               # How-to guides
+│   │   ├── development-guide.md
+│   │   ├── testing-guide.md
+│   │   ├── deployment-guide.md
+│   │   ├── database-guide.md
+│   │   └── api-testing-guide.md
+│   ├── reference/            # Technical reference
+│   │   ├── architecture.md
+│   │   ├── api-reference.md
+│   │   └── api-versioning.md
+│   ├── operations/           # Ops & monitoring
+│   │   ├── monitoring.md
+│   │   └── runbook.md
 │   ├── CLAUDE.md             # AI assistant context (this file)
-│   ├── AUDIT.md              # Codebase audit findings
 │   └── TODO.md               # Project roadmap
 │
 ├── CONTRIBUTING.md           # Contribution guidelines
@@ -299,6 +306,10 @@ AuthorizationError(message?, requiredRole?)          // 403
 RateLimitError(retryAfter?, limit?, window?)         // 429
 ExternalServiceError(service, message, originalError?) // 502
 AIGenerationError(message, model?, prompt?)          // 500
+
+// Utility function — safe error message extraction
+getErrorMessage(error: unknown, fallback?: string): string
+// Handles Error, string, { message } objects, and unknown types
 ```
 
 ### API Response Format
@@ -353,6 +364,7 @@ npm run test:coverage # Coverage report
 
 ```bash
 npm run dev          # Start development server
+npm run dev:debug    # Start with Node.js inspector attached
 npm run build        # Production build
 npm run start        # Start production server
 npm run lint         # ESLint check
@@ -360,6 +372,9 @@ npm run lint:fix     # Auto-fix lint issues
 npm run format       # Prettier format
 npm run typecheck    # TypeScript check
 npm test             # Run tests
+npm run test:ci      # Run tests in CI mode
+npm run validate     # Full validation (typecheck + lint + test:ci)
+npm run db:seed      # Reset database and seed data
 ```
 
 ---
@@ -422,7 +437,7 @@ OPENROUTER_API_KEY=sk-or-v1-...
 1. Add SQL to `database/schema.sql`
 2. Run in Supabase SQL Editor
 3. Enable RLS and create policies
-4. Update `docs/database-guide.md`
+4. Update `docs/guides/database-guide.md`
 
 ---
 
@@ -487,6 +502,32 @@ export function ComponentName({ prop1, prop2 }: Props) {
 }
 ```
 
+### Game Page Pattern
+
+All game pages use `GamePageLayout` for consistent layout and `usePlayerSettings` for player data:
+
+```tsx
+'use client'
+
+import { GamePageLayout } from '@/app/components/ui'
+import { usePlayerSettings } from '@/hooks/usePlayerSettings'
+import { getErrorMessage } from '@/lib/errors'
+
+export default function GamePage() {
+  const { playerInfo, settings } = usePlayerSettings()
+
+  return (
+    <GamePageLayout
+      header={{ title: 'Page Title', subtitle: 'Description', icon: '🎮', size: 'lg' }}
+      maxWidth="xl"
+      noBackground
+    >
+      {/* Page content */}
+    </GamePageLayout>
+  )
+}
+```
+
 ---
 
 ## Current Project Status
@@ -495,7 +536,7 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - Core game modes (Quick, Custom, Advanced)
 - Multiplayer system (room creation, joining, real-time sync, host controls)
 - Sound system (Web Audio API engine with 18 chiptune effects + procedural music loops)
-- Testing infrastructure (1405+ tests, 75+ suites)
+- Testing infrastructure (1399 tests, 75 suites)
 - CI/CD pipeline (GitHub Actions + Husky)
 - Security hardening (validation, rate limiting on all routes, middleware, CSP)
 - Structured logging via `lib/logger` with request ID tracing
@@ -513,7 +554,7 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - API response caching with SWR
 - Usage analytics (privacy-first, localStorage)
 - Stats dashboard (history, charts, overview)
-- Database migration tooling (Supabase migrations, seed data)
+- Database consolidation (single `schema.sql` source of truth)
 - Sentry error tracking (gated on DSN env var)
 - Bundle analyzer configured
 - Single-player play page with timer, scoring, keyboard shortcuts
@@ -523,6 +564,13 @@ export function ComponentName({ prop1, prop2 }: Props) {
 - Touch gesture support (swipe navigation)
 - Multiplayer invite links
 - Comprehensive documentation
+- **Phase 24 Code Refactoring:**
+  - `GamePageLayout` used by all 5 game pages (quick, custom, advanced, join, create)
+  - `usePlayerSettings` hook used by mode, select, join, create pages
+  - `getErrorMessage()` utility for safe error extraction
+  - `buildPlayerUrl()` utility for player URL construction
+  - Dev/prod scripts (`dev:debug`, `validate`, `db:seed`)
+  - CI/CD type errors resolved (18 fixes across 11 files)
 
 ### Planned
 - User authentication

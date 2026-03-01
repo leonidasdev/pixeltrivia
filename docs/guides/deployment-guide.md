@@ -305,7 +305,7 @@ Sentry is configured for error tracking across client, server, and edge:
 
 All configs are gated on the `SENTRY_DSN` environment variable. Source maps are uploaded automatically during CI builds when `SENTRY_AUTH_TOKEN` is set.
 
-See [docs/monitoring.md](monitoring.md) for alert rules and dashboard configuration.
+See [Monitoring](../operations/monitoring.md) for alert rules and dashboard configuration.
 
 ### Health Checks
 

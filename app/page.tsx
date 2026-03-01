@@ -23,6 +23,7 @@ import {
   StaggerChildren,
 } from './components/ui'
 import { useSound } from '@/hooks/useSound'
+import { useHoveredCard } from '@/hooks/useHoveredCard'
 
 // Generate random player name
 const generateRandomPlayerName = () => {
@@ -32,7 +33,7 @@ const generateRandomPlayerName = () => {
 
 export default function HomePage() {
   const router = useRouter()
-  const [hoveredButton, setHoveredButton] = useState<string | null>(null)
+  const { hoveredCard: hoveredButton, getHoverHandlers } = useHoveredCard()
   const [volume, setVolume] = useState(50)
   const [playerName, setPlayerName] = useState('')
   const [selectedAvatar, setSelectedAvatar] = useState('knight')
@@ -127,13 +128,7 @@ export default function HomePage() {
             {/* Start New Game Button */}
             <button
               onClick={handleStartNewGame}
-              onMouseEnter={() => {
-                setHoveredButton('new')
-                playSound('hover')
-              }}
-              onMouseLeave={() => setHoveredButton(null)}
-              onFocus={() => setHoveredButton('new')}
-              onBlur={() => setHoveredButton(null)}
+              {...getHoverHandlers('new', () => playSound('hover'))}
               className={`
               w-full py-4 px-8 text-2xl font-bold text-center
               bg-green-600 hover:bg-green-500 active:bg-green-700 border-green-800 hover:border-green-600
@@ -160,13 +155,7 @@ export default function HomePage() {
             {/* Join Existing Game Button */}
             <button
               onClick={handleJoinExistingGame}
-              onMouseEnter={() => {
-                setHoveredButton('join')
-                playSound('hover')
-              }}
-              onMouseLeave={() => setHoveredButton(null)}
-              onFocus={() => setHoveredButton('join')}
-              onBlur={() => setHoveredButton(null)}
+              {...getHoverHandlers('join', () => playSound('hover'))}
               className={`
               w-full py-4 px-8 text-2xl font-bold text-center
               bg-blue-600 hover:bg-blue-500 active:bg-blue-700
@@ -196,13 +185,7 @@ export default function HomePage() {
                   playSound('navigate')
                   router.push('/game/stats')
                 }}
-                onMouseEnter={() => {
-                  setHoveredButton('stats')
-                  playSound('hover')
-                }}
-                onMouseLeave={() => setHoveredButton(null)}
-                onFocus={() => setHoveredButton('stats')}
-                onBlur={() => setHoveredButton(null)}
+                {...getHoverHandlers('stats', () => playSound('hover'))}
                 className={`
                 flex-1 py-3 px-4 text-base font-bold text-center
                 bg-purple-600 hover:bg-purple-500 active:bg-purple-700
@@ -229,13 +212,7 @@ export default function HomePage() {
                   playSound('navigate')
                   router.push('/game/leaderboard')
                 }}
-                onMouseEnter={() => {
-                  setHoveredButton('leaderboard')
-                  playSound('hover')
-                }}
-                onMouseLeave={() => setHoveredButton(null)}
-                onFocus={() => setHoveredButton('leaderboard')}
-                onBlur={() => setHoveredButton(null)}
+                {...getHoverHandlers('leaderboard', () => playSound('hover'))}
                 className={`
                 flex-1 py-3 px-4 text-base font-bold text-center
                 bg-yellow-600 hover:bg-yellow-500 active:bg-yellow-700
@@ -262,13 +239,7 @@ export default function HomePage() {
                   playSound('navigate')
                   router.push('/game/achievements')
                 }}
-                onMouseEnter={() => {
-                  setHoveredButton('achievements')
-                  playSound('hover')
-                }}
-                onMouseLeave={() => setHoveredButton(null)}
-                onFocus={() => setHoveredButton('achievements')}
-                onBlur={() => setHoveredButton(null)}
+                {...getHoverHandlers('achievements', () => playSound('hover'))}
                 className={`
                 flex-1 py-3 px-4 text-base font-bold text-center
                 bg-amber-700 hover:bg-amber-600 active:bg-amber-800
@@ -295,13 +266,7 @@ export default function HomePage() {
               {/* Settings Button */}
               <button
                 onClick={handleSettingsToggle}
-                onMouseEnter={() => {
-                  setHoveredButton('settings')
-                  playSound('hover')
-                }}
-                onMouseLeave={() => setHoveredButton(null)}
-                onFocus={() => setHoveredButton('settings')}
-                onBlur={() => setHoveredButton(null)}
+                {...getHoverHandlers('settings', () => playSound('hover'))}
                 className={`
                 w-full py-3 px-6 text-base font-bold text-center
                 bg-gray-600 hover:bg-gray-500 active:bg-gray-700

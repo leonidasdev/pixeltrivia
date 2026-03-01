@@ -23,6 +23,9 @@ export type { ModalProps } from './Modal'
 export { PixelCard } from './PixelCard'
 export type { PixelCardProps } from './PixelCard'
 
+export { GameModeCard, GAME_MODES, GAME_MODE_COLORS } from './GameModeCard'
+export type { GameModeCardProps, GameModeCardColors, GameModeData } from './GameModeCard'
+
 export { PixelInput } from './PixelInput'
 export type { PixelInputProps } from './PixelInput'
 

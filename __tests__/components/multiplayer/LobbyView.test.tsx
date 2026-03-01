@@ -29,7 +29,8 @@ const makePlayers = (n: number) =>
     avatar: '🎮',
     score: 0,
     isHost: i === 0,
-    isReady: true,
+    hasAnswered: false,
+    joinedAt: new Date().toISOString(),
   }))
 
 const baseRoom: RoomState = {

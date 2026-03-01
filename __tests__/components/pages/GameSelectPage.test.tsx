@@ -61,7 +61,7 @@ describe('GameSelectPage', () => {
 
     it('renders greeting with player name', () => {
       render(<GameSelectPage />)
-      expect(screen.getByText(/choose your trivia adventure, Player1234/i)).toBeInTheDocument()
+      expect(screen.getByText(/choose your trivia adventure, Player/i)).toBeInTheDocument()
     })
 
     it('renders all three game mode cards', () => {

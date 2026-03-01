@@ -69,7 +69,7 @@ describe('QuickGamePage', () => {
   describe('Rendering', () => {
     it('renders the page title', () => {
       render(<QuickGamePage />)
-      expect(screen.getByText('QUICK GAME')).toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 1, name: /quick game/i })).toBeInTheDocument()
     })
 
     it('renders the subtitle', () => {

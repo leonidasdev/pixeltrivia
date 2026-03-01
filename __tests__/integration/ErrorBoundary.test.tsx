@@ -43,8 +43,8 @@ afterAll(() => {
 
 /** Component that throws a specific error type */
 function TypeErrorChild() {
-  // @ts-expect-error Intentional: testing TypeError
   const obj: null = null
+  // @ts-expect-error Intentional: testing TypeError on null access
   return <div>{obj.property}</div>
 }
 

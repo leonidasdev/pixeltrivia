@@ -23,13 +23,8 @@ const QuickGameSelector = dynamic(() => import('@/app/components/QuickGameSelect
   ),
 })
 import { logger } from '@/lib/logger'
-import {
-  ToastContainer,
-  useToast,
-  SparklesOverlay,
-  LoadingOverlay,
-  PageTransition,
-} from '@/app/components/ui'
+import { getErrorMessage } from '@/lib/errors'
+import { ToastContainer, useToast, GamePageLayout, LoadingOverlay } from '@/app/components/ui'
 import { useSound } from '@/hooks/useSound'
 
 export default function QuickGamePage() {
@@ -63,9 +58,7 @@ export default function QuickGamePage() {
       router.push('/game/play')
     } catch (err) {
       logger.error('Error starting quick game:', err)
-      toast.error(
-        `Failed to start the game: ${err instanceof Error ? err.message : 'Unknown error'}`
-      )
+      toast.error(`Failed to start the game: ${getErrorMessage(err)}`)
     } finally {
       setIsStartingGame(false)
     }
@@ -80,38 +73,32 @@ export default function QuickGamePage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      <SparklesOverlay />
+    <GamePageLayout
+      header={{
+        title: 'Quick Game',
+        subtitle: 'Jump into a fast-paced trivia challenge',
+        icon: '⚡',
+        size: 'lg',
+      }}
+      maxWidth="xl"
+      noBackground
+    >
+      {/* Game Selector */}
+      <QuickGameSelector onCategorySelected={handleCategorySelected} onCancel={handleCancel} />
 
-      {/* Main content */}
-      <PageTransition style="slide-up" className="z-10 w-full max-w-4xl">
-        {/* Page Header */}
-        <header className="text-center mb-8">
-          <h1 className="text-2xl md:text-4xl font-pixel text-white mb-2 pixel-text-shadow">
-            QUICK GAME
-          </h1>
-          <p className="text-cyan-300 text-lg md:text-xl">
-            Jump into a fast-paced trivia challenge
-          </p>
-        </header>
+      {/* Toast notifications */}
+      <ToastContainer messages={toasts} onDismiss={dismissToast} />
 
-        {/* Game Selector */}
-        <QuickGameSelector onCategorySelected={handleCategorySelected} onCancel={handleCancel} />
-
-        {/* Toast notifications */}
-        <ToastContainer messages={toasts} onDismiss={dismissToast} />
-
-        {/* Instructions */}
-        <section className="mt-8 text-center text-gray-400 text-sm max-w-lg mx-auto">
-          <h3 className="text-white font-pixel font-bold mb-2">How Quick Game Works:</h3>
-          <ul className="space-y-1 text-left">
-            <li>• Choose your preferred difficulty level</li>
-            <li>• Select a category that interests you</li>
-            <li>• Answer 10 questions as fast as you can</li>
-            <li>• Compete for the best time and score</li>
-          </ul>
-        </section>
-      </PageTransition>
-    </main>
+      {/* Instructions */}
+      <section className="mt-8 text-center text-gray-400 text-sm max-w-lg mx-auto">
+        <h3 className="text-white font-pixel font-bold mb-2">How Quick Game Works:</h3>
+        <ul className="space-y-1 text-left">
+          <li>• Choose your preferred difficulty level</li>
+          <li>• Select a category that interests you</li>
+          <li>• Answer 10 questions as fast as you can</li>
+          <li>• Compete for the best time and score</li>
+        </ul>
+      </section>
+    </GamePageLayout>
   )
 }

@@ -261,7 +261,8 @@ interface ConfirmModalProps {
   variant?: 'danger' | 'warning' | 'info'
 }
 
-export function ConfirmModal({
+// Unused — kept for potential future use
+function ConfirmModal({
   isOpen,
   onClose,
   onConfirm,

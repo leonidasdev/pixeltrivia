@@ -304,6 +304,36 @@ export function getStatusCode(error: unknown): number {
 }
 
 /**
+ * Extract a human-readable message from an unknown error value.
+ *
+ * Safely handles Error instances, AppErrors, strings, and arbitrary objects.
+ *
+ * @param error - Any caught value
+ * @param fallback - Default message when no useful info is available
+ * @returns A string suitable for user-facing display
+ *
+ * @example
+ * ```ts
+ * try { ... } catch (err) {
+ *   toast.error(getErrorMessage(err, 'Operation failed'))
+ * }
+ * ```
+ */
+export function getErrorMessage(error: unknown, fallback = 'Unknown error'): string {
+  if (typeof error === 'string') return error
+  if (error instanceof Error) return error.message
+  if (
+    error !== null &&
+    typeof error === 'object' &&
+    'message' in error &&
+    typeof (error as { message: unknown }).message === 'string'
+  ) {
+    return (error as { message: string }).message
+  }
+  return fallback
+}
+
+/**
  * Formats error for API response (hides sensitive info in production)
  */
 export function formatErrorResponse(

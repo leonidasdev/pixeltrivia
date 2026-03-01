@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** March 1, 2026 (Phase 24 — Code Cleanup & Documentation)
+> **Last Updated:** March 2, 2026 (Phase 24 — Code Cleanup, Refactoring & Coverage)
 > **Project:** PixelTrivia - Retro-styled trivia game
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
@@ -10,12 +10,12 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 75 |
-| Tests | 1399 |
-| Coverage (Statements) | ~62.65% |
-| Coverage (Branches) | ~57.12% |
-| Coverage (Functions) | ~66.42% |
-| Coverage (Lines) | ~63.42% |
+| Test Suites | 95 |
+| Tests | 1651 |
+| Coverage (Statements) | ~80.41% |
+| Coverage (Branches) | ~73.17% |
+| Coverage (Functions) | ~84.22% |
+| Coverage (Lines) | ~82.64% |
 | TypeScript Errors | 0 |
 | ESLint Errors | 0 |
 
@@ -168,7 +168,38 @@
 ### Documentation
 - Updated all 18 markdown files for accuracy, tone, and consistency
 - Marked resolved audit findings in `AUDIT.md`
+
+### Code Refactoring (Component Reuse & Clean Code)
+- Migrated 5 game pages to `GamePageLayout` component (quick, custom, advanced, join, create)
+- Migrated 4 game pages to `usePlayerSettings` hook (mode, select, join, create)
+- Extracted `getErrorMessage()` utility into `lib/errors.ts` — replaces `err instanceof Error ? err.message : 'Unknown error'` pattern in 3 pages
+- Extracted `buildPlayerUrl()` utility into `hooks/usePlayerSettings.ts` — replaces manual `URLSearchParams` construction in mode and select pages
+- Removed local `PlayerSettings` interfaces from mode and select pages (replaced by shared type)
+- Removed duplicated `getAvatarDetails()` helper from mode and select pages (replaced by `playerInfo.avatarDetails`)
+- Added dev/prod scripts: `dev:debug`, `validate`, `db:seed`
+- Fixed CI/CD type errors: 18 fixes across 11 files (`npx tsc --noEmit` → 0 errors)
+- Database consolidation: merged `migration-multiplayer.sql` into single `schema.sql`
+- Docs reorganized into `guides/`, `reference/`, `operations/` subdirectories
+- Updated 5 page test suites to match refactored component behavior
+- Final count: 75 suites, 1399 tests, 0 TypeScript errors
 - Updated test counts, coverage thresholds, and directory references across all docs
+
+### Component & Hook Extraction (continued)
+- Extracted `GameModeCard` component into `app/components/ui/GameModeCard.tsx` — reusable pixel-art card with `GAME_MODES` data array and `GAME_MODE_COLORS` color presets
+- Extracted `useHoveredCard` hook into `hooks/useHoveredCard.ts` — returns `{hoveredCard, setHoveredCard, getHoverHandlers}` for card hover/focus state
+- Refactored `app/game/mode/page.tsx`, `app/game/select/page.tsx`, `app/page.tsx` to use new component/hook
+
+### Dead Export Removal (~265 lines)
+- Gutted `lib/security.ts` to re-exports only (~200 lines removed); all logic lives in `security.core.ts`
+- Removed dead HOFs from `lib/rateLimit.ts`: `addRateLimitHeaders`, `withRateLimit`, `withRateLimitAndErrorHandling`, `ApiHandler`
+- Made private: `getRequestId` (logger), `MusicTrack` (soundManager), `ConfirmModal` (Modal)
+
+### Test Coverage Boost (65% → 80%)
+- **Round 1** (8 files, 107 tests): rateLimitModule, loggerModule, gameApiFetch, Footer, useHoveredCard, GameModeCard, ErrorPages, NotFound
+- **Round 2** (8 files, 96 tests): PlayerDisplay, ShareButton, StatsPage, AchievementsPage, LeaderboardPage, CreateGamePage, supabase, RootLayout
+- **Round 3** (4 files, 58 tests): roomAnswer, roomQuestion, roomStart, roomNext API route integration tests
+- Final: 95 suites, 1651 tests, 0 TypeScript errors
+- Coverage: Stmts 80.41%, Branch 73.17%, Funcs 84.22%, Lines 82.64%
 
 ---
 

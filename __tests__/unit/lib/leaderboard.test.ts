@@ -7,9 +7,9 @@ import { getLeaderboard, getPersonalRecords, getLeaderboardCategories } from '@/
 import type { GameHistoryEntry } from '@/lib/storage'
 
 // Mock storage module
-const mockGetHistory = jest.fn(() => [] as GameHistoryEntry[])
+const mockGetHistory = jest.fn<GameHistoryEntry[], []>(() => [])
 jest.mock('@/lib/storage', () => ({
-  getHistory: (...args: unknown[]) => mockGetHistory(...args),
+  getHistory: () => mockGetHistory(),
 }))
 
 function makeEntry(overrides: Partial<GameHistoryEntry> = {}): GameHistoryEntry {

@@ -363,17 +363,16 @@ describe('functionName', () => {
 |------|---------|
 | `README.md` | Project overview |
 | `CHANGELOG.md` | Release history |
-| `docs/architecture.md` | System design |
-| `docs/development-guide.md` | Setup guide |
-| `docs/api-reference.md` | API reference |
-| `docs/api-testing-guide.md` | Manual API testing |
-| `docs/api-versioning.md` | Versioning strategy |
-| `docs/database-guide.md` | Database schema |
-| `docs/deployment-guide.md` | Deployment & hosting |
-| `docs/monitoring.md` | Observability & alerts |
-| `docs/runbook.md` | Operational runbook |
-| `docs/testing-guide.md` | Testing guide |
-| `docs/AUDIT.md` | Code quality audit |
+| `docs/reference/architecture.md` | System design |
+| `docs/guides/development-guide.md` | Setup guide |
+| `docs/reference/api-reference.md` | API reference |
+| `docs/guides/api-testing-guide.md` | Manual API testing |
+| `docs/reference/api-versioning.md` | Versioning strategy |
+| `docs/guides/database-guide.md` | Database schema |
+| `docs/guides/deployment-guide.md` | Deployment & hosting |
+| `docs/operations/monitoring.md` | Observability & alerts |
+| `docs/operations/runbook.md` | Operational runbook |
+| `docs/guides/testing-guide.md` | Testing guide |
 | `docs/TODO.md` | Roadmap & task tracker |
 | `docs/CLAUDE.md` | AI assistant context |
 

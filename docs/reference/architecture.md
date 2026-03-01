@@ -230,6 +230,7 @@ hooks/
 RootLayout
 ├── Skip Navigation Link
 ├── MainMenuLogo
+├── BackButton (global floating nav)
 ├── HelpProvider (HelpContext)
 │   └── HelpModal
 └── Pages
@@ -239,25 +240,25 @@ RootLayout
     │   ├── Multiplayer Button
     │   └── Toast (notifications)
     │
-    ├── QuickGameSelector
-    │   ├── Category Grid
-    │   ├── Difficulty Selector
-    │   ├── Question Count Slider
-    │   └── Toast (success/error)
+    ├── Game Pages (all use GamePageLayout)
+    │   ├── GamePageLayout
+    │   │   ├── PageBackground + SparklesOverlay
+    │   │   ├── PageHeader (title, subtitle, icon, back button)
+    │   │   └── <main> content area
+    │   │
+    │   ├── QuickGamePage → QuickGameSelector
+    │   ├── CustomGamePage → CustomGameConfigurator
+    │   ├── AdvancedGamePage → AdvancedGameConfigurator
+    │   ├── JoinGamePage (room code + name input)
+    │   └── CreateGamePage (room creation form)
     │
-    ├── CustomGameConfigurator
-    │   ├── Topic Input
-    │   ├── Context Textarea
-    │   ├── Knowledge Level Selector
-    │   ├── Question Count Slider
-    │   └── Toast (success/error)
+    ├── Mode/Select Pages (use usePlayerSettings)
+    │   ├── GameModePage (solo/multiplayer choice)
+    │   └── GameSelectPage (game mode + play option)
     │
-    └── AdvancedGameConfigurator
-        ├── File Upload
-        ├── Category Multi-select
-        ├── Time Limit Slider
-        ├── Hints Toggle
-        └── Toast (success/error)
+    └── Play Pages
+        ├── SinglePlayerPlay (game/play/)
+        └── MultiplayerPlay (game/play/[code]/)
 ```
 
 ### Shared Component Patterns
@@ -268,6 +269,9 @@ All interactive components follow these patterns:
 2. **Toast Notifications** - Non-intrusive feedback via `ui/Toast.tsx` (replaces `alert()`)
 3. **Retro Styling** - Consistent pixel borders, retro fonts, color palette
 4. **State Management** - React hooks for local state
+5. **Layout Reuse** - `GamePageLayout` for consistent page structure (background, header, content)
+6. **Player Settings** - `usePlayerSettings` hook for name, avatar, volume across pages
+7. **Error Messages** - `getErrorMessage()` for safe error extraction in catch blocks
 5. **Reduced Motion** - Respects `prefers-reduced-motion` system preference
 4. **Error Boundaries** - Graceful error handling with retry options
 

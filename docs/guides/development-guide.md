@@ -168,6 +168,7 @@ npm run start
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Start development server (port 3000) |
+| `npm run dev:debug` | Start dev server with Node.js inspector attached |
 | `npm run build` | Create production build |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint checks |
@@ -177,7 +178,10 @@ npm run start
 | `npm test` | Run all tests |
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run test:coverage` | Run tests with coverage report |
+| `npm run test:ci` | Run tests in CI mode (no watch) |
 | `npm run typecheck` | Run TypeScript type checking |
+| `npm run validate` | Full validation: typecheck + lint + test:ci |
+| `npm run db:seed` | Reset database and seed with sample data |
 
 ---
 
@@ -214,12 +218,11 @@ pixeltrivia/
 │   └── schema.sql         # Supabase schema
 │
 ├── docs/                   # Documentation
-│   ├── api-reference.md   # API reference
-│   ├── architecture.md    # System architecture
-│   ├── database-guide.md  # Database schema
-│   ├── development-guide.md # This file
-│   ├── testing-guide.md   # Testing guide
-│   └── ...                # Other docs
+│   ├── guides/            # How-to guides (this file, testing, etc.)
+│   ├── reference/         # Architecture, API reference, versioning
+│   ├── operations/        # Monitoring, runbook
+│   ├── CLAUDE.md          # AI assistant context
+│   └── TODO.md            # Project roadmap
 │
 ├── lib/                    # Shared libraries
 │   ├── errors.ts          # Error classes
@@ -520,8 +523,8 @@ import { withSecurity } from '@/lib/security';
 
 ## Next Steps
 
-- Read the [Architecture Overview](architecture.md)
-- Explore the [API Reference](api-reference.md)
+- Read the [Architecture Overview](../reference/architecture.md)
+- Explore the [API Reference](../reference/api-reference.md)
 - Check the [Testing Guide](testing-guide.md)
 - Review the [Contributing Guidelines](../CONTRIBUTING.md)
 

@@ -15,13 +15,8 @@ import { useRouter } from 'next/navigation'
 import type { AdvancedGameConfig } from '../../components/AdvancedGameConfigurator'
 import { STORAGE_KEYS } from '@/constants/game'
 import { logger } from '@/lib/logger'
-import {
-  ToastContainer,
-  useToast,
-  SparklesOverlay,
-  LoadingOverlay,
-  PageTransition,
-} from '@/app/components/ui'
+import { getErrorMessage } from '@/lib/errors'
+import { ToastContainer, useToast, GamePageLayout, LoadingOverlay } from '@/app/components/ui'
 import Footer from '@/app/components/Footer'
 
 export default function AdvancedGamePage() {
@@ -99,9 +94,7 @@ export default function AdvancedGamePage() {
 
       toast.success(`Generated ${result.data.questions.length} questions from your documents!`)
     } catch (error) {
-      setError(
-        error instanceof Error ? error.message : 'Failed to generate quiz. Please try again.'
-      )
+      setError(getErrorMessage(error, 'Failed to generate quiz. Please try again.'))
     } finally {
       setIsGenerating(false)
     }
@@ -116,95 +109,92 @@ export default function AdvancedGamePage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated background elements */}
-      <SparklesOverlay />
+    <GamePageLayout
+      header={{
+        title: 'Advanced Game',
+        subtitle: 'Solo Play with Custom Documents',
+        icon: '📚',
+        size: 'lg',
+      }}
+      maxWidth="xl"
+      noBackground
+    >
+      <div className="flex flex-col items-center space-y-8 w-full">
+        {/* Game Configuration Display */}
+        <section className="w-full max-w-2xl bg-gray-900 border-4 border-gray-600 p-6 pixel-border">
+          <h2 className="text-sm font-pixel text-white mb-4 pixel-text-shadow">
+            Game Configuration
+          </h2>
 
-      {/* Main content container */}
-      <PageTransition>
-        <div className="flex flex-col items-center space-y-8 z-10 max-w-4xl w-full">
-          {/* Header */}
-          <header className="text-center">
-            <h1 className="text-2xl md:text-4xl font-pixel text-white mb-2 pixel-text-shadow">
-              📚 ADVANCED GAME
-            </h1>
-            <p className="text-cyan-300 font-pixel-body text-xl">Solo Play with Custom Documents</p>
-          </header>
-          {/* Game Configuration Display */}
-          <section className="w-full max-w-2xl bg-gray-900 border-4 border-gray-600 p-6 pixel-border">
-            <h2 className="text-sm font-pixel text-white mb-4 pixel-text-shadow">
-              Game Configuration
-            </h2>
-
-            <div className="space-y-4">
-              {/* Files */}
-              <div>
-                <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Uploaded Documents:</h3>
-                {gameConfig.files.length > 0 ? (
-                  <div className="space-y-2">
-                    {gameConfig.files.map(file => (
-                      <div
-                        key={file.id}
-                        className="bg-gray-800 border-4 border-gray-600 pixel-border p-3 flex items-center space-x-3"
-                      >
-                        <span className="text-lg">📄</span>
-                        <div>
-                          <div className="text-white font-pixel-body text-base font-medium">
-                            {file.name}
-                          </div>
-                          <div className="text-gray-400 font-pixel text-[8px]">
-                            {(file.size / 1024).toFixed(1)} KB
-                          </div>
+          <div className="space-y-4">
+            {/* Files */}
+            <div>
+              <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Uploaded Documents:</h3>
+              {gameConfig.files.length > 0 ? (
+                <div className="space-y-2">
+                  {gameConfig.files.map(file => (
+                    <div
+                      key={file.id}
+                      className="bg-gray-800 border-4 border-gray-600 pixel-border p-3 flex items-center space-x-3"
+                    >
+                      <span className="text-lg">📄</span>
+                      <div>
+                        <div className="text-white font-pixel-body text-base font-medium">
+                          {file.name}
+                        </div>
+                        <div className="text-gray-400 font-pixel text-[8px]">
+                          {(file.size / 1024).toFixed(1)} KB
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-400 font-pixel-body text-base">No documents uploaded</p>
-                )}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-400 font-pixel-body text-base">No documents uploaded</p>
+              )}
+            </div>
 
-              {/* Time and Format */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Time Per Question:</h3>
-                  <p className="text-white font-pixel-body text-xl">
-                    {gameConfig.timePerQuestion} seconds
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Question Format:</h3>
-                  <p className="text-white font-pixel-body text-xl capitalize">
-                    {gameConfig.questionFormat === 'short' ? 'Short Questions' : 'Longer Questions'}
-                  </p>
-                </div>
+            {/* Time and Format */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Time Per Question:</h3>
+                <p className="text-white font-pixel-body text-xl">
+                  {gameConfig.timePerQuestion} seconds
+                </p>
+              </div>
+              <div>
+                <h3 className="text-cyan-300 font-pixel text-[10px] mb-2">Question Format:</h3>
+                <p className="text-white font-pixel-body text-xl capitalize">
+                  {gameConfig.questionFormat === 'short' ? 'Short Questions' : 'Longer Questions'}
+                </p>
               </div>
             </div>
-          </section>{' '}
-          {/* Game Start Section */}
-          <section className="w-full max-w-lg">
-            {error && (
-              <div className="mb-4 p-4 bg-red-900 bg-opacity-30 border-4 border-red-600 pixel-border">
-                <h4 className="text-red-300 font-pixel text-[10px] mb-2">⚠️ Error</h4>
-                <p className="text-red-200 font-pixel-body text-base">{error}</p>
-              </div>
-            )}
+          </div>
+        </section>{' '}
+        {/* Game Start Section */}
+        <section className="w-full max-w-lg">
+          {error && (
+            <div className="mb-4 p-4 bg-red-900 bg-opacity-30 border-4 border-red-600 pixel-border">
+              <h4 className="text-red-300 font-pixel text-[10px] mb-2">⚠️ Error</h4>
+              <p className="text-red-200 font-pixel-body text-base">{error}</p>
+            </div>
+          )}
 
-            <div className="bg-blue-900 bg-opacity-30 border-4 border-blue-600 pixel-border p-6 text-center">
-              <h3 className="text-sm font-pixel text-white mb-4 pixel-text-shadow">
-                🚀 Ready to Start!
-              </h3>
-              <p className="text-blue-200 font-pixel-body text-base mb-6">
-                {gameConfig.files.length > 0
-                  ? 'Your documents have been processed. AI will generate personalized trivia questions based on the content.'
-                  : 'No documents uploaded. Please go back and upload at least one document.'}
-              </p>
+          <div className="bg-blue-900 bg-opacity-30 border-4 border-blue-600 pixel-border p-6 text-center">
+            <h3 className="text-sm font-pixel text-white mb-4 pixel-text-shadow">
+              🚀 Ready to Start!
+            </h3>
+            <p className="text-blue-200 font-pixel-body text-base mb-6">
+              {gameConfig.files.length > 0
+                ? 'Your documents have been processed. AI will generate personalized trivia questions based on the content.'
+                : 'No documents uploaded. Please go back and upload at least one document.'}
+            </p>
 
-              <div className="space-y-4">
-                <button
-                  onClick={handleStartGame}
-                  disabled={isGenerating || gameConfig.files.length === 0}
-                  className={`
+            <div className="space-y-4">
+              <button
+                onClick={handleStartGame}
+                disabled={isGenerating || gameConfig.files.length === 0}
+                className={`
                   w-full py-4 px-6 font-pixel text-sm text-white transition-all duration-150
                   focus:outline-none focus:ring-4 focus:ring-opacity-50 pixel-border pixel-glow-hover
                   ${
@@ -213,26 +203,23 @@ export default function AdvancedGamePage() {
                       : 'bg-green-600 hover:bg-green-500 border-4 border-green-800 hover:border-green-600 hover:scale-105 pixel-shadow active:scale-95 focus:ring-green-300'
                   }
                 `}
-                >
-                  <span className="block">
-                    {isGenerating ? '🔄 GENERATING...' : '🎯 START GAME'}
-                  </span>
-                  <span className="block font-pixel-body text-base mt-1 opacity-80">
-                    {isGenerating
-                      ? 'AI is creating your questions...'
-                      : 'Generate questions from your documents'}
-                  </span>
-                </button>
-              </div>
+              >
+                <span className="block">{isGenerating ? '🔄 GENERATING...' : '🎯 START GAME'}</span>
+                <span className="block font-pixel-body text-base mt-1 opacity-80">
+                  {isGenerating
+                    ? 'AI is creating your questions...'
+                    : 'Generate questions from your documents'}
+                </span>
+              </button>
             </div>
-          </section>
-          {/* Processing Info */}
-          <Footer hint="💡 Tip: Questions will be generated based on the content of your uploaded documents" />
-        </div>
-      </PageTransition>
+          </div>
+        </section>
+        {/* Processing Info */}
+        <Footer hint="💡 Tip: Questions will be generated based on the content of your uploaded documents" />
+      </div>
 
       {/* Toast notifications */}
       <ToastContainer messages={toasts} onDismiss={dismissToast} />
-    </main>
+    </GamePageLayout>
   )
 }

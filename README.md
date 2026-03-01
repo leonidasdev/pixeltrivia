@@ -84,12 +84,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 | Document | Description |
 |----------|-------------|
-| [Architecture](docs/architecture.md) | System design and component overview |
-| [Development](docs/development-guide.md) | Local setup and development guide |
-| [API Reference](docs/api-reference.md) | Complete API documentation |
-| [Database](docs/database-guide.md) | Schema and Supabase setup |
-| [Testing](docs/testing-guide.md) | Testing guide and conventions |
-| [Deployment](docs/deployment-guide.md) | Production deployment guide |
+| [Architecture](docs/reference/architecture.md) | System design and component overview |
+| [Development](docs/guides/development-guide.md) | Local setup and development guide |
+| [API Reference](docs/reference/api-reference.md) | Complete API documentation |
+| [Database](docs/guides/database-guide.md) | Schema and Supabase setup |
+| [Testing](docs/guides/testing-guide.md) | Testing guide and conventions |
+| [Deployment](docs/guides/deployment-guide.md) | Production deployment guide |
 | [Contributing](CONTRIBUTING.md) | How to contribute |
 
 ## Game Modes
