@@ -1,0 +1,11 @@
+{
+  "name": "PixelTrivia",
+  "short_name": "PixelTrivia",
+  "description": "A pixel-perfect retro trivia game experience",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e1b4b",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "categories": ["games", "entertainment", "education"]
+}
