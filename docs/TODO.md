@@ -1,6 +1,6 @@
 # PixelTrivia - TODO
 
-> **Last Updated:** March 1, 2026
+> **Last Updated:** June 2025
 > **Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS, Supabase, OpenRouter AI
 
 ---
@@ -9,12 +9,12 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 103 |
-| Tests | 1,822 |
-| Coverage (Statements) | 86.21% |
-| Coverage (Branches) | 80.14% |
-| Coverage (Functions) | 89.36% |
-| Coverage (Lines) | 88.48% |
+| Test Suites | 110 |
+| Tests | 1,906 |
+| Coverage (Statements) | ~88% |
+| Coverage (Branches) | ~82% |
+| Coverage (Functions) | ~89% |
+| Coverage (Lines) | ~89% |
 | TypeScript Errors | 0 |
 | ESLint Errors | 0 |
 | `any` in prod code | 0 |
@@ -115,55 +115,50 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
   subscriptions, timer logic, and state management. Zero test coverage.
 - [ ] **Add tests for `useRoom` hook** — manages room state, polling fallback, and Realtime
   channel cleanup. Zero test coverage.
-- [ ] **Add tests for multiplayer components** — `HostControls.tsx`, `PlayerList.tsx`,
-  `Scoreboard.tsx` have no test files.
-- [ ] **Add tests for UI components** — `AnswerFeedback.tsx`, `ScorePopup.tsx`,
-  `PixelTimer.tsx`, `PageTransition.tsx` have no test files.
+- [x] **Add tests for multiplayer components** — `HostControls.tsx`, `PlayerList.tsx`,
+  `Scoreboard.tsx` now have test files. *(commit 57ad683)*
+- [x] **Add tests for UI components** — `AnswerFeedback.tsx`, `ScorePopup.tsx`,
+  `PixelTimer.tsx`, `PageTransition.tsx` now have test files. *(commit 57ad683)*
 - [ ] **Add tests for stats components** — `StatsOverview.tsx`, `StatsChart.tsx` have no test files.
 - [ ] **Expand E2E coverage** — current Playwright specs cover home, game-flow, and
   leaderboard. Missing: actual gameplay (answering questions, timer, scoring), custom/advanced
   generation flow, multiplayer (create, join, lobby, play), and stats page.
-- [ ] **Raise coverage thresholds** — current thresholds (branches: 55%, functions: 64%, lines:
-  61%) are well below actual coverage (~80-89%). Raise to prevent regressions:
-  branches: 75%, functions: 85%, lines: 85%.
+- [x] **Raise coverage thresholds** — raised to branches: 75%, functions: 85%, lines: 85%,
+  statements: 83%. *(commit 57ad683)*
 
 ### P3 — Accessibility
 
-- [ ] **Fix heading hierarchy** — leaderboard and achievements pages render `<h3>` before `<h1>`
-  in DOM order. quick/page.tsx jumps from `<h1>` to `<h3>` skipping `<h2>`. play/page.tsx has
-  two `<h1>` tags for different states.
-- [ ] **Increase minimum font sizes** — `text-[10px]` (20+ occurrences) and `text-[8px]`
-  (advanced/page.tsx) are below WCAG minimum guidelines. Use `text-xs` (12px) as the minimum.
-- [ ] **Add focus styles to filter/tab buttons** — leaderboard period filters, achievement
-  category filters, and stats tabs have no `focus:` ring classes.
-- [ ] **Add `aria-label` to icon-only buttons** — stats page action buttons (L167-173) have
-  only emoji/icon content with no accessible name.
-- [ ] **Add `role="tab"` / `role="tabpanel"`** to tab UIs in stats, leaderboard, and
-  achievements pages.
+- [x] **Fix heading hierarchy** — changed `<h3>` to `<h2>` in leaderboard, achievements, and
+  quick pages. Added `sr-only` `<h1>` to play page playing state. *(commit 1b13826)*
+- [x] **Increase minimum font sizes** — replaced all `text-[10px]` (57 occurrences) and
+  `text-[8px]` with `text-xs` (12px) across 20 files. *(commit 1b13826)*
+- [x] **Add focus styles to filter/tab buttons** — added `focus:outline-none focus:ring-2
+  focus:ring-cyan-400` to all filter/tab/action buttons in leaderboard, achievements, stats,
+  and GameHistoryList. *(commit 1b13826)*
+- [x] **Add `aria-label` to icon-only buttons** — leaderboard sort buttons now have
+  `aria-label` matching their function. *(commit 1b13826)*
+- [ ] **Add `role="tab"` / `role="tabpanel"`** to tab UIs in leaderboard and
+  achievements pages. (stats/page.tsx already correct.)
 
 ### P4 — Performance
 
-- [ ] **Replace `<img>` with `next/image`** — two locations (`play/page.tsx` L451 and
-  `GameQuestion.tsx` L185) use raw `<img>` tags with ESLint disable comments. `next/image`
-  provides lazy loading, size optimization, and WebP/AVIF conversion.
-- [ ] **Add `React.memo` to list-item components** — `LeaderboardRow`, `AchievementCard`,
-  `Stat`, `RankBadge`, and `GameHistoryList` items are rendered in lists and would benefit from
-  shallow-comparison memoization.
-- [ ] **Memoize expensive derived values** — `play/page.tsx` computes `summary` and `grade`
-  inside render without `useMemo`. `LeaderboardPage` calls `getPersonalRecords()` inside render
-  without memoization.
+- [x] **Replace `<img>` with `next/image`** — replaced in `play/page.tsx` and
+  `GameQuestion.tsx`. Configured `next.config.js` with `remotePatterns` for external images.
+  *(commit 0212161)*
+- [x] **Add `React.memo` to list-item components** — wrapped `RankBadge`, `LeaderboardRow`,
+  `AchievementCard`, `Stat`, and `HistoryRow` with `memo()`. *(commit 0212161)*
+- [x] **Memoize expensive derived values** — added `useMemo` to `summary` in play/page.tsx,
+  `grade` in ResultsScreen.tsx, `getPersonalRecords()` in LeaderboardPage. *(commit 0212161)*
 - [ ] **Extract repeated Tailwind class strings** — long identical `className` strings appear
   2-3 times in custom, play, create, leaderboard, and achievements pages. Extract into shared
   constants or `@apply` utilities.
 
 ### P5 — Dependencies
 
-- [ ] **Align `@next/bundle-analyzer` version** — currently `^16.1.6` but project uses
-  Next.js 14. Should be `^14.x`.
-- [ ] **Align `eslint-config-next` version** — pinned to `14.0.0`. Should be `^14.2` to match
-  the Next.js runtime.
-- [ ] **Verify `ts-jest` compatibility** — `ts-jest@^29.4.6` with `jest@^30.2.0`. Check if
-  ts-jest 30.x is needed for full Jest 30 support.
+- [x] **Align `@next/bundle-analyzer` version** — changed `^16.1.6` to `^14.2.30`. *(commit 3df687e)*
+- [x] **Align `eslint-config-next` version** — changed `14.0.0` to `^14.2.30`. *(commit 3df687e)*
+- [x] **Verify `ts-jest` compatibility** — `ts-jest@29.4.6` confirmed compatible with
+  `jest@30.2.0` (all 1906 tests pass). *(commit 3df687e)*
 - [ ] **Evaluate `pdf-parse` replacement** — last published 2019, unmaintained. Consider
   `pdf-parse-new` or `pdfjs-dist`.
 - [ ] **Plan Next.js 15 upgrade** — Next.js 15 is available. Evaluate breaking changes and plan
