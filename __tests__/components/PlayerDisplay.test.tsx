@@ -21,14 +21,14 @@ import type { AvatarOption } from '@/constants/avatars'
 const testAvatar: AvatarOption = {
   id: 'warrior',
   name: 'Warrior',
-  emoji: '⚔️',
+  emoji: 'W',
   color: 'bg-red-500',
 }
 
 const defaultAvatar: AvatarOption = {
   id: 'default',
   name: 'Player',
-  emoji: '👤',
+  emoji: '>',
   color: 'bg-gray-500',
 }
 
@@ -50,7 +50,7 @@ describe('AvatarDisplay', () => {
   it('renders avatar emoji with proper label', () => {
     render(<AvatarDisplay avatar={testAvatar} />)
     const img = screen.getByRole('img', { name: 'Warrior' })
-    expect(img).toHaveTextContent('⚔️')
+    expect(img).toHaveTextContent('W')
   })
 
   it('applies avatar color class', () => {
@@ -111,7 +111,7 @@ describe('PlayerDisplay', () => {
 
   it('uses default avatar when avatarDetails not provided', () => {
     render(<PlayerDisplay player={playerNoAvatar} />)
-    expect(screen.getByRole('img', { name: 'Player' })).toHaveTextContent('👤')
+    expect(screen.getByRole('img', { name: 'Player' })).toHaveTextContent('>')
   })
 
   it('uses vertical layout when direction is vertical', () => {
@@ -168,7 +168,7 @@ describe('PlayerBadge', () => {
 
   it('uses default avatar for player without avatarDetails', () => {
     render(<PlayerBadge player={playerNoAvatar} />)
-    expect(screen.getByRole('img', { name: 'Player' })).toHaveTextContent('👤')
+    expect(screen.getByRole('img', { name: 'Player' })).toHaveTextContent('>')
   })
 
   it('applies custom className', () => {
@@ -184,7 +184,7 @@ describe('PlayerBadge', () => {
 describe('PlayerList', () => {
   const players = [
     { name: 'Alice', avatarDetails: testAvatar },
-    { name: 'Bob', avatarDetails: { ...testAvatar, id: 'mage', name: 'Mage', emoji: '🧙' } },
+    { name: 'Bob', avatarDetails: { ...testAvatar, id: 'mage', name: 'Mage', emoji: 'W' } },
     { name: 'Charlie' },
   ]
 

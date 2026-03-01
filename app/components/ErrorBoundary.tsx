@@ -103,7 +103,7 @@ function DefaultErrorFallback({ error, onReset }: DefaultErrorFallbackProps) {
   return (
     <div className="min-h-[300px] flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-gray-900 bg-opacity-95 border-4 border-red-600 pixel-border p-6 text-center">
-        <div className="text-6xl mb-4">💥</div>
+        <div className="text-6xl mb-4">X</div>
         <h2 className="text-lg font-pixel text-red-400 pixel-text-shadow mb-2">GAME OVER</h2>
         <p className="text-gray-300 font-pixel-body text-base mb-4">
           Something went wrong. Don&apos;t worry, your progress is safe!
@@ -129,7 +129,7 @@ function DefaultErrorFallback({ error, onReset }: DefaultErrorFallbackProps) {
                        focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-glow-hover"
           >
-            🔄 Try Again
+            Try Again
           </button>
           <button
             onClick={() => window.location.reload()}
@@ -138,7 +138,7 @@ function DefaultErrorFallback({ error, onReset }: DefaultErrorFallbackProps) {
                        focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-glow-hover"
           >
-            🏠 Reload Page
+            Reload Page
           </button>
         </div>
       </div>
@@ -159,7 +159,7 @@ export function PageErrorFallback({
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800 p-4">
       <div className="w-full max-w-lg bg-gray-900 bg-opacity-95 border-4 border-red-600 pixel-border p-8 text-center">
-        <div className="text-8xl mb-6 animate-pixel-bounce">🎮</div>
+        <div className="text-8xl mb-6 animate-pixel-bounce">!</div>
         <h1 className="text-lg font-pixel text-red-400 pixel-text-shadow mb-3">
           OOPS! GAME CRASHED
         </h1>
@@ -183,7 +183,7 @@ export function PageErrorFallback({
                        focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-border pixel-glow-hover"
           >
-            🔄 TRY AGAIN
+            TRY AGAIN
           </button>
           <a
             href="/"
@@ -192,7 +192,7 @@ export function PageErrorFallback({
                        focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-border pixel-glow-hover text-center"
           >
-            🏠 MAIN MENU
+            MAIN MENU
           </a>
         </div>
       </div>

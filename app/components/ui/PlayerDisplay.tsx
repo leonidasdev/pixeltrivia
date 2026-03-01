@@ -171,7 +171,7 @@ export function PlayerDisplay({
   const defaultAvatar: AvatarOption = {
     id: 'default',
     name: 'Player',
-    emoji: '👤',
+    emoji: '>',
     color: 'bg-gray-500',
   }
 
@@ -242,7 +242,7 @@ export function PlayerBadge({
   const avatarDetails =
     'avatarDetails' in player && player.avatarDetails
       ? player.avatarDetails
-      : { emoji: '👤', color: 'bg-gray-500', name: 'Player', id: 'default' }
+      : { emoji: '>', color: 'bg-gray-500', name: 'Player', id: 'default' }
 
   return (
     <div

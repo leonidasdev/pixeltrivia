@@ -122,7 +122,7 @@ export default function SettingsPanel({
                 {selectedAvatar === avatar.id && (
                   <div className="absolute -top-2 -right-2 w-5 h-5 bg-yellow-400 border-2 border-yellow-600 rounded-full flex items-center justify-center">
                     <span className="text-xs text-black font-bold" aria-hidden="true">
-                      ✓
+                      OK
                     </span>
                   </div>
                 )}

@@ -173,7 +173,7 @@ export function usePlayerSettings(): UsePlayerSettingsReturn {
       getAvatarById(DEFAULT_AVATAR_ID) ?? {
         id: DEFAULT_AVATAR_ID,
         name: 'Player',
-        emoji: '🤖',
+        emoji: 'R',
         color: 'bg-blue-500',
       }
 

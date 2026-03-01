@@ -27,7 +27,7 @@ export default function Error({
   return (
     <div className="min-h-[60vh] flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-gray-900 bg-opacity-95 border-4 border-red-600 pixel-border p-6 text-center">
-        <div className="text-6xl mb-4">⚠️</div>
+        <div className="text-6xl mb-4">!</div>
         <h2 className="text-lg font-pixel text-red-400 pixel-text-shadow mb-2">
           Something Went Wrong
         </h2>
@@ -55,7 +55,7 @@ export default function Error({
                        focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-glow-hover"
           >
-            🔄 Try Again
+            Try Again
           </button>
           <a
             href="/"
@@ -64,7 +64,7 @@ export default function Error({
                        focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-glow-hover text-center"
           >
-            🏠 Main Menu
+            Main Menu
           </a>
         </div>
       </div>

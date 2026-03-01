@@ -49,7 +49,7 @@ describe('MainMenuLogo', () => {
 
     it('should show game emoji', () => {
       render(<MainMenuLogo />)
-      expect(screen.getByText('🎮')).toBeInTheDocument()
+      expect(screen.getByText('PT')).toBeInTheDocument()
     })
 
     it('should have correct aria-label', () => {

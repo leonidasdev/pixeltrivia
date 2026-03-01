@@ -18,14 +18,14 @@ test.describe('Home Page', () => {
   })
 
   test('should display help and settings buttons', async ({ page }) => {
-    // Help and settings buttons with emoji text
-    await expect(page.getByText('❓ HELP')).toBeVisible()
-    await expect(page.getByText('⚙️')).toBeVisible()
+    // Help and settings buttons
+    await expect(page.getByLabel('Open help and game information')).toBeVisible()
+    await expect(page.getByText('SETTINGS')).toBeVisible()
   })
 
   test('should show settings panel when settings button clicked', async ({ page }) => {
-    // Click settings button (the gear icon)
-    await page.getByText('⚙️').click()
+    // Click settings button
+    await page.getByText('SETTINGS').click()
 
     // Settings panel should appear with player name and volume
     await expect(page.getByText('Player Name')).toBeVisible()
@@ -58,8 +58,8 @@ test.describe('Navigation', () => {
 test.describe('Settings Panel', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
-    // Open settings by clicking gear icon
-    await page.getByText('⚙️').click()
+    // Open settings by clicking settings button
+    await page.getByText('SETTINGS').click()
   })
 
   test('should allow changing player name', async ({ page }) => {

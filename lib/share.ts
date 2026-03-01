@@ -36,14 +36,14 @@ export interface ShareableResult {
 // Helpers
 // ============================================================================
 
-/** Get a grade emoji based on accuracy */
+/** Get a grade symbol based on accuracy */
 function getGradeEmoji(accuracy: number): string {
-  if (accuracy >= 100) return '🏆'
-  if (accuracy >= 90) return '🌟'
-  if (accuracy >= 80) return '🎯'
-  if (accuracy >= 70) return '💪'
-  if (accuracy >= 50) return '👍'
-  return '📚'
+  if (accuracy >= 100) return '[TROPHY]'
+  if (accuracy >= 90) return '[STAR]'
+  if (accuracy >= 80) return '[TARGET]'
+  if (accuracy >= 70) return '[STRONG]'
+  if (accuracy >= 50) return '[OK]'
+  return '[STUDY]'
 }
 
 /** Get a rank suffix (1st, 2nd, 3rd, 4th) */
@@ -56,8 +56,8 @@ function getRankSuffix(rank: number): string {
 
 /** Generate a progress bar from score boxes */
 function generateScoreBar(correct: number, total: number): string {
-  const filled = '🟩'
-  const empty = '🟥'
+  const filled = '[+]'
+  const empty = '[-]'
   return Array.from({ length: total }, (_, i) => (i < correct ? filled : empty)).join('')
 }
 
@@ -88,16 +88,16 @@ export function generateShareText(result: ShareableResult): string {
   lines.push('')
 
   if (result.category) {
-    lines.push(`📂 ${result.category}`)
+    lines.push(`Category: ${result.category}`)
   }
 
   lines.push(
-    `✅ ${result.correctAnswers}/${result.totalQuestions} correct (${Math.round(result.accuracy)}%)`
+    `${result.correctAnswers}/${result.totalQuestions} correct (${Math.round(result.accuracy)}%)`
   )
-  lines.push(`🏅 Score: ${result.score}`)
+  lines.push(`Score: ${result.score}`)
 
   if (result.rank != null && result.totalPlayers != null) {
-    lines.push(`🎖️ Finished ${getRankSuffix(result.rank)} of ${result.totalPlayers}`)
+    lines.push(`Finished ${getRankSuffix(result.rank)} of ${result.totalPlayers}`)
   }
 
   // Show a visual score bar for ≤ 20 questions

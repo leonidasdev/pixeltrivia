@@ -36,8 +36,8 @@ describe('PageHeader', () => {
   })
 
   it('renders icon when provided', () => {
-    render(<PageHeader title="Title" icon="🎮" />)
-    expect(screen.getByText('🎮')).toBeInTheDocument()
+    render(<PageHeader title="Title" icon="G" />)
+    expect(screen.getByText('G')).toBeInTheDocument()
   })
 
   it('shows back button when showBackButton is true', () => {

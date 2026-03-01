@@ -103,7 +103,7 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
           )}
         </div>
 
-        {achievement.unlocked && <div className="flex-shrink-0 text-green-400 text-lg">✓</div>}
+        {achievement.unlocked && <div className="flex-shrink-0 text-green-400 text-lg">OK</div>}
       </div>
     </div>
   )
@@ -201,9 +201,7 @@ export default function AchievementsPage() {
             >
               ← BACK
             </button>
-            <h1 className="font-pixel text-xl text-yellow-400 flex-1 text-center">
-              🏅 ACHIEVEMENTS
-            </h1>
+            <h1 className="font-pixel text-xl text-yellow-400 flex-1 text-center">ACHIEVEMENTS</h1>
             <div className="w-20" />
           </div>
 
@@ -234,7 +232,7 @@ export default function AchievementsPage() {
           {/* Achievement Grid */}
           {filtered.length === 0 ? (
             <div className="pixel-border bg-gray-800 bg-opacity-80 p-8 text-center space-y-2 flex-1">
-              <div className="text-4xl mb-3 animate-pixel-bounce">🏅</div>
+              <div className="text-4xl mb-3 animate-pixel-bounce">--</div>
               <p className="font-pixel text-sm text-gray-400">NO ACHIEVEMENTS</p>
               <p className="font-pixel-body text-xs text-gray-500 mt-1">
                 {activeFilter === 'unlocked'

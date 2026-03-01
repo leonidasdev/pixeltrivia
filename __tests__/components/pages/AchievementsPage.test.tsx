@@ -21,7 +21,7 @@ const mockAchievements = [
     id: 'first_game',
     name: 'First Steps',
     description: 'Complete your first game',
-    icon: '🎮',
+    icon: '[G]',
     tier: 'bronze' as const,
     category: 'gameplay' as const,
     unlocked: true,
@@ -33,7 +33,7 @@ const mockAchievements = [
     id: 'ten_games',
     name: 'Getting Started',
     description: 'Complete 10 games',
-    icon: '🏅',
+    icon: '[M]',
     tier: 'silver' as const,
     category: 'dedication' as const,
     unlocked: false,
@@ -44,7 +44,7 @@ const mockAchievements = [
     id: 'perfect_score',
     name: 'Perfectionist',
     description: 'Get a perfect score',
-    icon: '💯',
+    icon: '[100]',
     tier: 'gold' as const,
     category: 'mastery' as const,
     unlocked: false,
@@ -193,7 +193,7 @@ describe('AchievementsPage', () => {
 
   it('shows checkmark for unlocked achievements', () => {
     render(<AchievementsPage />)
-    expect(screen.getByText('✓')).toBeInTheDocument()
+    expect(screen.getByText('OK')).toBeInTheDocument()
   })
 
   it('navigates back on BACK button click', () => {

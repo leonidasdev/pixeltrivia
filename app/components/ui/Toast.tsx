@@ -31,22 +31,22 @@ const VARIANT_STYLES: Record<ToastVariant, { bg: string; border: string; icon: s
   success: {
     bg: 'bg-green-900/90',
     border: 'border-green-500',
-    icon: '✅',
+    icon: '+',
   },
   error: {
     bg: 'bg-red-900/90',
     border: 'border-red-500',
-    icon: '❌',
+    icon: 'x',
   },
   warning: {
     bg: 'bg-yellow-900/90',
     border: 'border-yellow-500',
-    icon: '⚠️',
+    icon: '!',
   },
   info: {
     bg: 'bg-blue-900/90',
     border: 'border-blue-500',
-    icon: 'ℹ️',
+    icon: 'i',
   },
 }
 
@@ -104,7 +104,7 @@ export function Toast({ message, onDismiss }: ToastProps) {
           className="text-gray-400 hover:text-white transition-colors flex-shrink-0 p-1"
           aria-label="Dismiss notification"
         >
-          ✕
+          x
         </button>
       </div>
     </div>

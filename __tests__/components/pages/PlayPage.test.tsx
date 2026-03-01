@@ -343,7 +343,7 @@ describe('PlayPage', () => {
       storeSession()
       render(<PlayPage />)
       // Timer shows some seconds remaining
-      expect(screen.getByText('⏱')).toBeInTheDocument()
+      expect(screen.getByText('TIME')).toBeInTheDocument()
     })
   })
 

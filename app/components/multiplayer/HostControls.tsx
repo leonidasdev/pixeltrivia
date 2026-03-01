@@ -56,7 +56,7 @@ export function HostControls({
             }
           `}
         >
-          {isLoading ? '⏳' : 'NEXT →'}
+          {isLoading ? '...' : 'NEXT →'}
         </button>
       </div>
 

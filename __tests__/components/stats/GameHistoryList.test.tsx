@@ -73,7 +73,7 @@ describe('GameHistoryList', () => {
       render(<GameHistoryList history={[makeEntry({ streak: 5 })]} />)
       const btn = screen.getByRole('button', { name: /game details/i })
       fireEvent.click(btn)
-      expect(screen.getByText('🔥 5')).toBeInTheDocument()
+      expect(screen.getByText('x5')).toBeInTheDocument()
     })
 
     it('shows playerName when present', () => {
@@ -94,14 +94,14 @@ describe('GameHistoryList', () => {
 
     it('filters by mode', () => {
       render(<GameHistoryList history={entries} />)
-      fireEvent.click(screen.getByText(/⚡ QUICK/i))
+      fireEvent.click(screen.getByText(/> QUICK/i))
       expect(screen.getByText(/showing 1 of 3/i)).toBeInTheDocument()
     })
 
     it('shows all when ALL filter selected', () => {
       render(<GameHistoryList history={entries} />)
-      fireEvent.click(screen.getByText(/⚡ QUICK/i)) // filter first
-      fireEvent.click(screen.getByText(/🎮 ALL/i))
+      fireEvent.click(screen.getByText(/> QUICK/i)) // filter first
+      fireEvent.click(screen.getByText(/^ALL$/i))
       expect(screen.getByText(/showing 3 of 3/i)).toBeInTheDocument()
     })
 
@@ -226,7 +226,7 @@ describe('GameHistoryList', () => {
           history={[makeEntry({ mode: 'multiplayer' as GameHistoryEntry['mode'] })]}
         />
       )
-      expect(screen.getByText('👥')).toBeInTheDocument()
+      expect(screen.getByText('++')).toBeInTheDocument()
     })
 
     // ── Date formatting branches ────────────────────────────
@@ -267,7 +267,7 @@ describe('GameHistoryList', () => {
       delete (entry as Record<string, unknown>).streak
       render(<GameHistoryList history={[entry]} />)
       fireEvent.click(screen.getByRole('button', { name: /game details/i }))
-      expect(screen.getByText('🔥 0')).toBeInTheDocument()
+      expect(screen.getByText('x0')).toBeInTheDocument()
     })
   })
 })

@@ -75,7 +75,7 @@ describe('PlayerList', () => {
 
   it('shows answer status when showAnswerStatus is true', () => {
     render(<PlayerList players={basePlayers} currentPlayerId={1} showAnswerStatus />)
-    expect(screen.getByText('✓')).toBeInTheDocument()
+    expect(screen.getByText('OK')).toBeInTheDocument()
   })
 })
 
@@ -286,9 +286,9 @@ describe('Scoreboard', () => {
 
   it('shows medal emojis for top 3', () => {
     render(<Scoreboard players={players} currentPlayerId={2} isFinal={true} onFinish={() => {}} />)
-    expect(screen.getByText('🥇')).toBeInTheDocument()
-    expect(screen.getByText('🥈')).toBeInTheDocument()
-    expect(screen.getByText('🥉')).toBeInTheDocument()
+    expect(screen.getByText('1st')).toBeInTheDocument()
+    expect(screen.getByText('2nd')).toBeInTheDocument()
+    expect(screen.getByText('3rd')).toBeInTheDocument()
   })
 
   it('shows (you) indicator for current player', () => {
@@ -346,6 +346,6 @@ describe('HostControls', () => {
 
   it('shows loading state', () => {
     render(<HostControls {...defaultProps} isLoading={true} />)
-    expect(screen.getByText('⏳')).toBeInTheDocument()
+    expect(screen.getByText('...')).toBeInTheDocument()
   })
 })

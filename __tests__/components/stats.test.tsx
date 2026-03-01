@@ -138,7 +138,7 @@ describe('StatsOverview', () => {
 
   it('displays favorite mode', () => {
     render(<StatsOverview stats={sampleStats} />)
-    expect(screen.getByText('⚡ Quick')).toBeInTheDocument()
+    expect(screen.getByText('> Quick')).toBeInTheDocument()
   })
 
   it('displays favorite category', () => {
@@ -240,7 +240,7 @@ describe('GameHistoryList', () => {
     render(<GameHistoryList history={entries} />)
 
     // Click "QUICK" filter
-    const quickFilter = screen.getByText('⚡ QUICK')
+    const quickFilter = screen.getByText('> QUICK')
     fireEvent.click(quickFilter)
 
     expect(screen.getByText('Showing 1 of 2 games')).toBeInTheDocument()
@@ -291,7 +291,7 @@ describe('ModeChart', () => {
       },
     }
     render(<ModeChart modeBreakdown={breakdown} />)
-    expect(screen.getByText('📊 MODE BREAKDOWN')).toBeInTheDocument()
+    expect(screen.getByText('MODE BREAKDOWN')).toBeInTheDocument()
     // Each mode appears twice (Games Played + Best Scores)
     expect(screen.getAllByText('Quick')).toHaveLength(2)
     expect(screen.getAllByText('Custom')).toHaveLength(2)
@@ -310,7 +310,7 @@ describe('CategoryChart', () => {
       History: { gamesPlayed: 5, totalScore: 3000, averageAccuracy: 80, bestScore: 900 },
     }
     render(<CategoryChart categoryBreakdown={breakdown} />)
-    expect(screen.getByText('📂 TOP CATEGORIES')).toBeInTheDocument()
+    expect(screen.getByText('TOP CATEGORIES')).toBeInTheDocument()
     expect(screen.getByText('Science')).toBeInTheDocument()
     expect(screen.getByText('History')).toBeInTheDocument()
   })
@@ -336,7 +336,7 @@ describe('StatsCharts', () => {
       Science: { gamesPlayed: 5, totalScore: 3000, averageAccuracy: 70, bestScore: 900 },
     }
     render(<StatsCharts modeBreakdown={modeBreakdown} categoryBreakdown={categoryBreakdown} />)
-    expect(screen.getByText('📊 MODE BREAKDOWN')).toBeInTheDocument()
-    expect(screen.getByText('📂 TOP CATEGORIES')).toBeInTheDocument()
+    expect(screen.getByText('MODE BREAKDOWN')).toBeInTheDocument()
+    expect(screen.getByText('TOP CATEGORIES')).toBeInTheDocument()
   })
 })

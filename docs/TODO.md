@@ -258,16 +258,16 @@
 ## Phase 22 Completed (Adaptive Difficulty UI, Invite Links, Keyboard Navigation)
 
 ### Adaptive Difficulty UI
-- Wired `getRecommendedDifficulty()` into `QuickGameSelector` — each category button now shows a `★ XX%` accuracy badge when the player has history for that category
+- Wired `getRecommendedDifficulty()` into `QuickGameSelector` — each category button now shows a `* XX%` accuracy badge when the player has history for that category
 - Badge has tooltip with adaptive difficulty reason (e.g., "Recommended: high-school — Consistent performance")
 - Uses `useMemo` to build recommendation map across all categories and difficulty sections
 
 ### Multiplayer Invite Links
 - Added copy-to-clipboard and share invite buttons to `LobbyView` lobby screen
 - Room code display is now clickable (copies code to clipboard)
-- **📋 COPY CODE** button copies the 6-character room code
-- **📤 INVITE LINK** button uses Web Share API (with invite URL) or falls back to copying invite URL to clipboard
-- Feedback text shown after actions: "✓ Copied!", "✓ Link copied!", "✓ Shared!", "❌ Copy failed"
+- **COPY CODE** button copies the 6-character room code
+- **INVITE LINK** button uses Web Share API (with invite URL) or falls back to copying invite URL to clipboard
+- Feedback text shown after actions: "OK Copied!", "OK Link copied!", "OK Shared!", "X Copy failed"
 - Invite URL format: `{origin}/game/join?code={roomCode}`
 
 ### Keyboard Navigation for Answers

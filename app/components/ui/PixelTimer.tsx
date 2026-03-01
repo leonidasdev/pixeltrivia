@@ -60,7 +60,7 @@ export function PixelTimer({
         barColor: 'bg-red-500',
         glowColor: 'shadow-[0_0_15px_rgba(239,68,68,0.5)]',
         animation: 'animate-pulse-urgent',
-        icon: '🔥',
+        icon: 'FIRE',
       }
     }
     if (isWarning) {
@@ -71,7 +71,7 @@ export function PixelTimer({
         barColor: 'bg-yellow-500',
         glowColor: 'shadow-[0_0_10px_rgba(234,179,8,0.3)]',
         animation: '',
-        icon: '⚡',
+        icon: 'BOLT',
       }
     }
     return {
@@ -81,7 +81,7 @@ export function PixelTimer({
       barColor: 'bg-cyan-500',
       glowColor: '',
       animation: '',
-      icon: '⏱',
+      icon: 'TIME',
     }
   }, [isCritical, isWarning])
 

@@ -36,7 +36,7 @@ export function PlayerList({
 }: PlayerListProps) {
   const getAvatarEmoji = (avatarId: string) => {
     const avatar = AVATAR_OPTIONS.find(a => a.id === avatarId)
-    return avatar?.emoji ?? '👤'
+    return avatar?.emoji ?? '>'
   }
 
   const getAvatarColor = (avatarId: string) => {
@@ -111,7 +111,7 @@ export function PlayerList({
                   className="w-6 h-6 pixel-border bg-green-500 flex items-center justify-center font-pixel text-[8px]"
                   style={{ borderWidth: '2px' }}
                 >
-                  ✓
+                  OK
                 </span>
               ) : (
                 <span

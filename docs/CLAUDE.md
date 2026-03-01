@@ -519,7 +519,7 @@ export default function GamePage() {
 
   return (
     <GamePageLayout
-      header={{ title: 'Page Title', subtitle: 'Description', icon: '🎮', size: 'lg' }}
+      header={{ title: 'Page Title', subtitle: 'Description', icon: 'G', size: 'lg' }}
       maxWidth="xl"
       noBackground
     >

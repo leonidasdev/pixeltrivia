@@ -33,25 +33,25 @@ const MODE_CONFIG: Record<
   { emoji: string; label: string; barColor: string; bgColor: string }
 > = {
   quick: {
-    emoji: '⚡',
+    emoji: '>',
     label: 'Quick',
     barColor: 'bg-orange-500',
     bgColor: 'bg-orange-900 bg-opacity-30',
   },
   custom: {
-    emoji: '🤖',
+    emoji: 'AI',
     label: 'Custom',
     barColor: 'bg-purple-500',
     bgColor: 'bg-purple-900 bg-opacity-30',
   },
   advanced: {
-    emoji: '📚',
+    emoji: '#',
     label: 'Advanced',
     barColor: 'bg-blue-500',
     bgColor: 'bg-blue-900 bg-opacity-30',
   },
   multiplayer: {
-    emoji: '👥',
+    emoji: '++',
     label: 'Multi',
     barColor: 'bg-green-500',
     bgColor: 'bg-green-900 bg-opacity-30',
@@ -131,7 +131,7 @@ export function ModeChart({ modeBreakdown }: ModeChartProps) {
   if (entries.length === 0) {
     return (
       <div className="pixel-border bg-gray-800 bg-opacity-80 p-6 text-center">
-        <div className="text-2xl mb-2">📊</div>
+        <div className="text-2xl mb-2">--</div>
         <p className="font-pixel text-xs text-gray-400">NO MODE DATA YET</p>
       </div>
     )
@@ -143,7 +143,7 @@ export function ModeChart({ modeBreakdown }: ModeChartProps) {
   return (
     <div className="pixel-border bg-gray-800 bg-opacity-80 p-4 space-y-4">
       <h3 className="font-pixel text-sm text-white text-center pixel-text-shadow">
-        📊 MODE BREAKDOWN
+        MODE BREAKDOWN
       </h3>
 
       {/* Games per mode */}
@@ -151,7 +151,7 @@ export function ModeChart({ modeBreakdown }: ModeChartProps) {
         <h4 className="font-pixel text-[10px] text-gray-500 uppercase">Games Played</h4>
         {entries.map(([mode, stats]) => {
           const config = MODE_CONFIG[mode] || {
-            emoji: '🎮',
+            emoji: '>',
             label: mode,
             barColor: 'bg-gray-500',
             bgColor: '',
@@ -175,7 +175,7 @@ export function ModeChart({ modeBreakdown }: ModeChartProps) {
         <h4 className="font-pixel text-[10px] text-gray-500 uppercase">Best Scores</h4>
         {entries.map(([mode, stats]) => {
           const config = MODE_CONFIG[mode] || {
-            emoji: '🎮',
+            emoji: '>',
             label: mode,
             barColor: 'bg-gray-500',
             bgColor: '',
@@ -209,7 +209,7 @@ export function CategoryChart({ categoryBreakdown }: CategoryChartProps) {
   if (entries.length === 0) {
     return (
       <div className="pixel-border bg-gray-800 bg-opacity-80 p-6 text-center">
-        <div className="text-2xl mb-2">📂</div>
+        <div className="text-2xl mb-2">--</div>
         <p className="font-pixel text-xs text-gray-400">NO CATEGORY DATA YET</p>
       </div>
     )
@@ -220,7 +220,7 @@ export function CategoryChart({ categoryBreakdown }: CategoryChartProps) {
   return (
     <div className="pixel-border bg-gray-800 bg-opacity-80 p-4 space-y-4">
       <h3 className="font-pixel text-sm text-white text-center pixel-text-shadow">
-        📂 TOP CATEGORIES
+        TOP CATEGORIES
       </h3>
 
       <div className="space-y-3">

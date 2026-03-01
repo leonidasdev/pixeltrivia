@@ -58,7 +58,7 @@ describe('HomePage', () => {
       fireEvent.click(settingsBtn)
 
       await waitFor(() => {
-        expect(screen.getByText('⚙️ PLAYER SETTINGS')).toBeInTheDocument()
+        expect(screen.getByText('PLAYER SETTINGS')).toBeInTheDocument()
       })
     })
 

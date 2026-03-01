@@ -186,7 +186,7 @@ function PlayContent({ params }: PlayPageProps) {
               onClick={handleViewStats}
               className="font-pixel text-xs min-h-[44px] bg-cyan-600 hover:bg-cyan-500 text-white border-4 border-cyan-800 pixel-border px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95 pixel-glow-hover"
             >
-              📊 VIEW STATS
+              VIEW STATS
             </button>
             {(() => {
               const sorted = [...room.players].sort((a, b) => b.score - a.score)

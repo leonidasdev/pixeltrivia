@@ -193,7 +193,7 @@ Add screenshots for UI changes
 - Use `unknown` instead of `any` when type is uncertain
 
 ```typescript
-// ✅ Good
+// Good
 interface Player {
   id: string;
   name: string;
@@ -204,7 +204,7 @@ function calculateScore(player: Player, bonus: number): number {
   return player.score + bonus;
 }
 
-// ❌ Bad
+// Bad
 function calc(p: any, b: any) {
   return p.score + b;
 }
@@ -218,7 +218,7 @@ function calc(p: any, b: any) {
 - Extract complex logic into custom hooks
 
 ```tsx
-// ✅ Good
+// Good
 interface QuestionCardProps {
   question: Question;
   onAnswer: (answer: number) => void;

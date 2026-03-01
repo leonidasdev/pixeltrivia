@@ -198,10 +198,10 @@ function GameSelectContent() {
               <div className="text-center mb-8">
                 <h2 className="text-lg font-pixel text-white mb-2 pixel-text-shadow">
                   {selectedGameMode === 'quick'
-                    ? '⚡ QUICK GAME'
+                    ? '> QUICK GAME'
                     : selectedGameMode === 'custom'
-                      ? '🤖 CUSTOM GAME'
-                      : '📚 ADVANCED GAME'}{' '}
+                      ? 'AI CUSTOM GAME'
+                      : 'ADV ADVANCED GAME'}{' '}
                   SELECTED
                 </h2>
                 <p className="text-gray-300 font-pixel-body text-base">
@@ -214,7 +214,7 @@ function GameSelectContent() {
               {selectedGameMode === 'advanced' && (
                 <div className="mb-8 p-6 bg-gray-900 border-4 border-gray-600 pixel-border">
                   <h3 className="text-sm font-pixel text-white mb-4 pixel-text-shadow">
-                    📚 Configure Advanced Game
+                    ADV Configure Advanced Game
                   </h3>
                   <AdvancedGameConfigurator
                     config={advancedGameConfig}
@@ -236,7 +236,7 @@ function GameSelectContent() {
                 `}
                 >
                   <div className="flex items-center justify-center space-x-4">
-                    <span className="text-3xl">🎯</span>
+                    <span className="text-3xl">T</span>
                     <div className="text-left">
                       <h3 className="text-sm font-pixel pixel-text-shadow">PLAY SOLO</h3>
                       <p className="text-green-200 font-pixel-body text-base">
@@ -260,7 +260,7 @@ function GameSelectContent() {
                     active:scale-95 active:translate-x-0 active:translate-y-0
                   `}
                   >
-                    <div className="text-3xl mb-3">🎪</div>
+                    <div className="text-3xl mb-3">+</div>
                     <h3 className="text-xs font-pixel mb-2 pixel-text-shadow">CREATE ROOM</h3>
                     <p className="text-blue-200 font-pixel-body text-base">
                       Host a game • Get 6-digit code • Invite friends
@@ -277,7 +277,7 @@ function GameSelectContent() {
                     active:scale-95 active:translate-x-0 active:translate-y-0
                   `}
                   >
-                    <div className="text-3xl mb-3">🚪</div>
+                    <div className="text-3xl mb-3">J</div>
                     <h3 className="text-xs font-pixel mb-2 pixel-text-shadow">JOIN ROOM</h3>{' '}
                     <p className="text-indigo-200 font-pixel-body text-base">
                       Enter room code • Join friends • Play together

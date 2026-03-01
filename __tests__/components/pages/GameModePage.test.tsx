@@ -42,10 +42,10 @@ describe('GameModePage', () => {
 
     it('renders game mode icons', () => {
       render(<GameModePage />)
-      expect(screen.getByText('⚡')).toBeInTheDocument()
-      // 🤖 appears twice: Custom Game icon + default robot avatar
-      expect(screen.getAllByText('🤖').length).toBeGreaterThanOrEqual(1)
-      expect(screen.getByText('📚')).toBeInTheDocument()
+      expect(screen.getByText('>')).toBeInTheDocument()
+      // AI appears twice: Custom Game icon + default robot avatar
+      expect(screen.getAllByText('AI').length).toBeGreaterThanOrEqual(1)
+      expect(screen.getByText('ADV')).toBeInTheDocument()
     })
 
     it('renders footer', () => {

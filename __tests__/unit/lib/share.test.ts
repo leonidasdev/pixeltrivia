@@ -38,7 +38,7 @@ describe('generateShareText', () => {
 
   it('omits category line when not provided', () => {
     const text = generateShareText({ ...baseResult, category: undefined })
-    expect(text).not.toContain('📂')
+    expect(text).not.toContain('Category:')
   })
 
   it('includes rank for multiplayer', () => {
@@ -54,18 +54,18 @@ describe('generateShareText', () => {
 
   it('omits rank when not multiplayer', () => {
     const text = generateShareText(baseResult)
-    expect(text).not.toContain('🎖️')
+    expect(text).not.toContain('Rank:')
   })
 
   it('includes score bar for ≤ 20 questions', () => {
     const text = generateShareText(baseResult)
-    expect(text).toContain('🟩')
-    expect(text).toContain('🟥')
+    expect(text).toContain('[+]')
+    expect(text).toContain('[-]')
   })
 
   it('omits score bar for > 20 questions', () => {
     const text = generateShareText({ ...baseResult, totalQuestions: 25, correctAnswers: 20 })
-    expect(text).not.toContain('🟩')
+    expect(text).not.toContain('[+]')
   })
 
   it('includes site URL', () => {
@@ -75,22 +75,22 @@ describe('generateShareText', () => {
 
   it('uses trophy emoji for 100% accuracy', () => {
     const text = generateShareText({ ...baseResult, accuracy: 100 })
-    expect(text).toContain('🏆')
+    expect(text).toContain('[TROPHY]')
   })
 
   it('uses star emoji for 90%+ accuracy', () => {
     const text = generateShareText({ ...baseResult, accuracy: 95 })
-    expect(text).toContain('🌟')
+    expect(text).toContain('[STAR]')
   })
 
   it('uses target emoji for 80%+ accuracy', () => {
     const text = generateShareText({ ...baseResult, accuracy: 80 })
-    expect(text).toContain('🎯')
+    expect(text).toContain('[TARGET]')
   })
 
   it('uses book emoji for low accuracy', () => {
     const text = generateShareText({ ...baseResult, accuracy: 30 })
-    expect(text).toContain('📚')
+    expect(text).toContain('[STUDY]')
   })
 })
 

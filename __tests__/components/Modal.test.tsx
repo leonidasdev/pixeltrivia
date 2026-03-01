@@ -46,7 +46,7 @@ describe('Modal', () => {
 
     it('renders close button by default', () => {
       render(<Modal {...defaultProps} title="Title" />)
-      // The close button has ✕ text
+      // The close button has x text
       const closeBtn = screen.getByRole('button', { name: /close/i })
       expect(closeBtn).toBeInTheDocument()
     })

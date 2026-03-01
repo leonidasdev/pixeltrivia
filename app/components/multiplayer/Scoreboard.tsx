@@ -33,9 +33,9 @@ interface ScoreboardProps {
 }
 
 const PODIUM_STYLES = [
-  { border: 'border-yellow-400', badge: '🥇', color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
-  { border: 'border-gray-300', badge: '🥈', color: 'text-gray-300', bg: 'bg-gray-400/10' },
-  { border: 'border-amber-600', badge: '🥉', color: 'text-amber-500', bg: 'bg-amber-500/10' },
+  { border: 'border-yellow-400', badge: '1st', color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
+  { border: 'border-gray-300', badge: '2nd', color: 'text-gray-300', bg: 'bg-gray-400/10' },
+  { border: 'border-amber-600', badge: '3rd', color: 'text-amber-500', bg: 'bg-amber-500/10' },
 ]
 
 export function Scoreboard({
@@ -50,7 +50,7 @@ export function Scoreboard({
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
 
   const getAvatarEmoji = (avatarId: string) => {
-    return AVATAR_OPTIONS.find(a => a.id === avatarId)?.emoji ?? '👤'
+    return AVATAR_OPTIONS.find(a => a.id === avatarId)?.emoji ?? '>'
   }
 
   const getAvatarColor = (avatarId: string) => {
@@ -61,7 +61,7 @@ export function Scoreboard({
     <div className="max-w-xl w-full mx-auto space-y-6">
       {/* Title */}
       <div className="text-center">
-        <div className="text-5xl mb-3">{isFinal ? '🏆' : '📊'}</div>
+        <div className="text-5xl mb-3">{isFinal ? 'W' : '--'}</div>
         <h2 className="font-pixel text-2xl text-white pixel-text-shadow">
           {isFinal ? 'FINAL SCORES' : 'SCOREBOARD'}
         </h2>
@@ -133,7 +133,7 @@ export function Scoreboard({
             onClick={onFinish}
             className="w-full py-4 font-pixel text-sm bg-cyan-600 hover:bg-cyan-500 border-4 border-cyan-800 text-white pixel-border pixel-shadow transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50 pixel-glow-hover"
           >
-            🏠 BACK TO HOME
+            BACK TO HOME
           </button>
         </div>
       )}

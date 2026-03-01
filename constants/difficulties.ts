@@ -19,7 +19,7 @@ export interface KnowledgeLevelConfig {
   label: string
   /** Description of the level */
   description: string
-  /** Emoji icon */
+  /** Text icon */
   emoji: string
   /** Suggested age range */
   ageRange?: string
@@ -39,14 +39,14 @@ export const KNOWLEDGE_LEVELS: readonly KnowledgeLevelConfig[] = [
     value: 'classic',
     label: 'Classic',
     description: 'Mixed difficulty - General knowledge',
-    emoji: '🌟',
+    emoji: '~',
     complexity: 3,
   },
   {
     value: 'college',
     label: 'College Level',
     description: 'Advanced topics - University level',
-    emoji: '🎓',
+    emoji: '^',
     ageRange: '18+',
     complexity: 5,
   },
@@ -54,7 +54,7 @@ export const KNOWLEDGE_LEVELS: readonly KnowledgeLevelConfig[] = [
     value: 'high-school',
     label: 'High School',
     description: 'Academic subjects - Grade 9-12',
-    emoji: '📚',
+    emoji: '#',
     ageRange: '14-18',
     complexity: 4,
   },
@@ -62,7 +62,7 @@ export const KNOWLEDGE_LEVELS: readonly KnowledgeLevelConfig[] = [
     value: 'middle-school',
     label: 'Middle School',
     description: 'Core subjects - Grade 6-8',
-    emoji: '📝',
+    emoji: '@',
     ageRange: '11-13',
     complexity: 3,
   },
@@ -70,7 +70,7 @@ export const KNOWLEDGE_LEVELS: readonly KnowledgeLevelConfig[] = [
     value: 'elementary',
     label: 'Elementary',
     description: 'Basic concepts - Grade K-5',
-    emoji: '🎈',
+    emoji: '*',
     ageRange: '6-10',
     complexity: 1,
   },

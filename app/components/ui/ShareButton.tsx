@@ -55,7 +55,7 @@ export function ShareButton({ result, className = '' }: ShareButtonProps) {
       `}
       aria-label="Share your results"
     >
-      {feedback ?? '📤 SHARE'}
+      {feedback ?? 'SHARE'}
     </button>
   )
 }

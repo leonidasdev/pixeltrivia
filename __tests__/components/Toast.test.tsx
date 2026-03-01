@@ -47,7 +47,7 @@ describe('Toast', () => {
     render(<Toast message={baseMessage} onDismiss={onDismiss} />)
 
     expect(screen.getByText('Test toast')).toBeInTheDocument()
-    expect(screen.getByText('✅')).toBeInTheDocument()
+    expect(screen.getByText('+')).toBeInTheDocument()
   })
 
   it('renders description when provided', () => {
@@ -62,16 +62,17 @@ describe('Toast', () => {
     const onDismiss = jest.fn()
 
     const variants = [
-      { variant: 'error' as const, icon: '❌' },
-      { variant: 'warning' as const, icon: '⚠️' },
-      { variant: 'info' as const, icon: 'ℹ️' },
+      { variant: 'error' as const, icon: 'x' },
+      { variant: 'warning' as const, icon: '!' },
+      { variant: 'info' as const, icon: 'i' },
     ]
 
     for (const { variant, icon } of variants) {
       const { unmount } = render(
         <Toast message={{ ...baseMessage, variant }} onDismiss={onDismiss} />
       )
-      expect(screen.getByText(icon)).toBeInTheDocument()
+      const matches = screen.getAllByText(icon)
+      expect(matches.length).toBeGreaterThanOrEqual(1)
       unmount()
     }
   })

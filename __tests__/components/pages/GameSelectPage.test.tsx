@@ -80,9 +80,9 @@ describe('GameSelectPage', () => {
 
     it('renders game mode icons', () => {
       render(<GameSelectPage />)
-      expect(screen.getByText('⚡')).toBeInTheDocument()
-      expect(screen.getAllByText('🤖').length).toBeGreaterThanOrEqual(1)
-      expect(screen.getByText('📚')).toBeInTheDocument()
+      expect(screen.getByText('>')).toBeInTheDocument()
+      expect(screen.getAllByText('AI').length).toBeGreaterThanOrEqual(1)
+      expect(screen.getByText('ADV')).toBeInTheDocument()
     })
 
     it('renders footer', () => {

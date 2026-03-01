@@ -155,7 +155,7 @@ export default function QuickGameSelector({
                             className="block text-[10px] font-pixel opacity-70 mt-0.5"
                             title={recommendations[category].reason}
                           >
-                            ★ {recommendations[category].averageAccuracy}%
+                            * {recommendations[category].averageAccuracy}%
                           </span>
                         )}
                       </button>
@@ -182,7 +182,7 @@ export default function QuickGameSelector({
           </button>
         )}
         <div className="text-center text-gray-400 font-pixel-body text-sm">
-          <p>🎮 Use keyboard arrows and Enter to navigate</p>
+          <p>Use keyboard arrows and Enter to navigate</p>
           <p className="opacity-75 font-pixel text-[10px]">
             10 questions per category • Instant start
           </p>

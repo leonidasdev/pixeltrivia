@@ -113,7 +113,7 @@ export default function AdvancedGamePage() {
       header={{
         title: 'Advanced Game',
         subtitle: 'Solo Play with Custom Documents',
-        icon: '📚',
+        icon: 'ADV',
         size: 'lg',
       }}
       maxWidth="xl"
@@ -137,7 +137,7 @@ export default function AdvancedGamePage() {
                       key={file.id}
                       className="bg-gray-800 border-4 border-gray-600 pixel-border p-3 flex items-center space-x-3"
                     >
-                      <span className="text-lg">📄</span>
+                      <span className="text-lg">DOC</span>
                       <div>
                         <div className="text-white font-pixel-body text-base font-medium">
                           {file.name}
@@ -175,14 +175,14 @@ export default function AdvancedGamePage() {
         <section className="w-full max-w-lg">
           {error && (
             <div className="mb-4 p-4 bg-red-900 bg-opacity-30 border-4 border-red-600 pixel-border">
-              <h4 className="text-red-300 font-pixel text-[10px] mb-2">⚠️ Error</h4>
+              <h4 className="text-red-300 font-pixel text-[10px] mb-2">Error</h4>
               <p className="text-red-200 font-pixel-body text-base">{error}</p>
             </div>
           )}
 
           <div className="bg-blue-900 bg-opacity-30 border-4 border-blue-600 pixel-border p-6 text-center">
             <h3 className="text-sm font-pixel text-white mb-4 pixel-text-shadow">
-              🚀 Ready to Start!
+              Ready to Start!
             </h3>
             <p className="text-blue-200 font-pixel-body text-base mb-6">
               {gameConfig.files.length > 0
@@ -204,7 +204,7 @@ export default function AdvancedGamePage() {
                   }
                 `}
               >
-                <span className="block">{isGenerating ? '🔄 GENERATING...' : '🎯 START GAME'}</span>
+                <span className="block">{isGenerating ? 'GENERATING...' : 'START GAME'}</span>
                 <span className="block font-pixel-body text-base mt-1 opacity-80">
                   {isGenerating
                     ? 'AI is creating your questions...'
@@ -215,7 +215,7 @@ export default function AdvancedGamePage() {
           </div>
         </section>
         {/* Processing Info */}
-        <Footer hint="💡 Tip: Questions will be generated based on the content of your uploaded documents" />
+        <Footer hint="Tip: Questions will be generated based on the content of your uploaded documents" />
       </div>
 
       {/* Toast notifications */}

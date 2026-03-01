@@ -36,10 +36,10 @@ const PERIODS: { id: LeaderboardPeriod; label: string }[] = [
 ]
 
 const SORT_OPTIONS: { id: LeaderboardSort; label: string; emoji: string }[] = [
-  { id: 'score', label: 'Score', emoji: '⭐' },
-  { id: 'accuracy', label: 'Accuracy', emoji: '🎯' },
-  { id: 'streak', label: 'Streak', emoji: '🔥' },
-  { id: 'speed', label: 'Speed', emoji: '⚡' },
+  { id: 'score', label: 'Score', emoji: '*' },
+  { id: 'accuracy', label: 'Accuracy', emoji: 'T' },
+  { id: 'streak', label: 'Streak', emoji: 'F' },
+  { id: 'speed', label: 'Speed', emoji: '>' },
 ]
 
 const MODE_OPTIONS = [
@@ -54,9 +54,9 @@ const MODE_OPTIONS = [
 // ============================================================================
 
 function RankBadge({ rank }: { rank: number }) {
-  if (rank === 1) return <span className="text-2xl">🥇</span>
-  if (rank === 2) return <span className="text-2xl">🥈</span>
-  if (rank === 3) return <span className="text-2xl">🥉</span>
+  if (rank === 1) return <span className="text-2xl">1st</span>
+  if (rank === 2) return <span className="text-2xl">2nd</span>
+  if (rank === 3) return <span className="text-2xl">3rd</span>
   return <span className="font-pixel text-gray-400 text-lg">#{rank}</span>
 }
 
@@ -64,10 +64,10 @@ function LeaderboardRow({ item }: { item: LeaderboardEntry }) {
   const { rank, entry, isPersonalBest } = item
   const isTop3 = rank <= 3
   const modeEmoji: Record<string, string> = {
-    quick: '⚡',
-    custom: '🤖',
-    advanced: '📚',
-    multiplayer: '👥',
+    quick: '>',
+    custom: 'AI',
+    advanced: '#',
+    multiplayer: '++',
   }
 
   return (
@@ -87,7 +87,7 @@ function LeaderboardRow({ item }: { item: LeaderboardEntry }) {
           <span className="font-pixel text-sm text-white truncate">
             {entry.playerName || 'Player'}
           </span>
-          <span className="text-xs">{modeEmoji[entry.mode] || '🎮'}</span>
+          <span className="text-xs">{modeEmoji[entry.mode] || '>'}</span>
           {isPersonalBest && (
             <span className="font-pixel text-[10px] text-cyan-400 bg-cyan-900/30 px-1">BEST</span>
           )}
@@ -100,7 +100,7 @@ function LeaderboardRow({ item }: { item: LeaderboardEntry }) {
       <div className="text-right flex-shrink-0">
         <div className="font-pixel text-sm text-yellow-400">{entry.score.toLocaleString()}</div>
         <div className="font-pixel-body text-xs text-gray-400">
-          {entry.accuracy}% · {entry.streak || 0}🔥
+          {entry.accuracy}% · {entry.streak || 0}F
         </div>
       </div>
     </div>
@@ -113,25 +113,25 @@ function PersonalRecordsSection() {
   const recordCards = [
     {
       label: 'HIGHEST SCORE',
-      emoji: '⭐',
+      emoji: '*',
       value: records.highestScore?.score.toLocaleString() ?? '—',
       sub: records.highestScore?.category ?? '',
     },
     {
       label: 'BEST ACCURACY',
-      emoji: '🎯',
+      emoji: 'T',
       value: records.bestAccuracy ? `${records.bestAccuracy.accuracy}%` : '—',
       sub: records.bestAccuracy?.category ?? '',
     },
     {
       label: 'LONGEST STREAK',
-      emoji: '🔥',
+      emoji: 'F',
       value: records.longestStreak?.streak?.toString() ?? '—',
       sub: records.longestStreak?.category ?? '',
     },
     {
       label: 'FASTEST GAME',
-      emoji: '⚡',
+      emoji: '>',
       value:
         records.fastestGame && records.fastestGame.totalQuestions > 0
           ? `${(records.fastestGame.duration / records.fastestGame.totalQuestions).toFixed(1)}s/q`
@@ -140,7 +140,7 @@ function PersonalRecordsSection() {
     },
     {
       label: 'MOST QUESTIONS',
-      emoji: '📝',
+      emoji: '#',
       value: records.mostQuestions?.totalQuestions?.toString() ?? '—',
       sub: records.mostQuestions?.category ?? '',
     },
@@ -211,7 +211,7 @@ export default function LeaderboardPage() {
               ← BACK
             </button>
             <h1 className="font-pixel text-lg sm:text-xl text-yellow-400 flex-1 text-center">
-              🏆 LEADERBOARD
+              LEADERBOARD
             </h1>
             <div className="w-20" /> {/* Spacer for centering */}
           </div>
@@ -297,7 +297,7 @@ export default function LeaderboardPage() {
             {leaderboard.entries.length === 0 ? (
               <div className="flex-1 flex items-center justify-center p-8">
                 <div className="text-center">
-                  <div className="text-4xl mb-3 animate-pixel-bounce">🏆</div>
+                  <div className="text-4xl mb-3 animate-pixel-bounce">W</div>
                   <p className="font-pixel text-sm text-gray-400">NO GAMES YET</p>
                   <p className="font-pixel-body text-xs text-gray-500 mt-1">
                     Play some games to see your rankings!

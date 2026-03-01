@@ -83,7 +83,7 @@ export default function CustomGamePage() {
       header={{
         title: 'Custom Game',
         subtitle: 'AI-powered personalized trivia experience',
-        icon: '🤖',
+        icon: 'AI',
         size: 'lg',
       }}
       maxWidth="xl"
@@ -91,7 +91,7 @@ export default function CustomGamePage() {
     >
       {/* Features tagline */}
       <div className="flex items-center justify-center space-x-2 text-yellow-400 font-pixel-body text-base mb-6">
-        <span>🤖</span>
+        <span>AI</span>
         <span>Powered by Advanced AI</span>
         <span>•</span>
         <span>Unlimited Topics</span>
@@ -109,7 +109,7 @@ export default function CustomGamePage() {
       {/* Features Section */}
       <section className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
         <div className="bg-gray-900 bg-opacity-60 pixel-border border-4 border-gray-600 p-4">
-          <div className="text-3xl mb-2">🎯</div>
+          <div className="text-3xl mb-2">T</div>
           <h3 className="text-white font-pixel text-[10px] mb-1">Targeted Learning</h3>
           <p className="text-gray-400 font-pixel-body text-base">
             Questions tailored to your specific topic and knowledge level
@@ -117,7 +117,7 @@ export default function CustomGamePage() {
         </div>
 
         <div className="bg-gray-900 bg-opacity-60 pixel-border border-4 border-gray-600 p-4">
-          <div className="text-3xl mb-2">⚡</div>
+          <div className="text-3xl mb-2">{'>'}</div>
           <h3 className="text-white font-pixel text-[10px] mb-1">Instant Generation</h3>
           <p className="text-gray-400 font-pixel-body text-base">
             AI creates fresh questions in seconds based on your context
@@ -125,7 +125,7 @@ export default function CustomGamePage() {
         </div>
 
         <div className="bg-gray-900 bg-opacity-60 pixel-border border-4 border-gray-600 p-4">
-          <div className="text-3xl mb-2">📚</div>
+          <div className="text-3xl mb-2">#</div>
           <h3 className="text-white font-pixel text-[10px] mb-1">Any Subject</h3>
           <p className="text-gray-400 font-pixel-body text-base">
             From textbook chapters to hobby topics - unlimited possibilities
@@ -139,7 +139,7 @@ export default function CustomGamePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <h4 className="text-cyan-300 font-pixel text-[10px] mb-2">
-              📝 What to include in context:
+              What to include in context:
             </h4>
             <ul className="space-y-1 font-pixel-body text-base">
               <li>• Specific topics or subjects</li>
@@ -150,7 +150,7 @@ export default function CustomGamePage() {
             </ul>
           </div>
           <div>
-            <h4 className="text-cyan-300 font-pixel text-[10px] mb-2">🎓 Knowledge levels:</h4>
+            <h4 className="text-cyan-300 font-pixel text-[10px] mb-2">Knowledge levels:</h4>
             <ul className="space-y-1 font-pixel-body text-base">
               <li>
                 • <strong>Elementary:</strong> Simple concepts, basic vocabulary

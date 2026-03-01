@@ -103,18 +103,18 @@ export function LobbyView({
             className="px-3 py-2 min-h-[44px] font-pixel text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white border-4 border-gray-600 pixel-border transition-all duration-150 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-300"
           >
             {copyFeedback === 'Code copied!'
-              ? '✓ Copied!'
+              ? 'OK Copied!'
               : copyFeedback === 'Copy failed'
-                ? '❌ Copy failed'
-                : '📋 COPY CODE'}
+                ? 'X Copy failed'
+                : 'COPY CODE'}
           </button>
           <button
             onClick={handleShareInvite}
             className="px-3 py-2 min-h-[44px] font-pixel text-xs bg-cyan-700 hover:bg-cyan-600 text-white border-4 border-cyan-800 pixel-border transition-all duration-150 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-300"
           >
             {copyFeedback === 'Link copied!' || copyFeedback === 'Shared!'
-              ? `✓ ${copyFeedback}`
-              : '📤 INVITE LINK'}
+              ? `OK ${copyFeedback}`
+              : 'INVITE LINK'}
           </button>
         </div>
       </div>
@@ -181,10 +181,10 @@ export function LobbyView({
           >
             {isStarting ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="animate-pixel-bounce">⏳</span> STARTING...
+                <span className="animate-pixel-bounce">...</span> STARTING...
               </span>
             ) : canStart ? (
-              '🎮 START GAME'
+              'START GAME'
             ) : (
               'WAITING FOR PLAYERS...'
             )}
@@ -193,7 +193,7 @@ export function LobbyView({
 
         {!isHost && (
           <div className="text-center py-4">
-            <div className="text-2xl mb-2 animate-pixel-bounce">⏳</div>
+            <div className="text-2xl mb-2 animate-pixel-bounce">...</div>
             <p className="font-pixel-body text-lg text-gray-300">
               Waiting for host to start the game...
             </p>

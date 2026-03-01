@@ -94,7 +94,7 @@ function CreateGameContent() {
     <GamePageLayout
       header={{
         title: 'Create Game Room',
-        icon: '🎮',
+        icon: 'G',
         size: 'lg',
       }}
       maxWidth="lg"
@@ -102,7 +102,7 @@ function CreateGameContent() {
       centerContent
     >
       <div className="bg-gray-900 border-4 border-gray-600 p-8 pixel-border space-y-6">
-        <div className="text-5xl mb-2">🎮</div>
+        <div className="text-5xl mb-2">G</div>
 
         {/* Player Name */}
         <div>
@@ -215,10 +215,10 @@ function CreateGameContent() {
         >
           {isCreating ? (
             <span className="flex items-center justify-center gap-2">
-              <span className="animate-pixel-bounce">⏳</span> CREATING ROOM...
+              <span className="animate-pixel-bounce">...</span> CREATING ROOM...
             </span>
           ) : (
-            '🚀 CREATE ROOM'
+            'CREATE ROOM'
           )}
         </button>
       </div>

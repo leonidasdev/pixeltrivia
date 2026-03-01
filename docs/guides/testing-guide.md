@@ -104,7 +104,7 @@ This generates:
 ## Test Structure
 
 ```
-__tests__/                         # Jest unit & component tests (104 files)
+__tests__/                         # Jest unit & component tests
 ├── components/                    # Component tests
 │   ├── AdvancedGameConfigurator.test.tsx
 │   ├── BackButton.test.tsx

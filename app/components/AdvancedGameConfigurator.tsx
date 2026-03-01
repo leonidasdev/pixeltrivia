@@ -209,13 +209,13 @@ export default function AdvancedGameConfigurator({
           <div className="pointer-events-none">
             {isUploading ? (
               <>
-                <div className="text-4xl mb-3 animate-pulse">⏳</div>
+                <div className="text-4xl mb-3 animate-pulse">...</div>
                 <p className="text-cyan-300 font-bold mb-2">Processing files...</p>
                 <p className="text-gray-400 text-sm">Extracting text from your documents</p>
               </>
             ) : (
               <>
-                <div className="text-4xl mb-3">📄</div>
+                <div className="text-4xl mb-3">DOC</div>
                 <p className="text-white font-bold mb-2">Drop files here or click to browse</p>
                 <p className="text-gray-400 text-sm">Supports: .txt, .pdf, .docx, .md files</p>
                 <p className="text-gray-500 text-xs mt-1">Max 10MB per file • Up to 5 files</p>
@@ -242,7 +242,7 @@ export default function AdvancedGameConfigurator({
                   className="flex items-center justify-between p-3 bg-gray-800 border-2 border-gray-600 rounded pixel-border"
                 >
                   <div className="flex items-center space-x-3">
-                    <span className="text-lg">📄</span>
+                    <span className="text-lg">DOC</span>
                     <div>
                       <div className="text-white text-sm font-medium">{file.name}</div>
                       <div className="text-gray-400 text-xs">{formatFileSize(file.size)}</div>
@@ -253,7 +253,7 @@ export default function AdvancedGameConfigurator({
                     className="text-red-400 hover:text-red-300 font-bold text-xl p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-red-900 hover:bg-opacity-30 rounded transition-colors"
                     aria-label={`Remove ${file.name}`}
                   >
-                    ✕
+                    x
                   </button>
                 </div>
               ))}
@@ -315,7 +315,7 @@ export default function AdvancedGameConfigurator({
             `}
             aria-pressed={config.questionFormat === 'short'}
           >
-            <div className="text-2xl mb-2">⚡</div>
+            <div className="text-2xl mb-2">{'>'}</div>
             <div className="font-bold text-sm">Short Questions</div>
             <div className="text-xs mt-1 opacity-80">Quick, focused questions</div>
           </button>
@@ -334,7 +334,7 @@ export default function AdvancedGameConfigurator({
             `}
             aria-pressed={config.questionFormat === 'long'}
           >
-            <div className="text-2xl mb-2">📖</div>
+            <div className="text-2xl mb-2">ADV</div>
             <div className="font-bold text-sm">Longer Questions</div>
             <div className="text-xs mt-1 opacity-80">Detailed, comprehensive</div>
           </button>
@@ -344,7 +344,7 @@ export default function AdvancedGameConfigurator({
       {/* Info Box */}
       <div className="bg-blue-900 bg-opacity-30 border-2 border-blue-600 p-4 pixel-border">
         <h4 className="text-blue-300 font-pixel font-bold text-sm mb-2 flex items-center">
-          <span className="mr-2">💡</span> Advanced Game Tips
+          <span className="mr-2">TIP:</span> Advanced Game Tips
         </h4>
         <ul className="text-blue-200 text-xs space-y-1">
           <li>• Upload documents to give richer context to the AI</li>

@@ -158,7 +158,7 @@ describe('AnswerOptionHighlight', () => {
         <span>Option A</span>
       </AnswerOptionHighlight>
     )
-    expect(screen.getByText('✓')).toBeInTheDocument()
+    expect(screen.getByText('OK')).toBeInTheDocument()
   })
 })
 

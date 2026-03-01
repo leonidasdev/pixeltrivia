@@ -9,7 +9,7 @@ import { GameModeCard, GAME_MODES, GAME_MODE_COLORS } from '@/app/components/ui/
 describe('GameModeCard', () => {
   const defaultProps = {
     id: 'quick',
-    icon: '⚡',
+    icon: '>',
     title: 'QUICK GAME',
     description: 'Test description',
     tagline: '• Test tagline',
@@ -27,7 +27,7 @@ describe('GameModeCard', () => {
   it('renders icon, title, description, and tagline', () => {
     render(<GameModeCard {...defaultProps} />)
 
-    expect(screen.getByText('⚡')).toBeInTheDocument()
+    expect(screen.getByText('>')).toBeInTheDocument()
     expect(screen.getByText('QUICK GAME')).toBeInTheDocument()
     expect(screen.getByText('Test description')).toBeInTheDocument()
     expect(screen.getByText('• Test tagline')).toBeInTheDocument()

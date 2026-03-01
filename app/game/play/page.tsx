@@ -300,14 +300,14 @@ export default function PlayPage() {
             <div className="text-center">
               <span className="text-5xl">
                 {grade === 'S'
-                  ? '🏆'
+                  ? 'W'
                   : grade === 'A'
-                    ? '🌟'
+                    ? '*'
                     : grade === 'B'
-                      ? '🎯'
+                      ? 'T'
                       : grade === 'C'
-                        ? '💪'
-                        : '📚'}
+                        ? '!'
+                        : '#'}
               </span>
               <p className="font-pixel text-lg text-cyan-400 mt-1">Grade: {grade}</p>
             </div>
@@ -328,13 +328,13 @@ export default function PlayPage() {
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <PixelButton variant="primary" onClick={() => router.push('/game/quick')}>
-                🔄 PLAY AGAIN
+                PLAY AGAIN
               </PixelButton>
               <PixelButton variant="secondary" onClick={() => router.push('/game/stats')}>
-                📊 VIEW STATS
+                VIEW STATS
               </PixelButton>
               <PixelButton variant="secondary" onClick={() => router.push('/')}>
-                🏠 HOME
+                HOME
               </PixelButton>
             </div>
 
@@ -394,7 +394,7 @@ export default function PlayPage() {
             <div
               className={`flex items-center gap-2 font-pixel font-bold text-2xl ${getTimerColor()} ${getTimerAnimation()}`}
             >
-              <span>⏱</span>
+              <span>TIME</span>
               <span>{timer.timeRemaining}s</span>
             </div>
           </div>
@@ -411,9 +411,9 @@ export default function PlayPage() {
 
           {/* Score + streak ribbon */}
           <div className="flex items-center justify-between text-sm font-pixel">
-            <span className="text-yellow-400">⭐ {game.score.toLocaleString()} pts</span>
+            <span className="text-yellow-400">* {game.score.toLocaleString()} pts</span>
             {game.streak > 1 && (
-              <span className="text-orange-400 animate-pulse">🔥 {game.streak} streak!</span>
+              <span className="text-orange-400 animate-pulse">F {game.streak} streak!</span>
             )}
           </div>
 
@@ -505,7 +505,7 @@ export default function PlayPage() {
                 }`}
               >
                 <div className="text-3xl mb-1">
-                  {lastAnswerCorrect ? '🎉' : selectedAnswer === null ? '⏰' : '❌'}
+                  {lastAnswerCorrect ? '+' : selectedAnswer === null ? 'TIME' : 'X'}
                 </div>
                 <div className="font-pixel text-lg pixel-text-shadow">
                   {lastAnswerCorrect

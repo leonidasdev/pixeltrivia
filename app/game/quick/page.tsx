@@ -77,7 +77,7 @@ export default function QuickGamePage() {
       header={{
         title: 'Quick Game',
         subtitle: 'Jump into a fast-paced trivia challenge',
-        icon: '⚡',
+        icon: '>',
         size: 'lg',
       }}
       maxWidth="xl"

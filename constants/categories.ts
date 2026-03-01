@@ -17,7 +17,7 @@ export interface CategoryGroup {
   key: DifficultyLevel
   /** Display title */
   title: string
-  /** Emoji icon */
+  /** Text icon */
   emoji: string
   /** Description of the difficulty */
   description: string
@@ -52,7 +52,7 @@ export const GAME_CATEGORIES: Record<DifficultyLevel, CategoryGroup> = {
   elementary: {
     key: 'elementary',
     title: 'Elementary',
-    emoji: '🎈',
+    emoji: '*',
     description: 'Ages 6-10 - Fun & Simple',
     styles: {
       color: 'bg-green-600',
@@ -73,7 +73,7 @@ export const GAME_CATEGORIES: Record<DifficultyLevel, CategoryGroup> = {
   'middle-school': {
     key: 'middle-school',
     title: 'Middle School',
-    emoji: '📚',
+    emoji: '#',
     description: 'Ages 11-13 - Learning Adventure',
     styles: {
       color: 'bg-blue-600',
@@ -94,7 +94,7 @@ export const GAME_CATEGORIES: Record<DifficultyLevel, CategoryGroup> = {
   'high-school': {
     key: 'high-school',
     title: 'High School',
-    emoji: '🎓',
+    emoji: '^',
     description: 'Ages 14-18 - Academic Challenge',
     styles: {
       color: 'bg-purple-600',
@@ -115,7 +115,7 @@ export const GAME_CATEGORIES: Record<DifficultyLevel, CategoryGroup> = {
   college: {
     key: 'college',
     title: 'College Level',
-    emoji: '🔬',
+    emoji: '+',
     description: 'Ages 18+ - Expert Knowledge',
     styles: {
       color: 'bg-red-600',
@@ -136,7 +136,7 @@ export const GAME_CATEGORIES: Record<DifficultyLevel, CategoryGroup> = {
   classic: {
     key: 'classic',
     title: 'Classic',
-    emoji: '🌟',
+    emoji: '~',
     description: 'Mixed difficulty - General Knowledge',
     styles: {
       color: 'bg-yellow-600',

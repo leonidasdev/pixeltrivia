@@ -107,7 +107,7 @@ export interface GameModeData {
 export const GAME_MODES: GameModeData[] = [
   {
     id: 'quick',
-    icon: '⚡',
+    icon: '>',
     title: 'QUICK GAME',
     description:
       'Jump into instant trivia with predefined categories. Perfect for quick brain challenges with 10 random questions!',
@@ -116,7 +116,7 @@ export const GAME_MODES: GameModeData[] = [
   },
   {
     id: 'custom',
-    icon: '🤖',
+    icon: 'AI',
     title: 'CUSTOM GAME',
     description:
       'Create AI-powered questions on any topic you choose. Specify difficulty, question count, and educational level!',
@@ -125,7 +125,7 @@ export const GAME_MODES: GameModeData[] = [
   },
   {
     id: 'advanced',
-    icon: '📚',
+    icon: 'ADV',
     title: 'ADVANCED GAME',
     description:
       'Upload your own documents for AI-powered trivia generation. Perfect for studying or testing knowledge of specific materials!',
@@ -147,7 +147,7 @@ export const GAME_MODES: GameModeData[] = [
  * ```tsx
  * <GameModeCard
  *   id="quick"
- *   icon="⚡"
+ *   icon=">"
  *   title="QUICK GAME"
  *   description="Jump into instant trivia..."
  *   tagline="• 10 Questions • Mixed Categories"

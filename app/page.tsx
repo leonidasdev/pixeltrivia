@@ -203,7 +203,7 @@ export default function HomePage() {
                 role="menuitem"
                 aria-label="View game stats and history"
               >
-                <span className="block">📊 STATS</span>
+                <span className="block">STATS</span>
               </button>
 
               {/* Leaderboard Button */}
@@ -230,7 +230,7 @@ export default function HomePage() {
                 role="menuitem"
                 aria-label="View leaderboard rankings"
               >
-                <span className="block">🏆 RANKS</span>
+                <span className="block">RANKS</span>
               </button>
 
               {/* Achievements Button */}
@@ -257,7 +257,7 @@ export default function HomePage() {
                 role="menuitem"
                 aria-label="View achievements"
               >
-                <span className="block">🏅 BADGES</span>
+                <span className="block">BADGES</span>
               </button>
             </div>
 
@@ -284,7 +284,7 @@ export default function HomePage() {
                 role="menuitem"
                 aria-label="Open player settings"
               >
-                <span className="block">⚙️ SETTINGS</span>
+                <span className="block">SETTINGS</span>
               </button>
             </div>
           </StaggerChildren>
@@ -293,7 +293,7 @@ export default function HomePage() {
         <Footer hint="Use arrow keys and Enter to navigate" className="mt-8" />
       </PageTransition>{' '}
       {/* Settings Modal */}
-      <Modal isOpen={showSettings} onClose={closeSettings} title="⚙️ PLAYER SETTINGS" size="lg">
+      <Modal isOpen={showSettings} onClose={closeSettings} title="PLAYER SETTINGS" size="lg">
         {nameError && (
           <div
             className="mb-4 p-3 bg-red-900 bg-opacity-40 border-2 border-red-500 text-red-200 text-sm pixel-border"

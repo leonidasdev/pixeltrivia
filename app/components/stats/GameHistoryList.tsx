@@ -32,10 +32,10 @@ type FilterMode = 'all' | 'quick' | 'custom' | 'advanced' | 'multiplayer'
 // ============================================================================
 
 const MODE_EMOJI: Record<string, string> = {
-  quick: '⚡',
-  custom: '🤖',
-  advanced: '📚',
-  multiplayer: '👥',
+  quick: '>',
+  custom: 'AI',
+  advanced: '#',
+  multiplayer: '++',
 }
 
 const MODE_COLORS: Record<string, string> = {
@@ -73,11 +73,11 @@ function getAccuracyColor(accuracy: number): string {
 }
 
 function getAccuracyBadge(accuracy: number): { emoji: string; label: string } {
-  if (accuracy === 100) return { emoji: '💎', label: 'PERFECT' }
-  if (accuracy >= 90) return { emoji: '🌟', label: 'EXCELLENT' }
-  if (accuracy >= 70) return { emoji: '✨', label: 'GOOD' }
-  if (accuracy >= 50) return { emoji: '👍', label: 'OK' }
-  return { emoji: '💪', label: 'KEEP AT IT' }
+  if (accuracy === 100) return { emoji: '***', label: 'PERFECT' }
+  if (accuracy >= 90) return { emoji: '**', label: 'EXCELLENT' }
+  if (accuracy >= 70) return { emoji: '*', label: 'GOOD' }
+  if (accuracy >= 50) return { emoji: '+', label: 'OK' }
+  return { emoji: '!', label: 'KEEP AT IT' }
 }
 
 // ============================================================================
@@ -105,7 +105,7 @@ function HistoryRow({ entry, onDelete }: HistoryRowProps) {
         aria-label={`Game details: ${entry.mode} - ${entry.category}`}
       >
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <span className="text-xl flex-shrink-0">{MODE_EMOJI[entry.mode] || '🎮'}</span>
+          <span className="text-xl flex-shrink-0">{MODE_EMOJI[entry.mode] || '>'}</span>
           <div className="min-w-0">
             <div className="font-pixel text-xs text-white truncate uppercase">{entry.category}</div>
             <div className="font-pixel-body text-xs text-gray-400">
@@ -147,7 +147,7 @@ function HistoryRow({ entry, onDelete }: HistoryRowProps) {
             </div>
             <div className="text-center">
               <div className="font-pixel text-[10px] text-gray-500">STREAK</div>
-              <div className="font-pixel-body text-sm text-orange-400">🔥 {entry.streak || 0}</div>
+              <div className="font-pixel-body text-sm text-orange-400">x{entry.streak || 0}</div>
             </div>
             <div className="text-center">
               <div className="font-pixel text-[10px] text-gray-500">RATING</div>
@@ -173,7 +173,7 @@ function HistoryRow({ entry, onDelete }: HistoryRowProps) {
                 className="font-pixel text-[10px] text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors"
                 aria-label="Delete this game entry"
               >
-                🗑️ DELETE
+                DELETE
               </button>
             </div>
           )}
@@ -221,7 +221,7 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
   if (history.length === 0) {
     return (
       <div className="pixel-border bg-gray-800 bg-opacity-80 p-8 text-center">
-        <div className="text-4xl mb-4">📜</div>
+        <div className="text-4xl mb-4">--</div>
         <h3 className="font-pixel text-lg text-white mb-2">NO HISTORY</h3>
         <p className="font-pixel-body text-gray-400 text-lg">
           Completed games will appear here. Go play some trivia!
@@ -246,7 +246,7 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
                   : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
               }`}
             >
-              {mode === 'all' ? '🎮 ALL' : `${MODE_EMOJI[mode]} ${mode.toUpperCase()}`}
+              {mode === 'all' ? 'ALL' : `${MODE_EMOJI[mode]} ${mode.toUpperCase()}`}
             </button>
           ))}
         </div>
@@ -259,9 +259,9 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
             className="font-pixel text-[10px] bg-gray-800 text-gray-300 pixel-border px-2 py-1 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             aria-label="Sort by"
           >
-            <option value="date">📅 NEWEST</option>
-            <option value="score">⭐ BEST SCORE</option>
-            <option value="accuracy">🎯 ACCURACY</option>
+            <option value="date">NEWEST</option>
+            <option value="score">BEST SCORE</option>
+            <option value="accuracy">ACCURACY</option>
           </select>
 
           {onClearAll && (
@@ -270,7 +270,7 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
               className="font-pixel text-[10px] text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors"
               aria-label="Clear all history"
             >
-              🗑️ CLEAR
+              CLEAR
             </button>
           )}
         </div>

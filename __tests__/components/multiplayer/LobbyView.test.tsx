@@ -26,7 +26,7 @@ const makePlayers = (n: number) =>
   Array.from({ length: n }, (_, i) => ({
     id: i + 1,
     name: `Player ${i + 1}`,
-    avatar: '🎮',
+    avatar: 'R',
     score: 0,
     isHost: i === 0,
     hasAnswered: false,

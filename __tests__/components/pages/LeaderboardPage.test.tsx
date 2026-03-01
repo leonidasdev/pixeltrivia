@@ -156,8 +156,8 @@ describe('LeaderboardPage', () => {
 
   it('renders leaderboard entries with rank medals', () => {
     render(<LeaderboardPage />)
-    expect(screen.getByText('🥇')).toBeInTheDocument()
-    expect(screen.getByText('🥈')).toBeInTheDocument()
+    expect(screen.getByText('1st')).toBeInTheDocument()
+    expect(screen.getByText('2nd')).toBeInTheDocument()
   })
 
   it('renders player names in entries', () => {
@@ -183,6 +183,7 @@ describe('LeaderboardPage', () => {
   })
 
   it('switches period filter on click', () => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { getLeaderboard } = require('@/lib/leaderboard')
     render(<LeaderboardPage />)
     fireEvent.click(screen.getByText('THIS WEEK'))

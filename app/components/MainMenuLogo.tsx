@@ -61,7 +61,7 @@ export default function MainMenuLogo() {
       {/* Logo Content */}
       <div className="text-center select-none">
         <div className="text-xl sm:text-2xl mb-1" role="img" aria-hidden="true">
-          🎮
+          PT
         </div>
         <div className="text-xs sm:text-sm font-bold leading-tight pixel-text-shadow">PIXEL</div>
         <div className="text-xs text-purple-200 leading-tight">TRIVIA</div>

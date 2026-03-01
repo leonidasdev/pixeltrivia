@@ -72,7 +72,7 @@ export default function CustomGameConfigurator({
     <div className="w-full max-w-2xl mx-auto bg-gray-900 bg-opacity-90 border-4 border-gray-600 p-6 backdrop-blur-sm pixel-border">
       <header className="text-center mb-6">
         <h2 className="text-xl sm:text-3xl font-pixel font-bold text-white pixel-text-shadow mb-2">
-          🎯 CUSTOM GAME
+          CUSTOM GAME
         </h2>
         <p className="text-cyan-300 text-sm">AI-generated questions tailored to your needs</p>
       </header>
@@ -236,7 +236,7 @@ export default function CustomGameConfigurator({
                 <span>GENERATING...</span>
               </span>
             ) : (
-              '🚀 START CUSTOM GAME'
+              'START CUSTOM GAME'
             )}
           </button>
 
@@ -259,8 +259,7 @@ export default function CustomGameConfigurator({
       {/* Info Footer */}
       <footer className="mt-6 pt-4 border-t border-gray-600 text-center text-gray-400 text-xs">
         <p className="flex items-center justify-center space-x-2 mb-1">
-          <span>🤖</span>
-          <span>Powered by AI • Questions generated in real-time</span>
+          <span>Powered by AI - Questions generated in real-time</span>
         </p>
         <p className="opacity-75">Generation time: ~10-30 seconds depending on complexity</p>
       </footer>

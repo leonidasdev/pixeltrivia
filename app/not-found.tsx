@@ -13,7 +13,7 @@ export default function NotFound() {
   return (
     <div className="min-h-[60vh] flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-gray-900 bg-opacity-95 border-4 border-yellow-600 pixel-border p-8 text-center">
-        <div className="text-8xl mb-4">🔍</div>
+        <div className="text-8xl mb-4">?</div>
         <h1 className="text-2xl font-pixel text-yellow-400 pixel-text-shadow mb-2">404</h1>
         <h2 className="text-sm font-pixel text-white mb-4">Page Not Found</h2>
         <p className="text-gray-300 font-pixel-body text-lg mb-6">
@@ -29,7 +29,7 @@ export default function NotFound() {
                        focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-border pixel-glow-hover"
           >
-            🏠 MAIN MENU
+            MAIN MENU
           </Link>
           <Link
             href="/game/quick"
@@ -38,7 +38,7 @@ export default function NotFound() {
                        focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:ring-opacity-50
                        hover:scale-105 active:scale-95 pixel-border pixel-glow-hover"
           >
-            🎮 QUICK GAME
+            QUICK GAME
           </Link>
         </div>
       </div>

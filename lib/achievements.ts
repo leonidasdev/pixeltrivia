@@ -30,7 +30,7 @@ export interface Achievement {
   name: string
   /** Description of how to unlock */
   description: string
-  /** Emoji icon */
+  /** Text icon */
   icon: string
   /** Rarity tier */
   tier: AchievementTier
@@ -105,7 +105,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'first_game',
     name: 'First Steps',
     description: 'Complete your first game',
-    icon: '🎮',
+    icon: '[G]',
     tier: 'bronze',
     category: 'gameplay',
     check: h => ({ unlocked: h.length >= 1, progress: Math.min(h.length, 1) }),
@@ -114,7 +114,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'ten_games',
     name: 'Getting Started',
     description: 'Complete 10 games',
-    icon: '🏃',
+    icon: '[>]',
     tier: 'bronze',
     category: 'gameplay',
     check: h => ({ unlocked: h.length >= 10, progress: Math.min(h.length / 10, 1) }),
@@ -123,7 +123,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'fifty_games',
     name: 'Dedicated Player',
     description: 'Complete 50 games',
-    icon: '🎯',
+    icon: '[T]',
     tier: 'silver',
     category: 'gameplay',
     check: h => ({ unlocked: h.length >= 50, progress: Math.min(h.length / 50, 1) }),
@@ -132,7 +132,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'hundred_games',
     name: 'Trivia Veteran',
     description: 'Complete 100 games',
-    icon: '🏆',
+    icon: '[W]',
     tier: 'gold',
     category: 'gameplay',
     check: h => ({ unlocked: h.length >= 100, progress: Math.min(h.length / 100, 1) }),
@@ -143,7 +143,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'perfect_score',
     name: 'Perfect Round',
     description: 'Get 100% accuracy in a game',
-    icon: '💯',
+    icon: '[100]',
     tier: 'gold',
     category: 'mastery',
     check: h => {
@@ -155,7 +155,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'high_scorer',
     name: 'High Scorer',
     description: 'Score over 1,000 points in a single game',
-    icon: '⭐',
+    icon: '[*]',
     tier: 'silver',
     category: 'mastery',
     check: h => {
@@ -167,7 +167,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'mega_scorer',
     name: 'Mega Scorer',
     description: 'Score over 5,000 points in a single game',
-    icon: '🌟',
+    icon: '[**]',
     tier: 'platinum',
     category: 'mastery',
     check: h => {
@@ -179,7 +179,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'streak_five',
     name: 'On Fire',
     description: 'Get a streak of 5 correct answers',
-    icon: '🔥',
+    icon: '[F]',
     tier: 'bronze',
     category: 'mastery',
     check: h => {
@@ -191,7 +191,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'streak_ten',
     name: 'Unstoppable',
     description: 'Get a streak of 10 correct answers',
-    icon: '💪',
+    icon: '[S]',
     tier: 'silver',
     category: 'mastery',
     check: h => {
@@ -203,7 +203,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'streak_twenty',
     name: 'Legendary Streak',
     description: 'Get a streak of 20 correct answers',
-    icon: '👑',
+    icon: '[K]',
     tier: 'platinum',
     category: 'mastery',
     check: h => {
@@ -215,7 +215,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'speed_demon',
     name: 'Speed Demon',
     description: 'Average under 5 seconds per question in a game',
-    icon: '⚡',
+    icon: '[!]',
     tier: 'gold',
     category: 'mastery',
     check: h => {
@@ -231,7 +231,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'all_modes',
     name: 'Well-Rounded',
     description: 'Play all game modes (Quick, Custom, Advanced)',
-    icon: '🎲',
+    icon: '[D]',
     tier: 'silver',
     category: 'dedication',
     check: h => {
@@ -245,7 +245,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'five_categories',
     name: 'Knowledge Seeker',
     description: 'Play games in 5 different categories',
-    icon: '📚',
+    icon: '[B]',
     tier: 'silver',
     category: 'dedication',
     check: h => {
@@ -257,7 +257,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'ten_categories',
     name: 'Renaissance Mind',
     description: 'Play games in 10 different categories',
-    icon: '🧠',
+    icon: '[M]',
     tier: 'gold',
     category: 'dedication',
     check: h => {
@@ -269,7 +269,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'total_score_10k',
     name: 'Score Collector',
     description: 'Accumulate 10,000 total points',
-    icon: '💰',
+    icon: '[$]',
     tier: 'silver',
     category: 'dedication',
     check: (_h, s) => ({
@@ -281,7 +281,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'total_score_100k',
     name: 'Score Hoarder',
     description: 'Accumulate 100,000 total points',
-    icon: '💎',
+    icon: '[$$]',
     tier: 'platinum',
     category: 'dedication',
     check: (_h, s) => ({
@@ -293,7 +293,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'thousand_questions',
     name: 'Question Machine',
     description: 'Answer 1,000 questions total',
-    icon: '🤖',
+    icon: '[Q]',
     tier: 'gold',
     category: 'dedication',
     check: (_h, s) => ({
@@ -307,7 +307,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'win_streak_three',
     name: 'Hat Trick',
     description: 'Win 3 games in a row (70%+ accuracy)',
-    icon: '🎩',
+    icon: '[H]',
     tier: 'silver',
     category: 'special',
     check: (_h, s) => ({
@@ -319,7 +319,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'win_streak_ten',
     name: 'Dominant Force',
     description: 'Win 10 games in a row (70%+ accuracy)',
-    icon: '🏅',
+    icon: '[X]',
     tier: 'platinum',
     category: 'special',
     check: (_h, s) => ({
@@ -331,7 +331,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: 'improving',
     name: 'Growth Mindset',
     description: 'Have an improving accuracy trend',
-    icon: '📈',
+    icon: '[^]',
     tier: 'bronze',
     category: 'special',
     check: (_h, s) => ({

@@ -76,7 +76,7 @@ function JoinGameContent() {
     <GamePageLayout
       header={{
         title: 'Join Game Room',
-        icon: '🚪',
+        icon: 'J',
         size: 'lg',
       }}
       maxWidth="lg"
@@ -84,7 +84,7 @@ function JoinGameContent() {
       centerContent
     >
       <div className="bg-gray-900 border-4 border-gray-600 p-8 pixel-border space-y-6">
-        <div className="text-5xl mb-2">🚪</div>
+        <div className="text-5xl mb-2">J</div>
 
         {/* Player Name */}
         <div>
@@ -150,10 +150,10 @@ function JoinGameContent() {
         >
           {isJoining ? (
             <span className="flex items-center justify-center gap-2">
-              <span className="animate-pixel-bounce">⏳</span> JOINING...
+              <span className="animate-pixel-bounce">...</span> JOINING...
             </span>
           ) : roomCode.length === 6 ? (
-            '🎮 JOIN ROOM'
+            'JOIN ROOM'
           ) : (
             `ENTER ${6 - roomCode.length} MORE CHARACTER${6 - roomCode.length !== 1 ? 'S' : ''}`
           )}

@@ -139,7 +139,7 @@ export function GameQuestion({
         <div
           className={`flex items-center gap-2 font-pixel font-bold text-2xl ${getTimerColor()} ${getTimerAnimation()}`}
         >
-          <span>⏱</span>
+          <span>T</span>
           <span>{timeRemaining}s</span>
         </div>
       </div>
@@ -236,7 +236,7 @@ export function GameQuestion({
       {hasAnswered && !isRevealing && (
         <div className="text-center py-3">
           <div className="text-lg font-pixel-body text-gray-300 animate-pulse">
-            ✓ Answer submitted — waiting for other players...
+            OK Answer submitted — waiting for other players...
           </div>
         </div>
       )}
@@ -249,7 +249,7 @@ export function GameQuestion({
               : 'bg-red-900/30 border-red-500 text-red-300'
           }`}
         >
-          <div className="text-3xl mb-1">{wasCorrect ? '🎉' : '❌'}</div>
+          <div className="text-3xl mb-1">{wasCorrect ? '+' : 'X'}</div>
           <div className="font-pixel text-lg pixel-text-shadow">
             {wasCorrect ? 'Correct!' : 'Wrong answer!'}
           </div>

@@ -32,7 +32,7 @@ describe('ShareButton', () => {
 
   it('renders with default share text', () => {
     render(<ShareButton result={testResult} />)
-    expect(screen.getByText('📤 SHARE')).toBeInTheDocument()
+    expect(screen.getByText('SHARE')).toBeInTheDocument()
   })
 
   it('has proper aria-label', () => {
@@ -45,7 +45,7 @@ describe('ShareButton', () => {
 
     render(<ShareButton result={testResult} />)
     await act(async () => {
-      fireEvent.click(screen.getByText('📤 SHARE'))
+      fireEvent.click(screen.getByText('SHARE'))
     })
 
     expect(screen.getByText('Copied!')).toBeInTheDocument()
@@ -56,7 +56,7 @@ describe('ShareButton', () => {
 
     render(<ShareButton result={testResult} />)
     await act(async () => {
-      fireEvent.click(screen.getByText('📤 SHARE'))
+      fireEvent.click(screen.getByText('SHARE'))
     })
 
     expect(screen.getByText('Failed')).toBeInTheDocument()
@@ -67,11 +67,11 @@ describe('ShareButton', () => {
 
     render(<ShareButton result={testResult} />)
     await act(async () => {
-      fireEvent.click(screen.getByText('📤 SHARE'))
+      fireEvent.click(screen.getByText('SHARE'))
     })
 
     // Should still show the default text, not "Copied!"
-    expect(screen.getByText('📤 SHARE')).toBeInTheDocument()
+    expect(screen.getByText('SHARE')).toBeInTheDocument()
   })
 
   it('applies custom className', () => {
@@ -84,7 +84,7 @@ describe('ShareButton', () => {
 
     render(<ShareButton result={testResult} />)
     await act(async () => {
-      fireEvent.click(screen.getByText('📤 SHARE'))
+      fireEvent.click(screen.getByText('SHARE'))
     })
 
     expect(mockShareResults).toHaveBeenCalledWith(testResult)

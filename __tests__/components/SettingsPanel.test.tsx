@@ -156,11 +156,11 @@ describe('SettingsPanel', () => {
     it('should display avatar emojis', () => {
       render(<SettingsPanel {...defaultProps} />)
 
-      expect(screen.getByText('🤖')).toBeInTheDocument()
-      expect(screen.getByText('👽')).toBeInTheDocument()
-      expect(screen.getByText('👻')).toBeInTheDocument()
-      expect(screen.getByText('🧙')).toBeInTheDocument()
-      expect(screen.getByText('🥷')).toBeInTheDocument()
+      expect(screen.getByText('R')).toBeInTheDocument()
+      expect(screen.getByText('A')).toBeInTheDocument()
+      expect(screen.getByText('G')).toBeInTheDocument()
+      expect(screen.getByText('W')).toBeInTheDocument()
+      expect(screen.getByText('N')).toBeInTheDocument()
     })
   })
 

@@ -19,7 +19,7 @@ describe('NotFound Page', () => {
 
   it('renders search icon', () => {
     render(<NotFound />)
-    expect(screen.getByText('🔍')).toBeInTheDocument()
+    expect(screen.getByText('?')).toBeInTheDocument()
   })
 
   it('renders Main Menu link to /', () => {

@@ -31,9 +31,9 @@ interface Tab {
 }
 
 const TABS: Tab[] = [
-  { id: 'overview', label: 'OVERVIEW', emoji: '📊' },
-  { id: 'history', label: 'HISTORY', emoji: '📜' },
-  { id: 'charts', label: 'CHARTS', emoji: '📈' },
+  { id: 'overview', label: 'OVERVIEW', emoji: '--' },
+  { id: 'history', label: 'HISTORY', emoji: '#' },
+  { id: 'charts', label: 'CHARTS', emoji: '^' },
 ]
 
 // ============================================================================
@@ -75,7 +75,7 @@ export default function StatsPage() {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl animate-pixel-bounce mb-4">📊</div>
+          <div className="text-4xl animate-pixel-bounce mb-4">--</div>
           <p className="font-pixel text-white">LOADING STATS...</p>
         </div>
       </main>
@@ -94,7 +94,7 @@ export default function StatsPage() {
         <header className="text-center w-full">
           <StaggerChildren staggerDelay={80} style="slide-up">
             <h1 className="text-3xl md:text-4xl font-pixel text-white pixel-text-shadow mb-2">
-              📊 STATS & HISTORY
+              STATS & HISTORY
             </h1>
             <p className="font-pixel-body text-cyan-300 text-lg">
               Track your trivia journey and see how you&apos;ve improved!
@@ -104,17 +104,17 @@ export default function StatsPage() {
             {stats.totalGames > 0 && (
               <div className="flex flex-wrap justify-center gap-2 mt-4">
                 <span className="font-pixel text-[10px] bg-green-900 bg-opacity-50 text-green-400 pixel-border px-3 py-1">
-                  🎮 {stats.totalGames} GAMES
+                  G {stats.totalGames} GAMES
                 </span>
                 <span className="font-pixel text-[10px] bg-yellow-900 bg-opacity-50 text-yellow-400 pixel-border px-3 py-1">
-                  ⭐ {stats.totalScore.toLocaleString()} PTS
+                  * {stats.totalScore.toLocaleString()} PTS
                 </span>
                 <span className="font-pixel text-[10px] bg-cyan-900 bg-opacity-50 text-cyan-400 pixel-border px-3 py-1">
-                  🎯 {Math.round(stats.averageAccuracy)}% AVG
+                  T {Math.round(stats.averageAccuracy)}% AVG
                 </span>
                 {stats.currentWinStreak > 0 && (
                   <span className="font-pixel text-[10px] bg-orange-900 bg-opacity-50 text-orange-400 pixel-border px-3 py-1">
-                    🔥 {stats.currentWinStreak} STREAK
+                    F {stats.currentWinStreak} STREAK
                   </span>
                 )}
               </div>
@@ -168,7 +168,7 @@ export default function StatsPage() {
             onClick={handlePlayAgain}
             className="font-pixel text-sm bg-green-600 hover:bg-green-500 text-white border-4 border-green-800 pixel-border px-6 py-3 pixel-glow-hover transition-all duration-200 hover:scale-105 active:scale-95"
           >
-            🎮 PLAY AGAIN
+            PLAY AGAIN
           </button>
           <button
             onClick={handleBack}
