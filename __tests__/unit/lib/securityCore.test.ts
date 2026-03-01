@@ -108,6 +108,8 @@ describe('security.core — branch coverage', () => {
     })
 
     it('allows any origin in development mode', () => {
+      // @ts-expect-error -- Jest env override
+
       process.env.NODE_ENV = 'development'
 
       jest.isolateModules(() => {
@@ -117,6 +119,8 @@ describe('security.core — branch coverage', () => {
     })
 
     it('rejects unknown origin in production mode', () => {
+      // @ts-expect-error -- Jest env override
+
       process.env.NODE_ENV = 'production'
       delete process.env.ALLOWED_ORIGINS
 
@@ -127,6 +131,8 @@ describe('security.core — branch coverage', () => {
     })
 
     it('accepts localhost:3000 in production (base origin)', () => {
+      // @ts-expect-error -- Jest env override
+
       process.env.NODE_ENV = 'production'
       delete process.env.ALLOWED_ORIGINS
 
@@ -179,6 +185,8 @@ describe('security.core — branch coverage', () => {
   // ==========================================================================
   describe('CSP directives', () => {
     it('includes unsafe-eval in development CSP', () => {
+      // @ts-expect-error -- Jest env override
+
       process.env.NODE_ENV = 'development'
 
       jest.isolateModules(() => {
@@ -188,6 +196,8 @@ describe('security.core — branch coverage', () => {
     })
 
     it('excludes unsafe-eval in production CSP', () => {
+      // @ts-expect-error -- Jest env override
+
       process.env.NODE_ENV = 'production'
 
       jest.isolateModules(() => {
@@ -197,6 +207,8 @@ describe('security.core — branch coverage', () => {
     })
 
     it('includes upgrade-insecure-requests in production', () => {
+      // @ts-expect-error -- Jest env override
+
       process.env.NODE_ENV = 'production'
 
       jest.isolateModules(() => {

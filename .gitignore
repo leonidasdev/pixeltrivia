@@ -189,6 +189,7 @@ postcss.config.js.bak
 
 # Testing
 coverage/
+coverage-*.txt
 .nyc_output/
 junit.xml
 test-results/

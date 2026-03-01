@@ -19,6 +19,7 @@ const testResult = {
   score: 8,
   totalQuestions: 10,
   accuracy: 80,
+  correctAnswers: 8,
   category: 'Science',
   difficulty: 'medium' as const,
   mode: 'quick' as const,

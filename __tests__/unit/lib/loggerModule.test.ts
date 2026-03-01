@@ -32,6 +32,8 @@ describe('logger module', () => {
     consoleSpy.info.mockRestore()
     consoleSpy.warn.mockRestore()
     consoleSpy.error.mockRestore()
+    // @ts-expect-error -- Jest env override
+
     process.env.NODE_ENV = originalEnv
   })
 
@@ -44,6 +46,8 @@ describe('logger module', () => {
 
   // Helper: load logger in development mode
   async function loadDevLogger() {
+    // @ts-expect-error -- Jest env override
+
     process.env.NODE_ENV = 'development'
     jest.resetModules()
     const mod = await import('@/lib/logger')
@@ -52,6 +56,8 @@ describe('logger module', () => {
 
   // Helper: load logger in production mode
   async function loadProdLogger() {
+    // @ts-expect-error -- Jest env override
+
     process.env.NODE_ENV = 'production'
     jest.resetModules()
     const mod = await import('@/lib/logger')
@@ -60,6 +66,8 @@ describe('logger module', () => {
 
   // Helper: load logger in test mode
   async function loadTestLogger() {
+    // @ts-expect-error -- Jest env override
+
     process.env.NODE_ENV = 'test'
     jest.resetModules()
     const mod = await import('@/lib/logger')

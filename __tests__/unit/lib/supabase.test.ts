@@ -3,15 +3,15 @@
  */
 
 // Save original env
-const originalEnv = { ...process.env }
+const savedEnv = process.env
 
 beforeEach(() => {
   jest.resetModules()
-  process.env = { ...originalEnv }
+  process.env = { ...savedEnv }
 })
 
 afterAll(() => {
-  process.env = originalEnv
+  process.env = savedEnv
 })
 
 // Mock @supabase/supabase-js

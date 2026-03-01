@@ -100,7 +100,7 @@ export default function AdvancedGameConfigurator({
       }
 
       const newUploadedFiles: UploadedFile[] = result.data.files.map(
-        (f: { name: string; type: string; size: number; textLength: number }, i: number) => ({
+        (f: { name: string; type: string; size: number; textLength: number }, _i: number) => ({
           id: Math.random().toString(36).substring(2, 11),
           name: f.name,
           size: f.size,

@@ -26,6 +26,7 @@ function makeEntry(overrides: Partial<GameHistoryEntry> = {}): GameHistoryEntry 
     totalQuestions: 10,
     duration: 120,
     streak: 3,
+    playerName: 'Player',
     playedAt: new Date().toISOString(),
     ...overrides,
   }
@@ -84,7 +85,7 @@ describe('GameHistoryList', () => {
 
     it('does not show playerName when absent', () => {
       const entry = makeEntry()
-      delete (entry as Record<string, unknown>).playerName
+      delete (entry as unknown as Record<string, unknown>).playerName
       render(<GameHistoryList history={[entry]} />)
       fireEvent.click(screen.getByRole('button', { name: /game details/i }))
       expect(screen.queryByText(/played by/i)).not.toBeInTheDocument()
@@ -264,7 +265,7 @@ describe('GameHistoryList', () => {
 
     it('shows streak 0 when streak is undefined', () => {
       const entry = makeEntry()
-      delete (entry as Record<string, unknown>).streak
+      delete (entry as unknown as Record<string, unknown>).streak
       render(<GameHistoryList history={[entry]} />)
       fireEvent.click(screen.getByRole('button', { name: /game details/i }))
       expect(screen.getByText('x0')).toBeInTheDocument()

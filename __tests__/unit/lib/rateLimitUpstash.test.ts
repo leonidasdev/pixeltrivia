@@ -175,6 +175,8 @@ describe('InMemoryRateLimitStore (production warning)', () => {
   })
 
   it('warns when using in-memory store in production', () => {
+    // @ts-expect-error -- Jest env override
+
     process.env.NODE_ENV = 'production'
     delete process.env.UPSTASH_REDIS_REST_URL
     delete process.env.UPSTASH_REDIS_REST_TOKEN

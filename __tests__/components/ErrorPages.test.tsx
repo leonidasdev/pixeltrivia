@@ -61,7 +61,6 @@ describe('Error Page', () => {
   })
 
   it('logs the error via logger', () => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { logger } = require('@/lib/logger')
     render(<ErrorPage error={mockError} reset={mockReset} />)
     expect(logger.error).toHaveBeenCalledWith('Route error', mockError)

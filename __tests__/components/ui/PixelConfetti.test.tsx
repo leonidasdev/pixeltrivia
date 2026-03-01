@@ -156,7 +156,8 @@ describe('PixelConfetti', () => {
   })
 
   it('handles null canvas context gracefully', () => {
-    mockGetContext.mockReturnValueOnce(null)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockGetContext.mockReturnValueOnce(null as any)
     // Should not throw
     expect(() => render(<PixelConfetti active={true} />)).not.toThrow()
   })

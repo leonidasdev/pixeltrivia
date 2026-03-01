@@ -183,7 +183,6 @@ describe('LeaderboardPage', () => {
   })
 
   it('switches period filter on click', () => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { getLeaderboard } = require('@/lib/leaderboard')
     render(<LeaderboardPage />)
     fireEvent.click(screen.getByText('THIS WEEK'))

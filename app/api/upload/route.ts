@@ -15,7 +15,6 @@ import {
   validationErrorResponse,
   serverErrorResponse,
   methodNotAllowedResponse,
-  rateLimitResponse,
 } from '@/lib/apiResponse'
 import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 import { parseFiles, buildFilesSummary, MAX_FILE_SIZE, MAX_FILES } from '@/lib/fileParser'
