@@ -60,7 +60,11 @@ function ProgressBar({ progress }: { progress: number }) {
   )
 }
 
-const AchievementCard = memo(function AchievementCard({ achievement }: { achievement: Achievement }) {
+const AchievementCard = memo(function AchievementCard({
+  achievement,
+}: {
+  achievement: Achievement
+}) {
   const tier = getTierDisplay(achievement.tier)
 
   return (
@@ -143,9 +147,7 @@ function SummaryBar() {
           const data = summary.byTier[t]
           return (
             <div key={t} className="text-center">
-              <div className={`font-pixel text-xs ${tier.color}`}>
-                {tier.label.toUpperCase()}
-              </div>
+              <div className={`font-pixel text-xs ${tier.color}`}>{tier.label.toUpperCase()}</div>
               <div className="font-pixel text-sm text-white">
                 {data.unlocked}/{data.total}
               </div>

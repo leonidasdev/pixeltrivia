@@ -118,9 +118,7 @@ describe('PlayerList', () => {
   })
 
   it('handles unknown avatar gracefully', () => {
-    const players = [
-      { ...makePlayers()[0], avatar: 'nonexistent-avatar-id' },
-    ]
+    const players = [{ ...makePlayers()[0], avatar: 'nonexistent-avatar-id' }]
     render(<PlayerList players={players} />)
     // Should fall back to default emoji '>'
     expect(screen.getByText('>')).toBeInTheDocument()

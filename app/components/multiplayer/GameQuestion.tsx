@@ -154,7 +154,10 @@ export function GameQuestion({
 
       {/* Question image (if provided) */}
       {question.imageUrl && (
-        <div className="relative bg-gray-800 border-4 border-gray-600 pixel-border overflow-hidden" style={{ minHeight: '12rem' }}>
+        <div
+          className="relative bg-gray-800 border-4 border-gray-600 pixel-border overflow-hidden"
+          style={{ minHeight: '12rem' }}
+        >
           <Image
             src={question.imageUrl}
             alt="Question illustration"

@@ -113,11 +113,7 @@ describe('StaggerChildren', () => {
   it('renders all children', () => {
     render(
       <StaggerChildren>
-        {[
-          <p key="1">First</p>,
-          <p key="2">Second</p>,
-          <p key="3">Third</p>,
-        ]}
+        {[<p key="1">First</p>, <p key="2">Second</p>, <p key="3">Third</p>]}
       </StaggerChildren>
     )
     expect(screen.getByText('First')).toBeInTheDocument()
@@ -128,10 +124,7 @@ describe('StaggerChildren', () => {
   it('applies stagger delay to each child', () => {
     const { container } = render(
       <StaggerChildren staggerDelay={100}>
-        {[
-          <p key="1">First</p>,
-          <p key="2">Second</p>,
-        ]}
+        {[<p key="1">First</p>, <p key="2">Second</p>]}
       </StaggerChildren>
     )
     const wrappers = container.querySelectorAll('div')
