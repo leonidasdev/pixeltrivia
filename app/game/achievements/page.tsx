@@ -211,7 +211,11 @@ export default function AchievementsPage() {
           <SummaryBar />
 
           {/* Filter Tabs */}
-          <div className="flex flex-wrap gap-1 mb-4">
+          <div
+            className="flex flex-wrap gap-1 mb-4"
+            role="tablist"
+            aria-label="Filter achievements"
+          >
             {FILTER_TABS.map(tab => (
               <button
                 key={tab.id}
@@ -224,7 +228,10 @@ export default function AchievementsPage() {
                     ? 'bg-yellow-600 text-white'
                     : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                 }`}
-                aria-pressed={activeFilter === tab.id}
+                role="tab"
+                aria-selected={activeFilter === tab.id}
+                aria-controls="achievements-panel"
+                id={`filter-tab-${tab.id}`}
               >
                 {tab.label}
               </button>
@@ -233,7 +240,12 @@ export default function AchievementsPage() {
 
           {/* Achievement Grid */}
           {filtered.length === 0 ? (
-            <div className="pixel-border bg-gray-800 bg-opacity-80 p-8 text-center space-y-2 flex-1">
+            <div
+              className="pixel-border bg-gray-800 bg-opacity-80 p-8 text-center space-y-2 flex-1"
+              role="tabpanel"
+              id="achievements-panel"
+              aria-labelledby={`filter-tab-${activeFilter}`}
+            >
               <div className="text-4xl mb-3 animate-pixel-bounce">--</div>
               <p className="font-pixel text-sm text-gray-400">NO ACHIEVEMENTS</p>
               <p className="font-pixel-body text-xs text-gray-500 mt-1">
@@ -243,11 +255,18 @@ export default function AchievementsPage() {
               </p>
             </div>
           ) : (
-            <StaggerChildren className="space-y-2 flex-1">
-              {filtered.map(achievement => (
-                <AchievementCard key={achievement.id} achievement={achievement} />
-              ))}
-            </StaggerChildren>
+            <div
+              role="tabpanel"
+              id="achievements-panel"
+              aria-labelledby={`filter-tab-${activeFilter}`}
+              className="flex-1"
+            >
+              <StaggerChildren className="space-y-2">
+                {filtered.map(achievement => (
+                  <AchievementCard key={achievement.id} achievement={achievement} />
+                ))}
+              </StaggerChildren>
+            </div>
           )}
 
           <Footer />

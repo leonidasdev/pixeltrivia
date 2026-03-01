@@ -223,7 +223,7 @@ export default function LeaderboardPage() {
           {/* Filters */}
           <StaggerChildren className="space-y-3 mb-4">
             {/* Period Tabs */}
-            <div className="flex gap-1">
+            <div className="flex gap-1" role="tablist" aria-label="Filter by time period">
               {PERIODS.map(p => (
                 <button
                   key={p.id}
@@ -236,7 +236,10 @@ export default function LeaderboardPage() {
                       ? 'bg-yellow-600 text-white'
                       : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                   }`}
-                  aria-pressed={period === p.id}
+                  role="tab"
+                  aria-selected={period === p.id}
+                  aria-controls="leaderboard-panel"
+                  id={`period-tab-${p.id}`}
                 >
                   {p.label}
                 </button>
@@ -286,7 +289,12 @@ export default function LeaderboardPage() {
           </StaggerChildren>
 
           {/* Leaderboard List */}
-          <div className="pixel-border bg-gray-800 bg-opacity-80 flex-1 overflow-hidden flex flex-col">
+          <div
+            className="pixel-border bg-gray-800 bg-opacity-80 flex-1 overflow-hidden flex flex-col"
+            role="tabpanel"
+            id="leaderboard-panel"
+            aria-labelledby={`period-tab-${period}`}
+          >
             <div className="flex items-center justify-between px-4 py-2 border-b border-gray-700">
               <span className="font-pixel text-xs text-gray-400">
                 {leaderboard.totalGames} game{leaderboard.totalGames !== 1 ? 's' : ''}
