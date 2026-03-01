@@ -24,11 +24,12 @@ Comprehensive guide to testing in PixelTrivia.
 
 PixelTrivia uses a comprehensive testing setup with:
 
-- **1399 tests** total (Jest unit/component + Playwright E2E)
+- **1850 tests** total (Jest unit/component + Playwright E2E)
 - **Jest 30** as the unit/component test runner
 - **Playwright** for E2E testing (Chromium + Firefox)
 - **React Testing Library** for component tests
-- **Coverage thresholds**: branches ≥55%, functions/lines/statements ≥55%
+- **Coverage**: Stmts 86%, Branch 80%, Funcs 89%, Lines 88%
+- **Coverage thresholds** (jest.config.js): branches ≥55%, functions ≥64%, lines ≥61%, statements ≥60%
 
 Tests run automatically:
 - On every commit (via Husky pre-commit hooks)
@@ -103,17 +104,24 @@ This generates:
 ## Test Structure
 
 ```
-__tests__/                         # Jest unit & component tests
+__tests__/                         # Jest unit & component tests (104 files)
 ├── components/                    # Component tests
 │   ├── AdvancedGameConfigurator.test.tsx
 │   ├── BackButton.test.tsx
 │   ├── CustomGameConfigurator.test.tsx
 │   ├── ErrorBoundary.test.tsx
+│   ├── ErrorPages.test.tsx
+│   ├── Footer.test.tsx
+│   ├── GameModeCard.test.tsx
 │   ├── MainMenuLogo.test.tsx
 │   ├── Modal.test.tsx
+│   ├── NotFound.test.tsx
 │   ├── PixelStyleConsistency.test.tsx
+│   ├── PlayerDisplay.test.tsx
 │   ├── QuickGameSelector.test.tsx
+│   ├── RootLayout.test.tsx
 │   ├── SettingsPanel.test.tsx
+│   ├── ShareButton.test.tsx
 │   ├── Toast.test.tsx
 │   ├── stats.test.tsx
 │   ├── help/                      # Help system tests
@@ -125,24 +133,36 @@ __tests__/                         # Jest unit & component tests
 │   │   ├── LobbyView.test.tsx
 │   │   └── MultiplayerComponents.test.tsx
 │   ├── pages/                     # Page-level component tests
+│   │   ├── AchievementsPage.test.tsx
 │   │   ├── AdvancedGamePage.test.tsx
+│   │   ├── CreateGamePage.test.tsx
 │   │   ├── CustomGamePage.test.tsx
 │   │   ├── GameModePage.test.tsx
 │   │   ├── GameSelectPage.test.tsx
 │   │   ├── HomePage.test.tsx
 │   │   ├── JoinGamePage.test.tsx
+│   │   ├── LeaderboardPage.test.tsx
 │   │   ├── PlayPage.test.tsx
-│   │   └── QuickGamePage.test.tsx
+│   │   ├── QuickGamePage.test.tsx
+│   │   └── StatsPage.test.tsx
+│   ├── stats/                     # Stats component tests
+│   │   └── GameHistoryList.test.tsx
 │   └── ui/                        # UI primitive tests
+│       ├── AnimatedBackground.test.tsx
+│       ├── GamePageLayout.test.tsx
+│       ├── LoadingSpinner.test.tsx
+│       ├── PageHeader.test.tsx
 │       ├── PixelBadge.test.tsx
 │       ├── PixelButton.test.tsx
 │       ├── PixelCard.test.tsx
+│       ├── PixelConfetti.test.tsx
 │       ├── PixelInput.test.tsx
 │       └── VisualEffects.test.tsx
 ├── hooks/                         # Hook tests
 │   ├── createStorage.test.ts
 │   ├── useGameHistory.test.ts
 │   ├── useGameState.test.ts
+│   ├── useHoveredCard.test.ts
 │   ├── useLocalStorage.test.ts
 │   ├── usePlayerSettings.test.ts
 │   ├── useQuizSession.test.ts
@@ -150,20 +170,25 @@ __tests__/                         # Jest unit & component tests
 │   ├── useSwipe.test.ts
 │   └── useTimer.test.ts
 ├── integration/                   # Integration tests
+│   ├── ErrorBoundary.test.tsx
 │   └── api/
 │       ├── gameQuestions.test.ts
 │       ├── quizAdvanced.test.ts
 │       ├── quizCustom.test.ts
 │       ├── quizQuick.test.ts
+│       ├── roomAnswer.test.ts
 │       ├── roomCreate.test.ts
 │       ├── roomJoin.test.ts
+│       ├── roomNext.test.ts
+│       ├── roomQuestion.test.ts
+│       ├── roomStart.test.ts
 │       ├── roomState.test.ts
 │       └── upload.test.ts
 └── unit/                          # Unit tests
     ├── middleware.test.ts
     ├── api/
     │   └── quizLogic.test.ts
-    └── lib/                       # Library unit tests (25 files)
+    └── lib/                       # Library unit tests
         ├── achievements.test.ts
         ├── adaptiveDifficulty.test.ts
         ├── analytics.test.ts
@@ -174,25 +199,33 @@ __tests__/                         # Jest unit & component tests
         ├── errors.test.ts
         ├── fileParser.test.ts
         ├── gameApi.test.ts
+        ├── gameApiFetch.test.ts
         ├── leaderboard.test.ts
         ├── logger.test.ts
+        ├── loggerModule.test.ts
         ├── multiplayerApi.test.ts
         ├── quickQuizApi.test.ts
         ├── rateLimit.test.ts
+        ├── rateLimitModule.test.ts
+        ├── rateLimitUpstash.test.ts
         ├── roomApi.test.ts
         ├── roomCode.test.ts
         ├── security.test.ts
+        ├── securityCore.test.ts
         ├── session.test.ts
         ├── share.test.ts
         ├── soundManager.test.ts
         ├── storageHistory.test.ts
         ├── storageProfileSettings.test.ts
+        ├── supabase.test.ts
+        ├── supabaseClient.test.ts
         ├── utils.test.ts
         └── validation.test.ts
 
 tests/                             # Playwright E2E tests
 ├── home.spec.ts                   # Home page E2E tests
-└── game-flow.spec.ts              # Game flow E2E tests
+├── game-flow.spec.ts              # Game flow E2E tests
+└── leaderboard-achievements.spec.ts # Leaderboard & achievements E2E
 ```
 
 ### Naming Conventions
@@ -591,10 +624,10 @@ Current thresholds (set in `jest.config.js`):
 
 | Metric | Threshold | Actual |
 |--------|-----------|--------|
-| Statements | 55% | ~63% |
-| Branches | 55% | ~57% |
-| Functions | 55% | ~66% |
-| Lines | 55% | ~63% |
+| Statements | 60% | ~86% |
+| Branches | 55% | ~80% |
+| Functions | 64% | ~89% |
+| Lines | 61% | ~88% |
 
 ---
 
@@ -830,4 +863,4 @@ Tests are also validated via lint-staged on commit:
 
 ---
 
-*Last updated: March 1, 2026*
+*Last updated: March 2, 2026 (Phase 24 — Session 2)*

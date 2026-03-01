@@ -7,7 +7,7 @@ This directory contains the complete database definition for PixelTrivia (Supaba
 ```
 database/
   schema.sql   -- Single source of truth: tables, indexes, RLS, Realtime, functions
-  seed.sql     -- Sample trivia questions (90+ across 10 categories)
+  seed.sql     -- Sample trivia questions (150+ across 40 categories)
   README.md    -- This file
 ```
 
@@ -52,7 +52,7 @@ psql "$DATABASE_URL" -f database/seed.sql
 
 ## Seed Data
 
-The `seed.sql` file contains 90+ sample trivia questions across 10 categories (Geography, Science, History, Art, Literature, Mathematics, Animals, Music, Sports, Food, Colors & Shapes, Technology) at easy/medium/hard difficulties.
+The `seed.sql` file contains 150+ sample trivia questions across 40 categories (Geography, Science, History, Art, Literature, Mathematics, Animals, Music, Sports, Food, Colors & Shapes, Technology, and more) at easy/medium/hard difficulties.
 
 ## Environment Variables
 

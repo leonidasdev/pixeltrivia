@@ -1,6 +1,6 @@
 # Operational Runbook
 
-> Last Updated: February 28, 2026
+> Last Updated: March 2, 2026
 
 Quick-reference procedures for common operational tasks in PixelTrivia.
 
@@ -75,10 +75,10 @@ Current Jest coverage thresholds (from `jest.config.js`):
 
 | Metric | Threshold |
 |--------|----------|
-| Statements | 55% |
+| Statements | 60% |
 | Branches | 55% |
-| Functions | 55% |
-| Lines | 55% |
+| Functions | 64% |
+| Lines | 61% |
 
 ---
 

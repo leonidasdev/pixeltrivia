@@ -7,7 +7,8 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ecf8e?logo=supabase)
-![Tests](https://img.shields.io/badge/Tests-1399%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-1850%20passing-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-86%25-brightgreen)
 
 **A retro-styled trivia game with AI-powered question generation**
 
@@ -19,18 +20,22 @@
 
 ## Features
 
-- **Pixel-Perfect Retro UI** - Nostalgic 8-bit inspired design
-- **AI-Powered Questions** - Generate custom trivia using DeepSeek AI via OpenRouter
-- **Multiple Game Modes** - Quick Play, Custom Topics, Advanced Configuration
-- **Multiplayer Rooms** - Create and join rooms, real-time gameplay with Supabase Realtime
-- **Host-Driven Flow** - Host controls game start and question progression
-- **Time-Based Scoring** - Speed matters — faster answers earn more points
-- **Responsive Design** - Works on desktop, tablet, and mobile
-- **Toast Notifications** - Non-intrusive feedback replacing browser alerts
-- **Keyboard Navigation** - Full keyboard accessibility support
-- **WCAG Accessible** - Screen reader friendly with proper ARIA labels, skip navigation
-- **Reduced Motion** - Respects `prefers-reduced-motion` system preference
-- **Security Hardened** - Rate limiting, input validation, XSS protection
+- **Pixel-Perfect Retro UI** — Nostalgic 8-bit inspired design with retro fonts and pixel borders
+- **AI-Powered Questions** — Generate custom trivia using DeepSeek AI via OpenRouter
+- **Multiple Game Modes** — Quick Play, Custom Topics, Advanced (file-based)
+- **Multiplayer Rooms** — Create and join rooms, real-time gameplay with Supabase Realtime
+- **Single-Player Mode** — Full solo gameplay with timer, scoring, streaks, and results
+- **Leaderboards & Achievements** — Local rankings with 20 unlockable achievements across 4 tiers
+- **Adaptive Difficulty** — Per-category accuracy tracking adjusts recommended difficulty
+- **Chiptune Sound System** — Web Audio API engine with 18 sound effects and procedural music
+- **Image-Based Questions** — Optional image support for richer trivia content
+- **Share Results** — Web Share API with clipboard fallback for sharing scores
+- **Touch Gestures** — Swipe navigation on mobile devices
+- **Keyboard Navigation** — Full keyboard accessibility (1-4 / A-D answer shortcuts)
+- **WCAG Accessible** — Screen reader friendly, ARIA labels, skip navigation, 44px touch targets
+- **Reduced Motion** — Respects `prefers-reduced-motion` system preference
+- **Security Hardened** — Rate limiting, input validation, XSS protection, CSP headers
+- **Responsive Design** — Works on desktop, tablet, and mobile
 
 ## Quick Start
 
@@ -96,21 +101,29 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Quick Play
 Jump straight into a trivia game with predefined categories:
-- Gaming, Movies, Science, History, Geography, and more
+- 40+ categories across Gaming, Movies, Science, History, Geography, and more
 - 5 difficulty levels from Elementary to College
+- Adaptive difficulty recommendations based on your performance
 - 5-50 questions per game
 
 ### Custom Game
 Create your own trivia experience:
-- AI generates questions based on your topic
+- AI generates questions based on your topic using DeepSeek
 - Provide optional context for more specific questions
-- Supports multiple languages
+- Configurable question count and difficulty
+
+### Advanced Game
+Generate questions from your own documents:
+- Upload PDF, DOCX, TXT, or Markdown files
+- AI creates questions based on document content
+- Input sanitization and prompt injection protection
 
 ### Multiplayer
 Play with friends in real-time:
 - Create private rooms with 6-character codes
 - Up to 16 players per room
 - Host controls game flow
+- Invite links and room code sharing
 
 ## Project Structure
 
@@ -142,14 +155,22 @@ pixeltrivia/
 │   ├── errors.ts          # Custom error classes
 │   ├── validation.ts      # Zod schemas
 │   ├── security.ts        # Security middleware
-│   ├── rateLimit.ts       # Rate limiting
+│   ├── security.core.ts   # Pure security functions
+│   ├── rateLimit.ts       # Rate limiting (in-memory + Redis)
 │   ├── apiResponse.ts     # API response helpers
 │   ├── logger.ts          # Structured logging utility
 │   ├── storage.ts         # Typed localStorage wrapper
+│   ├── soundManager.ts    # Web Audio API sound engine
+│   ├── leaderboard.ts     # Local leaderboard system
+│   ├── achievements.ts    # Achievement system
+│   ├── apiCache.ts        # SWR-based API caching
 │   └── *Api.ts            # API client functions
 ├── database/              # Database schema
 ├── docs/                  # Documentation
-├── __tests__/             # Test suites
+│   ├── guides/            # Development, testing, deployment
+│   ├── reference/         # Architecture, API reference
+│   └── operations/        # Monitoring, runbook
+├── __tests__/             # Test suites (104 suites, 1850 tests)
 └── .github/               # GitHub Actions CI/CD
 ```
 
@@ -169,7 +190,7 @@ npm run test:coverage
 npm run typecheck
 ```
 
-**Test Coverage:** 1399 tests across 75 test suites (unit, component, page, hook, integration)
+**Test Coverage:** 1850 tests across 104 test suites (unit, component, page, hook, integration)
 
 ## Scripts
 

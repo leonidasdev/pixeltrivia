@@ -92,4 +92,4 @@ You can test the integration by:
 5. Select "Play Solo"
 6. Click "Start Game" to trigger the API call
 
-The response will be logged to the browser console and stored in localStorage for the game to use.
+The response will be stored in localStorage for the game to use.
