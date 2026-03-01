@@ -144,7 +144,10 @@ pixeltrivia/
 │   │   ├── create/        # Create multiplayer room
 │   │   ├── join/          # Join multiplayer room
 │   │   ├── mode/          # Game mode selection
-│   │   └── select/        # Category & difficulty selection
+│   │   ├── select/        # Category & difficulty selection
+│   │   ├── leaderboard/   # Rankings page
+│   │   ├── achievements/  # Achievement showcase
+│   │   └── stats/         # Game statistics
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Home page
@@ -203,7 +206,9 @@ npm run typecheck
 | `npm run lint:fix` | Fix ESLint errors |
 | `npm run format` | Format with Prettier |
 | `npm test` | Run tests |
+| `npm run test:coverage` | Run tests with coverage |
 | `npm run typecheck` | TypeScript type checking |
+| `npm run validate` | Full validation (typecheck + lint + test) |
 
 ## Security Features
 

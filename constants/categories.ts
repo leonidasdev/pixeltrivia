@@ -73,7 +73,7 @@ export const GAME_CATEGORIES: Record<DifficultyLevel, CategoryGroup> = {
   'middle-school': {
     key: 'middle-school',
     title: 'Middle School',
-    emoji: '#',
+    emoji: '@',
     description: 'Ages 11-13 - Learning Adventure',
     styles: {
       color: 'bg-blue-600',
@@ -94,7 +94,7 @@ export const GAME_CATEGORIES: Record<DifficultyLevel, CategoryGroup> = {
   'high-school': {
     key: 'high-school',
     title: 'High School',
-    emoji: '^',
+    emoji: '#',
     description: 'Ages 14-18 - Academic Challenge',
     styles: {
       color: 'bg-purple-600',
@@ -115,7 +115,7 @@ export const GAME_CATEGORIES: Record<DifficultyLevel, CategoryGroup> = {
   college: {
     key: 'college',
     title: 'College Level',
-    emoji: '+',
+    emoji: '^',
     description: 'Ages 18+ - Expert Knowledge',
     styles: {
       color: 'bg-red-600',

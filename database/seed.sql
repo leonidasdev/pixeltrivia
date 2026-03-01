@@ -7,8 +7,7 @@
 --   Run in Supabase SQL editor after applying migrations, or via:
 --   npx supabase db seed (with Supabase CLI)
 --
--- Idempotent: uses ON CONFLICT DO NOTHING to avoid duplicates
--- when re-running.
+-- Note: re-running this script will insert duplicate rows.
 
 BEGIN;
 

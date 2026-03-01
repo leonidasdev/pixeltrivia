@@ -7,7 +7,7 @@
  * @since 1.0.0
  */
 
-import type { Player, GameState, DifficultyLevel } from './game'
+import type { Player, DifficultyLevel } from './game'
 
 // ============================================================================
 // Room Types
@@ -35,14 +35,11 @@ export interface Room {
 
 /**
  * Possible room statuses
+ *
+ * @remarks
+ * Matches the database CHECK constraint: `waiting`, `active`, `finished`.
  */
-export type RoomStatus =
-  | 'waiting' // Waiting for players to join
-  | 'starting' // Game is about to start
-  | 'in-progress' // Game is active
-  | 'paused' // Game is paused
-  | 'finished' // Game has ended
-  | 'closed' // Room has been closed
+export type RoomStatus = 'waiting' | 'active' | 'finished'
 
 /**
  * Room configuration settings
@@ -62,151 +59,6 @@ export interface RoomSettings {
   categories: string[]
   /** Whether to allow late joining */
   allowLateJoin: boolean
-}
-
-/**
- * Default room settings
- */
-export const DEFAULT_ROOM_SETTINGS: RoomSettings = {
-  maxPlayers: 8,
-  isPrivate: false,
-  difficulty: 'classic',
-  questionCount: 10,
-  timeLimit: 30,
-  categories: [],
-  allowLateJoin: false,
-}
-
-// ============================================================================
-// Room Events
-// ============================================================================
-
-/**
- * Types of events that can occur in a room
- */
-export type RoomEventType =
-  | 'player_joined'
-  | 'player_left'
-  | 'player_ready'
-  | 'game_started'
-  | 'game_paused'
-  | 'game_resumed'
-  | 'question_started'
-  | 'answer_submitted'
-  | 'question_ended'
-  | 'game_ended'
-  | 'chat_message'
-  | 'settings_changed'
-  | 'host_changed'
-
-/**
- * Base room event structure
- */
-export interface RoomEvent<T = unknown> {
-  /** Event type */
-  type: RoomEventType
-  /** Event payload */
-  payload: T
-  /** When the event occurred */
-  timestamp: Date
-  /** ID of the player who triggered the event (if applicable) */
-  playerId?: string
-}
-
-/**
- * Player joined event payload
- */
-export interface PlayerJoinedPayload {
-  player: Player
-  playerCount: number
-}
-
-/**
- * Player left event payload
- */
-export interface PlayerLeftPayload {
-  playerId: string
-  playerName: string
-  reason: 'left' | 'kicked' | 'disconnected' | 'timeout'
-}
-
-/**
- * Game started event payload
- */
-export interface GameStartedPayload {
-  gameState: GameState
-  totalQuestions: number
-  firstQuestionId: string | number
-}
-
-// ============================================================================
-// Room API Types
-// ============================================================================
-
-/**
- * Request to create a new room
- */
-export interface CreateRoomRequest {
-  /** Nickname of the host */
-  hostNickname: string
-  /** Maximum players (optional, defaults to 8) */
-  maxPlayers?: number
-  /** Whether the room is private (optional, defaults to false) */
-  isPrivate?: boolean
-}
-
-/**
- * Response from creating a room
- */
-export interface CreateRoomResponse {
-  /** Whether the operation was successful */
-  success: boolean
-  /** Room data if successful */
-  data?: {
-    /** The generated room code */
-    roomCode: string
-    /** When the room was created */
-    createdAt: string
-    /** Initial room status */
-    status: RoomStatus
-  }
-  /** Error message if failed */
-  error?: string
-  /** Human-readable message */
-  message: string
-}
-
-/**
- * Request to join a room
- */
-export interface JoinRoomRequest {
-  /** Room code to join */
-  roomCode: string
-  /** Player's nickname */
-  nickname: string
-  /** Selected avatar ID */
-  avatarId?: string
-}
-
-/**
- * Response from joining a room
- */
-export interface JoinRoomResponse {
-  /** Whether the operation was successful */
-  success: boolean
-  /** Room data if successful */
-  data?: {
-    /** The room that was joined */
-    room: Room
-    /** The player's assigned ID */
-    playerId: string
-    /** Session token for authentication */
-    sessionToken: string
-  }
-  /** Error message if failed */
-  error?: string
-  /** Human-readable message */
-  message: string
 }
 
 // ============================================================================
@@ -249,34 +101,6 @@ export interface MultiplayerPlayer {
   hasAnswered: boolean
   /** When the player joined */
   joinedAt: string
-}
-
-/**
- * Full multiplayer room state
- */
-export interface MultiplayerRoomState {
-  /** Room code */
-  code: string
-  /** Current room/game status */
-  status: 'waiting' | 'active' | 'finished'
-  /** Current question index (0-based) */
-  currentQuestion: number
-  /** Total questions in the game */
-  totalQuestions: number
-  /** When the current question started (ISO string) */
-  questionStartTime: string | null
-  /** Time limit per question in seconds */
-  timeLimit: number
-  /** Max players allowed */
-  maxPlayers: number
-  /** Game mode */
-  gameMode: string | null
-  /** Category filter */
-  category: string | null
-  /** When the room was created */
-  createdAt: string
-  /** Players in the room */
-  players: MultiplayerPlayer[]
 }
 
 /**

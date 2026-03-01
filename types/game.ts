@@ -182,35 +182,3 @@ export interface CustomGameConfig {
   /** Number of questions to generate */
   numberOfQuestions: number
 }
-
-/**
- * Configuration for a quick game
- */
-export interface QuickGameConfig {
-  /** Selected category */
-  category: string
-  /** Selected difficulty */
-  difficulty: DifficultyLevel
-  /** Number of questions (default: 10) */
-  questionCount?: number
-  /** Time limit per question in seconds (default: 30) */
-  timeLimit?: number
-}
-
-/**
- * Configuration for an advanced game
- */
-export interface AdvancedGameConfig {
-  /** Array of selected categories */
-  categories: string[]
-  /** Difficulty level */
-  difficulty: DifficultyLevel
-  /** Number of questions */
-  questionCount: number
-  /** Time limit per question in seconds */
-  timeLimit: number
-  /** Whether to shuffle questions */
-  shuffleQuestions: boolean
-  /** Whether to show correct answers after each question */
-  showCorrectAnswers: boolean
-}

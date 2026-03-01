@@ -10,7 +10,7 @@
 
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { soundManager, type SoundEffect, type SoundOptions } from '@/lib/soundManager'
 
 // ============================================================================
@@ -47,6 +47,7 @@ export interface UseSoundReturn {
  * ```
  */
 export function useSound(initialVolume: number = 50): UseSoundReturn {
+  const [isMuted, setIsMuted] = useState(false)
   const mutedRef = useRef(false)
 
   // Sync volume to sound manager whenever it changes
@@ -64,6 +65,7 @@ export function useSound(initialVolume: number = 50): UseSoundReturn {
 
   const toggleMute = useCallback(() => {
     mutedRef.current = !mutedRef.current
+    setIsMuted(mutedRef.current)
     soundManager.muted = mutedRef.current
   }, [])
 
@@ -71,6 +73,6 @@ export function useSound(initialVolume: number = 50): UseSoundReturn {
     play,
     setVolume,
     toggleMute,
-    isMuted: mutedRef.current,
+    isMuted,
   }
 }

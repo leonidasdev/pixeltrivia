@@ -119,7 +119,7 @@ export function useLocalStorage<T>(
         window.localStorage.removeItem(key)
       }
     } catch (error) {
-      logger.warn(`Error setting localStorage key "${key}":`, error)
+      logger.warn(`Error removing localStorage key "${key}":`, error)
     }
   }, [key, initialValue])
 
