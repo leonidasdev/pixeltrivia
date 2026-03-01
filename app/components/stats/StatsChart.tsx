@@ -130,7 +130,7 @@ export function ModeChart({ modeBreakdown }: ModeChartProps) {
 
   if (entries.length === 0) {
     return (
-      <div className="pixel-border bg-gray-800 bg-opacity-80 p-6 text-center">
+      <div className="pixel-panel p-6 text-center">
         <div className="text-2xl mb-2">--</div>
         <p className="font-pixel text-xs text-gray-400">NO MODE DATA YET</p>
       </div>
@@ -141,7 +141,7 @@ export function ModeChart({ modeBreakdown }: ModeChartProps) {
   const maxScore = Math.max(...entries.map(([, s]) => s.bestScore))
 
   return (
-    <div className="pixel-border bg-gray-800 bg-opacity-80 p-4 space-y-4">
+    <div className="pixel-panel p-4 space-y-4">
       <h3 className="font-pixel text-sm text-white text-center pixel-text-shadow">
         MODE BREAKDOWN
       </h3>
@@ -208,7 +208,7 @@ export function CategoryChart({ categoryBreakdown }: CategoryChartProps) {
 
   if (entries.length === 0) {
     return (
-      <div className="pixel-border bg-gray-800 bg-opacity-80 p-6 text-center">
+      <div className="pixel-panel p-6 text-center">
         <div className="text-2xl mb-2">--</div>
         <p className="font-pixel text-xs text-gray-400">NO CATEGORY DATA YET</p>
       </div>
@@ -218,7 +218,7 @@ export function CategoryChart({ categoryBreakdown }: CategoryChartProps) {
   const maxGames = Math.max(...entries.map(([, s]) => s.gamesPlayed))
 
   return (
-    <div className="pixel-border bg-gray-800 bg-opacity-80 p-4 space-y-4">
+    <div className="pixel-panel p-4 space-y-4">
       <h3 className="font-pixel text-sm text-white text-center pixel-text-shadow">
         TOP CATEGORIES
       </h3>

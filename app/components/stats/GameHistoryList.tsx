@@ -100,7 +100,7 @@ const HistoryRow = memo(function HistoryRow({ entry, onDelete }: HistoryRowProps
       {/* Main row */}
       <button
         onClick={() => setShowDetails(!showDetails)}
-        className="w-full p-3 text-left flex items-center justify-between gap-3 hover:bg-white hover:bg-opacity-5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
+        className="w-full p-3 text-left flex items-center justify-between gap-3 hover:bg-white hover:bg-opacity-5 transition-colors focus-ring"
         aria-expanded={showDetails}
         aria-label={`Game details: ${entry.mode} - ${entry.category}`}
       >
@@ -170,7 +170,7 @@ const HistoryRow = memo(function HistoryRow({ entry, onDelete }: HistoryRowProps
                   e.stopPropagation()
                   onDelete(entry.id)
                 }}
-                className="font-pixel text-xs text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="font-pixel text-xs text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors focus-ring"
                 aria-label="Delete this game entry"
               >
                 DELETE
@@ -220,7 +220,7 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
 
   if (history.length === 0) {
     return (
-      <div className="pixel-border bg-gray-800 bg-opacity-80 p-8 text-center">
+      <div className="pixel-panel p-8 text-center">
         <div className="text-4xl mb-4">--</div>
         <h3 className="font-pixel text-lg text-white mb-2">NO HISTORY</h3>
         <p className="font-pixel-body text-gray-400 text-lg">
@@ -240,7 +240,7 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
             <button
               key={mode}
               onClick={() => setFilterMode(mode)}
-              className={`font-pixel text-xs px-2 py-1 pixel-border transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400 ${
+              className={`font-pixel text-xs px-2 py-1 pixel-border transition-colors focus-ring ${
                 filterMode === mode
                   ? 'bg-cyan-600 text-white border-cyan-400'
                   : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
@@ -267,7 +267,7 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
           {onClearAll && (
             <button
               onClick={() => setShowConfirmClear(true)}
-              className="font-pixel text-xs text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="font-pixel text-xs text-red-400 hover:text-red-300 pixel-border px-2 py-1 bg-red-900 bg-opacity-30 hover:bg-opacity-50 transition-colors focus-ring"
               aria-label="Clear all history"
             >
               CLEAR
@@ -301,13 +301,13 @@ export function GameHistoryList({ history, onDelete, onClearAll }: GameHistoryLi
                 onClearAll?.()
                 setShowConfirmClear(false)
               }}
-              className="font-pixel text-xs bg-red-600 hover:bg-red-500 text-white pixel-border px-4 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="font-pixel text-xs bg-red-600 hover:bg-red-500 text-white pixel-border px-4 py-2 transition-colors focus-ring"
             >
               YES, DELETE ALL
             </button>
             <button
               onClick={() => setShowConfirmClear(false)}
-              className="font-pixel text-xs bg-gray-600 hover:bg-gray-500 text-white pixel-border px-4 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="font-pixel text-xs bg-gray-600 hover:bg-gray-500 text-white pixel-border px-4 py-2 transition-colors focus-ring"
             >
               CANCEL
             </button>

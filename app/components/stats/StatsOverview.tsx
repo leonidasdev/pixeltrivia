@@ -72,7 +72,7 @@ interface StatCardProps {
 
 function StatCard({ emoji, label, value, subtext, colorClass = 'text-white' }: StatCardProps) {
   return (
-    <div className="pixel-border bg-gray-800 bg-opacity-80 p-4 text-center hover:bg-gray-700 transition-colors duration-200">
+    <div className="pixel-panel p-4 text-center hover:bg-gray-700 transition-colors duration-200">
       <div className="text-2xl mb-2">{emoji}</div>
       <div className="font-pixel text-xs text-gray-400 uppercase tracking-wide mb-1">{label}</div>
       <div className={`font-pixel text-xl ${colorClass}`}>{value}</div>
@@ -90,7 +90,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
 
   if (stats.totalGames === 0) {
     return (
-      <div className="pixel-border bg-gray-800 bg-opacity-80 p-8 text-center">
+      <div className="pixel-panel p-8 text-center">
         <div className="text-4xl mb-4 animate-pixel-bounce">--</div>
         <h3 className="font-pixel text-lg text-white mb-2">NO GAMES YET</h3>
         <p className="font-pixel-body text-gray-400 text-lg">

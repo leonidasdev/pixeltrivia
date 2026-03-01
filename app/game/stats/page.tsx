@@ -130,7 +130,7 @@ export default function StatsPage() {
               onClick={() => handleTabChange(tab.id)}
               role="tab"
               aria-selected={activeTab === tab.id}
-              className={`flex-1 font-pixel text-xs py-3 px-2 pixel-border text-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400 ${
+              className={`flex-1 font-pixel text-xs py-3 px-2 pixel-border text-center transition-all duration-200 focus-ring ${
                 activeTab === tab.id
                   ? 'bg-cyan-600 text-white border-cyan-400 pixel-shadow'
                   : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
@@ -166,13 +166,13 @@ export default function StatsPage() {
         <div className="flex flex-wrap justify-center gap-3 w-full pt-4">
           <button
             onClick={handlePlayAgain}
-            className="font-pixel text-sm bg-green-600 hover:bg-green-500 text-white border-4 border-green-800 pixel-border px-6 py-3 pixel-glow-hover transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            className="font-pixel text-sm bg-green-600 hover:bg-green-500 text-white border-4 border-green-800 pixel-border px-6 py-3 pixel-glow-hover transition-all duration-200 hover:scale-105 active:scale-95 focus-ring"
           >
             PLAY AGAIN
           </button>
           <button
             onClick={handleBack}
-            className="font-pixel text-sm bg-gray-600 hover:bg-gray-500 text-white border-4 border-gray-800 pixel-border px-6 py-3 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            className="font-pixel text-sm bg-gray-600 hover:bg-gray-500 text-white border-4 border-gray-800 pixel-border px-6 py-3 transition-all duration-200 hover:scale-105 active:scale-95 focus-ring"
           >
             ← BACK
           </button>

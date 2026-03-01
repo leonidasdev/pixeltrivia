@@ -31,6 +31,16 @@
       0 2px 0 currentColor,
       2px 2px 0 currentColor;
   }
+
+  /** Standard accessible focus ring for interactive elements */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-cyan-400;
+  }
+
+  /** Semi-transparent dark panel/card container with pixel border */
+  .pixel-panel {
+    @apply pixel-border bg-gray-800 bg-opacity-80;
+  }
 }
 
 /* Custom range slider styling */

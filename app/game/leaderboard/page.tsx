@@ -147,7 +147,7 @@ function PersonalRecordsSection() {
   ]
 
   return (
-    <div className="pixel-border bg-gray-800 bg-opacity-80 p-4 mb-6">
+    <div className="pixel-panel p-4 mb-6">
       <h2 className="font-pixel text-sm text-cyan-400 mb-3">Personal Records</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {recordCards.map(card => (
@@ -206,7 +206,7 @@ export default function LeaderboardPage() {
           <div className="flex items-center gap-4 mb-6">
             <button
               onClick={handleBack}
-              className="pixel-border bg-gray-800 hover:bg-gray-700 text-white font-pixel text-xs px-3 py-3 min-h-[44px] transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="pixel-border bg-gray-800 hover:bg-gray-700 text-white font-pixel text-xs px-3 py-3 min-h-[44px] transition-colors focus-ring"
               aria-label="Go back"
             >
               ← BACK
@@ -231,7 +231,7 @@ export default function LeaderboardPage() {
                     playSound('select')
                     setPeriod(p.id)
                   }}
-                  className={`font-pixel text-xs px-2 py-3 min-h-[44px] transition-colors flex-1 focus:outline-none focus:ring-2 focus:ring-cyan-400 ${
+                  className={`font-pixel text-xs px-2 py-3 min-h-[44px] transition-colors flex-1 focus-ring ${
                     period === p.id
                       ? 'bg-yellow-600 text-white'
                       : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
@@ -256,7 +256,7 @@ export default function LeaderboardPage() {
                       playSound('select')
                       setSortBy(opt.id)
                     }}
-                    className={`font-pixel text-xs px-2 py-3 min-h-[44px] transition-colors flex-1 focus:outline-none focus:ring-2 focus:ring-cyan-400 ${
+                    className={`font-pixel text-xs px-2 py-3 min-h-[44px] transition-colors flex-1 focus-ring ${
                       sortBy === opt.id
                         ? 'bg-cyan-700 text-white'
                         : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
@@ -276,7 +276,7 @@ export default function LeaderboardPage() {
                   playSound('select')
                   setModeFilter(e.target.value)
                 }}
-                className="font-pixel text-xs bg-gray-800 text-gray-300 border border-gray-700 px-2 py-2 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="font-pixel text-xs bg-gray-800 text-gray-300 border border-gray-700 px-2 py-2 min-h-[44px] focus-ring"
                 aria-label="Filter by game mode"
               >
                 {MODE_OPTIONS.map(m => (
@@ -290,7 +290,7 @@ export default function LeaderboardPage() {
 
           {/* Leaderboard List */}
           <div
-            className="pixel-border bg-gray-800 bg-opacity-80 flex-1 overflow-hidden flex flex-col"
+            className="pixel-panel flex-1 overflow-hidden flex flex-col"
             role="tabpanel"
             id="leaderboard-panel"
             aria-labelledby={`period-tab-${period}`}
