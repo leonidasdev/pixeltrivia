@@ -82,7 +82,7 @@ export default function PlayPage() {
         playSound('wrong')
         setFeedbackType('wrong')
       }
-    }, [game.state, game.submitAnswer, showCorrectReveal, timeLimit, playSound]),
+    }, [game, showCorrectReveal, timeLimit, playSound]),
     onWarning: useCallback(() => playSound('timerWarning'), [playSound]),
     onCritical: useCallback(() => playSound('timerCritical'), [playSound]),
   })
@@ -171,16 +171,7 @@ export default function PlayPage() {
 
     // Cleanup session
     localStorage.removeItem(STORAGE_KEYS.CURRENT_GAME_SESSION)
-  }, [
-    game.state,
-    game.getSummary,
-    game.category,
-    game.difficulty,
-    game.streak,
-    historySaved,
-    playSound,
-    gameMode,
-  ])
+  }, [game, historySaved, playSound, gameMode])
 
   // ── Handlers ──
 
@@ -268,10 +259,7 @@ export default function PlayPage() {
     })
 
   // ── Derived values for results screen ──
-  const summary = useMemo(
-    () => (game.state === 'finished' ? game.getSummary() : null),
-    [game.state, game]
-  )
+  const summary = useMemo(() => (game.state === 'finished' ? game.getSummary() : null), [game])
 
   // ── Render ──
 

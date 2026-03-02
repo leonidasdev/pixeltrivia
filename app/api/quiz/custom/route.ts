@@ -14,7 +14,6 @@ import { ExternalAPIError } from '@/lib/errors'
 import {
   successResponse,
   validationErrorResponse,
-  externalApiErrorResponse,
   methodNotAllowedResponse,
   withErrorHandling,
 } from '@/lib/apiResponse'

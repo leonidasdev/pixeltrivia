@@ -8,7 +8,7 @@
  * @since 1.1.0
  */
 
-import { apiFetch, type ApiClientResponse } from './apiFetch'
+import { apiFetch } from './apiFetch'
 import type { MultiplayerQuestion, MultiplayerPlayer, QuestionResult } from '@/types/room'
 
 // ============================================================================
