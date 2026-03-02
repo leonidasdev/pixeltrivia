@@ -132,13 +132,7 @@ export const quickQuizSchema = z.object({
  * Quick quiz route request — only category is required, difficulty is optional.
  */
 export const quickQuizRequestSchema = z.object({
-  category: z
-    .string({
-      required_error: 'Category is required',
-      invalid_type_error: 'Category must be a string',
-    })
-    .trim()
-    .min(1, 'Category is required'),
+  category: z.string({ error: 'Category must be a string' }).trim().min(1, 'Category is required'),
   difficulty: knowledgeLevelSchema.optional(),
 })
 

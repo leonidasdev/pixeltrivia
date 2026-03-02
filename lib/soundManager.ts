@@ -17,6 +17,7 @@ import {
   MUSIC_PATTERNS,
   SOUND_EFFECTS,
   type NoteConfig,
+  type MusicPattern,
   type MusicTrack,
   type SoundEffectDefinition,
 } from './soundData'

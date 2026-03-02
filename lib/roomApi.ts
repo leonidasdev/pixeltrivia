@@ -19,7 +19,7 @@ export type CreateRoomResponse = ApiClientResponse<{
  * Creates a new room by calling the API endpoint
  */
 export async function createRoom(): Promise<CreateRoomResponse> {
-  return apiFetch<CreateRoomResponse['data']>('/api/room/create', {
+  return apiFetch<NonNullable<CreateRoomResponse['data']>>('/api/room/create', {
     method: 'POST',
     errorContext: 'create room',
   })

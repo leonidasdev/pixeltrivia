@@ -121,7 +121,7 @@ export async function fetchQuestions(
     limit: limit.toString(),
   })
 
-  return apiFetch<FetchQuestionsResponse['data']>(`/api/game/questions?${params}`, {
+  return apiFetch<NonNullable<FetchQuestionsResponse['data']>>(`/api/game/questions?${params}`, {
     errorContext: 'fetch questions',
   })
 }
