@@ -136,15 +136,14 @@ async function parseText(buffer: Buffer): Promise<string> {
 }
 
 /**
- * Extract text from a PDF file using pdf-parse-new.
+ * Extract text from a PDF file using unpdf.
  * Loaded lazily to avoid pulling the library into memory until needed.
  */
 async function parsePdf(buffer: Buffer): Promise<string> {
-  const pdfParse = (await import('pdf-parse-new')).default as (
-    buffer: Buffer
-  ) => Promise<{ text: string }>
-  const result = await pdfParse(buffer)
-  return result.text
+  const { extractText, getDocumentProxy } = await import('unpdf')
+  const pdf = await getDocumentProxy(new Uint8Array(buffer))
+  const { text } = await extractText(pdf, { mergePages: true })
+  return text
 }
 
 /**

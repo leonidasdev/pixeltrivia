@@ -6,10 +6,10 @@
  * Unit tests for lib/fileParser
  */
 
-jest.mock('pdf-parse-new', () => ({
-  __esModule: true,
-  default: jest.fn((buffer: Buffer) =>
-    Promise.resolve({ text: `PDF content from buffer of ${buffer.length} bytes` })
+jest.mock('unpdf', () => ({
+  getDocumentProxy: jest.fn(() => Promise.resolve({ numPages: 1 })),
+  extractText: jest.fn((_pdf: unknown) =>
+    Promise.resolve({ totalPages: 1, text: 'PDF content extracted' })
   ),
 }))
 
@@ -67,13 +67,13 @@ describe('parseFiles', () => {
     expect(result.parsed[0].text).toContain('# Title')
   })
 
-  it('parses a PDF file via pdf-parse', async () => {
+  it('parses a PDF file via unpdf', async () => {
     const file = makeFile('doc.pdf', 'fake pdf bytes', 'application/pdf')
     const result = await parseFiles([file])
 
     expect(result.parsed).toHaveLength(1)
     expect(result.parsed[0].type).toBe('pdf')
-    expect(result.parsed[0].text).toContain('PDF content from buffer')
+    expect(result.parsed[0].text).toContain('PDF content extracted')
   })
 
   it('parses a DOCX file via mammoth', async () => {
