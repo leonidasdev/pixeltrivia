@@ -67,7 +67,15 @@ function makeRoom(overrides: Partial<RoomState> = {}): RoomState {
     category: 'Science',
     createdAt: '2025-01-01T00:00:00Z',
     players: [
-      { id: PLAYER_ID, name: 'Host', avatarId: 1, score: 0, isHost: true, isConnected: true },
+      {
+        id: PLAYER_ID,
+        name: 'Host',
+        avatar: 'pixel-cat',
+        score: 0,
+        isHost: true,
+        hasAnswered: false,
+        joinedAt: '2025-01-01T00:00:00Z',
+      },
     ],
     ...overrides,
   }

@@ -53,10 +53,11 @@ const mockRoom: RoomState = {
     {
       id: 1,
       name: 'Host',
-      avatarId: 1,
+      avatar: 'pixel-cat',
       score: 0,
       isHost: true,
-      isConnected: true,
+      hasAnswered: false,
+      joinedAt: '2025-01-01T00:00:00Z',
     },
   ],
 }
@@ -65,13 +66,21 @@ const mockRoom: RoomState = {
 // Helpers
 // ============================================================================
 
-function createMockChannel() {
+interface MockChannel {
+  on: jest.Mock
+  subscribe: jest.Mock
+  _triggerStatus: (status: string) => void
+  _triggerChange: (table: string) => void
+  _handlers: Record<string, () => void>
+}
+
+function createMockChannel(): MockChannel {
   const handlers: Record<string, () => void> = {}
   let subscribeCallback: ((status: string) => void) | null = null
 
-  const channel = {
+  const channel: MockChannel = {
     on: jest.fn(function (
-      this: typeof channel,
+      this: MockChannel,
       _event: string,
       _opts: Record<string, unknown>,
       handler: () => void
@@ -81,7 +90,7 @@ function createMockChannel() {
       handlers[table] = handler
       return this
     }),
-    subscribe: jest.fn((cb: (status: string) => void) => {
+    subscribe: jest.fn((cb: (status: string) => void): MockChannel => {
       subscribeCallback = cb
       return channel
     }),
