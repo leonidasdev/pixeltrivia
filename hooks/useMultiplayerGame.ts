@@ -95,6 +95,7 @@ export function useMultiplayerGame({
   const [error, setError] = useState<string | null>(null)
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const revealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const questionStartRef = useRef<number>(0)
   const timeLimitRef = useRef<number>(30)
 
@@ -103,6 +104,14 @@ export function useMultiplayerGame({
     if (timerRef.current) {
       clearInterval(timerRef.current)
       timerRef.current = null
+    }
+  }, [])
+
+  // Clear any pending reveal-phase timeout
+  const clearRevealTimeout = useCallback(() => {
+    if (revealTimeoutRef.current) {
+      clearTimeout(revealTimeoutRef.current)
+      revealTimeoutRef.current = null
     }
   }, [])
 
@@ -255,13 +264,15 @@ export function useMultiplayerGame({
       if (result.data.gameOver) {
         setFinalScores(result.data.finalScores ?? null)
         // Short delay, then show final scores
-        setTimeout(() => {
+        clearRevealTimeout()
+        revealTimeoutRef.current = setTimeout(() => {
           setPhase('finished')
           onRefresh()
         }, ANSWER_REVEAL_DURATION)
       } else {
         // Show results briefly, then load next question
-        setTimeout(async () => {
+        clearRevealTimeout()
+        revealTimeoutRef.current = setTimeout(async () => {
           if (result.data?.nextQuestion) {
             setCurrentQuestion(result.data.nextQuestion)
             setHasAnswered(false)
@@ -281,12 +292,24 @@ export function useMultiplayerGame({
     } else {
       setError(result.error ?? 'Failed to advance')
     }
-  }, [isHost, playerId, roomCode, room?.timeLimit, clearTimer, startTimer, onRefresh])
+  }, [
+    isHost,
+    playerId,
+    roomCode,
+    room?.timeLimit,
+    clearTimer,
+    clearRevealTimeout,
+    startTimer,
+    onRefresh,
+  ])
 
   // Cleanup
   useEffect(() => {
-    return () => clearTimer()
-  }, [clearTimer])
+    return () => {
+      clearTimer()
+      clearRevealTimeout()
+    }
+  }, [clearTimer, clearRevealTimeout])
 
   return {
     phase,

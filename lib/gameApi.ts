@@ -68,8 +68,11 @@ export function loadMultiplayerSession(): MultiplayerSession | null {
 
   if (!storedId || !storedCode) return null
 
+  const playerId = parseInt(storedId, 10)
+  if (Number.isNaN(playerId)) return null
+
   return {
-    playerId: parseInt(storedId),
+    playerId,
     roomCode: storedCode,
     isHost: storedHost === 'true',
   }

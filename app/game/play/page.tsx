@@ -19,6 +19,7 @@ import { useGameState } from '@/hooks/useGameState'
 import { useTimer } from '@/hooks/useTimer'
 import { useSound } from '@/hooks/useSound'
 import { addHistoryEntry, getProfile } from '@/lib/storage'
+import { recordCategoryPerformance } from '@/lib/adaptiveDifficulty'
 import type { Question, DifficultyLevel } from '@/types/game'
 import {
   LoadingOverlay,
@@ -164,6 +165,7 @@ export default function PlayPage() {
         streak: game.streak,
         playerName: profile?.name ?? 'Player',
       })
+      recordCategoryPerformance(game.category, Math.round(summary.accuracy))
     }
     setHistorySaved(true)
 

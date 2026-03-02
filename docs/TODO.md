@@ -163,7 +163,29 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
   CSS utility classes to `globals.css` via `@apply`. Replaced 15 inline focus-ring and 11
   inline pixel-panel occurrences across 8 files. *(commit 8721634)*
 
-### P5 — Dependencies
+### P5 — Modularity and Refactoring
+
+> Identified via deep codebase audit (June 2025). Prioritized by risk and deduplication impact.
+
+- [x] **Fix uncancelled `setTimeout` in `useMultiplayerGame.ts`** — reveal-phase timeouts
+  now tracked via `revealTimeoutRef` and cleared on unmount. *(this commit)*
+- [x] **Wrap `upload/route.ts` in `withErrorHandling`** — unified with all other API routes,
+  removed manual try/catch. *(this commit)*
+- [x] **Unify `multiplayerApi.ts` with `apiFetch`** — removed duplicate internal `apiCall<T>()`
+  function, all multiplayer API functions now use `apiFetch` with `errorContext`. Updated
+  test expectations for error message format. *(this commit)*
+- [x] **Split `soundManager.ts` (692 lines)** — extracted note frequencies, music patterns,
+  and sound effect definitions to `lib/soundData.ts` (266 lines). `soundManager.ts` reduced
+  to 318 lines with data-driven `play()` method. *(this commit)*
+- [ ] **Split `storage.ts` (659 lines)** — five responsibilities: profile, settings, history,
+  migration, and stats. Extract into focused modules under `lib/storage/`.
+- [x] **Decouple `addHistoryEntry()` from `recordCategoryPerformance()`** — removed hidden
+  side effect. Callers (`play/page.tsx`, `play/[code]/page.tsx`) now call
+  `recordCategoryPerformance` explicitly. *(this commit)*
+- [x] **Add NaN guard in `loadMultiplayerSession()`** — added `Number.isNaN()` check after
+  `parseInt()`, returns null for invalid stored IDs. *(this commit)*
+
+### P6 — Dependencies
 
 - [x] **Align `@next/bundle-analyzer` version** — changed `^16.1.6` to `^14.2.30`. *(commit 3df687e)*
 - [x] **Align `eslint-config-next` version** — changed `14.0.0` to `^14.2.30`. *(commit 3df687e)*
@@ -175,7 +197,7 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
 - [ ] **Plan Next.js 15 upgrade** — Next.js 15 is available. Evaluate breaking changes and plan
   migration when stable.
 
-### P6 — Future Features
+### P7 — Future Features
 
 - [ ] Move leaderboard/achievements from localStorage to Supabase for cross-device persistence
 - [ ] Add user authentication (Supabase Auth) with game history and achievements per user

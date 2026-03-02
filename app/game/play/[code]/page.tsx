@@ -16,6 +16,7 @@ import { useRoom } from '@/hooks/useRoom'
 import { useMultiplayerGame } from '@/hooks/useMultiplayerGame'
 import { useSound } from '@/hooks/useSound'
 import { addHistoryEntry } from '@/lib/storage'
+import { recordCategoryPerformance } from '@/lib/adaptiveDifficulty'
 import { GameQuestion, PlayerList, Scoreboard, HostControls } from '@/app/components/multiplayer'
 import {
   LoadingOverlay,
@@ -140,6 +141,7 @@ function PlayContent({ params }: PlayPageProps) {
           streak: 0,
           playerName: currentPlayer?.name ?? 'Player',
         })
+        recordCategoryPerformance(room.category || 'Mixed', accuracy)
       }
     }
   }, [game.phase, playSound, room, playerId])
