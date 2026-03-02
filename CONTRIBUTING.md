@@ -401,7 +401,7 @@ Include:
 
 | Label | Description |
 |-------|-------------|
-| `bug` | Something isn't working |
+| `bug` | Something is not working |
 | `enhancement` | New feature request |
 | `documentation` | Documentation improvements |
 | `good first issue` | Good for newcomers |

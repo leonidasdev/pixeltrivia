@@ -52,7 +52,7 @@ hosting provider, or third-party service configuration.
   implicit Vercel GitHub integration. Consider explicit preview deploy on PRs.
 - [ ] **Add branch protection rules** on `main` — require passing CI, at least 1 review, and
   no force pushes.
-- [ ] **Fix CI build env vars** — CI uses placeholder values for Supabase URL/keys. Build won't
+- [ ] **Fix CI build env vars** — CI uses placeholder values for Supabase URL/keys. Build does not
   catch env-dependent compilation issues.
 
 ### Environment & Secrets
@@ -86,7 +86,7 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
 
 - [x] **Adopt `GamePageLayout` consistently** — assessed all 13 game pages. 5 simple
   pages (quick, custom, advanced, join, create) already use it. Remaining 8 pages have
-  custom layouts (swipe refs, tab systems, filter controls, gameplay UIs) that don't map
+  custom layouts (swipe refs, tab systems, filter controls, gameplay UIs) that do not map
   to GamePageLayout's API without scope creep. Keeping direct composition for those.
   *(assessed session 14)*
 - [x] **Extract multiplayer session helpers** — `saveMultiplayerSession()`,
@@ -108,7 +108,7 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
   `gameStateRef.current = gameState` synced on every render. `submitAnswer`, `getCurrentQuestion`,
   `getSummary` now read from ref. *(commit b8b8eaf)*
 - [x] **Fix JSON parse error inconsistency** — `withErrorHandling` now catches `SyntaxError`
-  globally (returns 400). `room/create` inner try/catch documented for backward compat.
+  globally (returns 400). `room/create` inner try/catch documented for compatibility.
   *(commit b8b8eaf)*
 - [x] **Add `displayName` to `forwardRef` components** — already done in prior session
   (commit 5052c48).

@@ -75,10 +75,10 @@ Current Jest coverage thresholds (from `jest.config.js`):
 
 | Metric | Threshold |
 |--------|----------|
-| Statements | 60% |
-| Branches | 55% |
-| Functions | 64% |
-| Lines | 61% |
+| Statements | 83% |
+| Branches | 75% |
+| Functions | 85% |
+| Lines | 85% |
 
 ---
 

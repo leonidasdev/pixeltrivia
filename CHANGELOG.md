@@ -32,8 +32,8 @@ Version numbers follow the project's internal phase numbering (not semver) until
 - **Documentation Overhaul** — Updated all 18 markdown files for accuracy, consistent tone, and current test counts
 
 ### Removed
-- Deprecated `GameSession` type alias from `lib/gameApi.ts` (use `ActiveGameSession`)
-- Deprecated `shuffleQuestions()` from `lib/quickQuizApi.ts` (use `shuffleArray()` from `lib/utils.ts`)
+- `GameSession` type alias from `lib/gameApi.ts` (use `ActiveGameSession`)
+- `shuffleQuestions()` from `lib/quickQuizApi.ts` (use `shuffleArray()` from `lib/utils.ts`)
 - Unused `ValidatedQuestion` type from `lib/validation.ts`
 - 6 redundant `shuffleQuestions` tests (covered by `shuffleArray` tests)
 
@@ -153,7 +153,7 @@ Version numbers follow the project's internal phase numbering (not semver) until
 
 ### Changed
 - Refactored `gameApi`, `quickQuizApi`, `customQuizApi`, `roomApi` to use `apiFetch` instead of duplicated fetch boilerplate
-- Consolidated `GameSession` type — renamed to `ActiveGameSession` with `@deprecated` alias for backward compat
+- Consolidated `GameSession` type — renamed to `ActiveGameSession` with type alias for compatibility
 - Added `useCallback`/`useMemo` memoization to `HelpContext.tsx`, `HelpModal.tsx`, and `usePlayerSettings.ts`
 
 ## [Phase 16] - 2026-02-28

@@ -75,7 +75,7 @@ This will:
 # Check that all scripts work
 npm run lint      # Should complete without errors
 npm run typecheck # Should complete without errors
-npm test          # Should run 1850+ tests
+npm test          # Should run 1990+ tests
 ```
 
 ---

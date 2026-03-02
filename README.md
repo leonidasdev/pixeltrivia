@@ -7,7 +7,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ecf8e?logo=supabase)
-![Tests](https://img.shields.io/badge/Tests-1850%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-1990%20passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/Coverage-86%25-brightgreen)
 
 **A retro-styled trivia game with AI-powered question generation**
@@ -100,7 +100,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Game Modes
 
 ### Quick Play
-Jump straight into a trivia game with predefined categories:
+Select from predefined categories and start a trivia game:
 - 40+ categories across Gaming, Movies, Science, History, Geography, and more
 - 5 difficulty levels from Elementary to College
 - Adaptive difficulty recommendations based on your performance
@@ -119,7 +119,7 @@ Generate questions from your own documents:
 - Input sanitization and prompt injection protection
 
 ### Multiplayer
-Play with friends in real-time:
+Compete with others in real-time:
 - Create private rooms with 6-character codes
 - Up to 16 players per room
 - Host controls game flow
@@ -173,7 +173,7 @@ pixeltrivia/
 │   ├── guides/            # Development, testing, deployment
 │   ├── reference/         # Architecture, API reference
 │   └── operations/        # Monitoring, runbook
-├── __tests__/             # Test suites (104 suites, 1850 tests)
+├── __tests__/             # Test suites (114 suites, 1990 tests)
 └── .github/               # GitHub Actions CI/CD
 ```
 
@@ -193,7 +193,7 @@ npm run test:coverage
 npm run typecheck
 ```
 
-**Test Coverage:** 1850 tests across 104 test suites (unit, component, page, hook, integration)
+**Test Coverage:** 1990 tests across 114 test suites (unit, component, page, hook, integration)
 
 ## Scripts
 

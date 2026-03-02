@@ -64,7 +64,7 @@ app/
    - Removing or renaming response fields
    - Changing request body schema
    - Altering error codes or HTTP status semantics
-3. **Deprecation**: Old versions serve a `Sunset` header for 90 days before removal
+3. **Sunset policy**: Superseded versions serve a `Sunset` header for 90 days before removal
 4. **Default**: Unversioned routes (`/api/quiz/quick`) always point to the latest stable version
 
 ### Implementation Checklist (when needed)
@@ -72,7 +72,7 @@ app/
 ```
 [ ] Create app/api/v1/ route group mirroring current endpoints
 [ ] Add version detection middleware in middleware.ts
-[ ] Add Sunset header to deprecated versions
+[ ] Add Sunset header to superseded versions
 [ ] Update lib/apiFetch.ts to accept optional version parameter
 [ ] Update client-side API modules (gameApi, quickQuizApi, etc.)
 [ ] Document version differences in docs/reference/api-reference.md

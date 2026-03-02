@@ -24,12 +24,12 @@ Comprehensive guide to testing in PixelTrivia.
 
 PixelTrivia uses a comprehensive testing setup with:
 
-- **1850 tests** total (Jest unit/component + Playwright E2E)
+- **1990 tests** total (Jest unit/component + Playwright E2E)
 - **Jest 30** as the unit/component test runner
 - **Playwright** for E2E testing (Chromium + Firefox)
 - **React Testing Library** for component tests
 - **Coverage**: Stmts 86%, Branch 80%, Funcs 89%, Lines 88%
-- **Coverage thresholds** (jest.config.js): branches ≥55%, functions ≥64%, lines ≥61%, statements ≥60%
+- **Coverage thresholds** (jest.config.js): branches ≥75%, functions ≥85%, lines ≥85%, statements ≥83%
 
 Tests run automatically:
 - On every commit (via Husky pre-commit hooks)
@@ -146,7 +146,9 @@ __tests__/                         # Jest unit & component tests
 │   │   ├── QuickGamePage.test.tsx
 │   │   └── StatsPage.test.tsx
 │   ├── stats/                     # Stats component tests
-│   │   └── GameHistoryList.test.tsx
+│       ├── GameHistoryList.test.tsx
+│       ├── StatsOverview.test.tsx
+│       └── StatsChart.test.tsx
 │   └── ui/                        # UI primitive tests
 │       ├── AnimatedBackground.test.tsx
 │       ├── GamePageLayout.test.tsx
@@ -164,8 +166,10 @@ __tests__/                         # Jest unit & component tests
 │   ├── useGameState.test.ts
 │   ├── useHoveredCard.test.ts
 │   ├── useLocalStorage.test.ts
+│   ├── useMultiplayerGame.test.ts
 │   ├── usePlayerSettings.test.ts
 │   ├── useQuizSession.test.ts
+│   ├── useRoom.test.ts
 │   ├── useSound.test.ts
 │   ├── useSwipe.test.ts
 │   └── useTimer.test.ts
@@ -599,10 +603,10 @@ Coverage is configured in `jest.config.js`:
   ],
   coverageThreshold: {
     global: {
-      branches: 55,
-      functions: 64,
-      lines: 61,
-      statements: 60,
+      branches: 75,
+      functions: 85,
+      lines: 85,
+      statements: 83,
     },
   },
 }
@@ -624,10 +628,10 @@ Current thresholds (set in `jest.config.js`):
 
 | Metric | Threshold | Actual |
 |--------|-----------|--------|
-| Statements | 60% | ~86% |
-| Branches | 55% | ~80% |
-| Functions | 64% | ~89% |
-| Lines | 61% | ~88% |
+| Statements | 83% | ~86% |
+| Branches | 75% | ~80% |
+| Functions | 85% | ~89% |
+| Lines | 85% | ~88% |
 
 ---
 
@@ -743,7 +747,7 @@ moduleNameMapper: {
 
 ### "Request is not defined" in Tests
 
-Some Next.js server modules can't be imported in test environment. Split your code:
+Some Next.js server modules cannot be imported in the test environment. Split your code:
 
 ```typescript
 // lib/security.core.ts - Pure functions (testable)

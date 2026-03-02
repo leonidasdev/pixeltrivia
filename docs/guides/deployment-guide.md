@@ -155,7 +155,7 @@ Configure variables for appropriate environments:
 
 ### 3. Enable Row Level Security
 
-The schema already includes RLS policies. Verify they're active:
+The schema already includes RLS policies. Verify they are active:
 
 ```sql
 SELECT tablename, policyname, cmd

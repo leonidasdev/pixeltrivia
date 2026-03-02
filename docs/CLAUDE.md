@@ -19,7 +19,7 @@
 | **Styling** | Tailwind CSS |
 | **Database** | Supabase (PostgreSQL) |
 | **AI** | OpenRouter API (DeepSeek model) |
-| **Testing** | Jest + React Testing Library (1850 tests, 104 suites) |
+| **Testing** | Jest + React Testing Library (1990 tests, 114 suites) |
 
 ---
 
@@ -223,7 +223,7 @@ pixeltrivia/
   "typescript": "^5.8.3",
   "tailwindcss": "^3.3.0",
   "@supabase/supabase-js": "^2.49.4",
-  "zod": "^3.25.76",
+  "zod": "^4.3.6",
   "jest": "^30.2.0",
   "@testing-library/react": "^16.4.1"
 }
@@ -340,10 +340,10 @@ All API routes use `lib/apiResponse.ts` helpers for consistent response envelope
 ## Testing Overview
 
 ### Test Statistics
-- **1850 tests** across 104 test suites
+- **1990 tests** across 114 test suites
 - **100% passing** on CI
 - **Coverage**: Stmts 86.27%, Branch 80.15%, Funcs 89.36%, Lines 88.48%
-- **Coverage thresholds** (jest.config.js): branches ≥55%, functions ≥64%, lines ≥61%, statements ≥60%
+- **Coverage thresholds** (jest.config.js): branches ≥75%, functions ≥85%, lines ≥85%, statements ≥83%
 
 ### Test Commands
 ```bash
@@ -545,7 +545,7 @@ export default function GamePage() {
 - Share game results (Web Share API + clipboard fallback)
 - Touch gesture support (swipe navigation)
 - Multiplayer invite links and room code sharing
-- Testing infrastructure (1850 tests, 104 suites, 86%+ coverage)
+- Testing infrastructure (1990 tests, 114 suites, 86%+ coverage)
 - CI/CD pipeline (GitHub Actions + Husky + Lighthouse CI)
 - Security hardening (validation, rate limiting, middleware, CSP)
 - Structured logging with request ID tracing
@@ -603,13 +603,14 @@ export default function GamePage() {
 When working on this codebase:
 
 1. **Always use TypeScript** with strict types
-2. **Follow existing patterns** - check similar files for conventions
+2. **Follow existing patterns** — check similar files for conventions
 3. **Write tests** for new functionality
 4. **Use Zod** for input validation
 5. **Follow the retro pixel aesthetic** in UI components
 6. **Update documentation** when making significant changes
 7. **Run `npm test`** before committing
 8. **Use conventional commits** (feat:, fix:, docs:, etc.)
+9. **No temporal naming** — never use suffixes or prefixes like "old", "legacy", "new", or "deprecated" in file names, variable names, or package references. Git version control provides full history; temporal markers add confusion and maintenance overhead.
 
 ### Quick Reference
 
@@ -626,4 +627,4 @@ When working on this codebase:
 
 ---
 
-*Last updated: March 1, 2026*
+*Last updated: March 2, 2026*
