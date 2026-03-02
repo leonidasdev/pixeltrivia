@@ -9,8 +9,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Test Suites | 112 |
-| Tests | 1,946 |
+| Test Suites | 114 |
+| Tests | 1,990 |
 | Coverage (Statements) | ~88% |
 | Coverage (Branches) | ~82% |
 | Coverage (Functions) | ~89% |
@@ -117,10 +117,12 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
 
 ### P2 — Testing
 
-- [ ] **Add tests for `useMultiplayerGame` hook** — complex hook with Supabase Realtime
-  subscriptions, timer logic, and state management. Zero test coverage.
-- [ ] **Add tests for `useRoom` hook** — manages room state, polling fallback, and Realtime
-  channel cleanup. Zero test coverage.
+- [x] **Add tests for `useMultiplayerGame` hook** — 26 tests covering phase transitions
+  (lobby/playing/answered/revealing/finished), startGame, submitAnswer, nextQuestion,
+  timer, and error handling. *(commit dd16aa3)*
+- [x] **Add tests for `useRoom` hook** — 18 tests covering initial state, error handling,
+  refresh, polling fallback, and Supabase Realtime subscription lifecycle.
+  *(commit dd16aa3)*
 - [x] **Add tests for multiplayer components** — `HostControls.tsx`, `PlayerList.tsx`,
   `Scoreboard.tsx` now have test files. *(commit 57ad683)*
 - [x] **Add tests for UI components** — `AnswerFeedback.tsx`, `ScorePopup.tsx`,
@@ -167,8 +169,8 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
 - [x] **Align `eslint-config-next` version** — changed `14.0.0` to `^14.2.30`. *(commit 3df687e)*
 - [x] **Verify `ts-jest` compatibility** — `ts-jest@29.4.6` confirmed compatible with
   `jest@30.2.0` (all 1906 tests pass). *(commit 3df687e)*
-- [ ] **Evaluate `pdf-parse` replacement** — last published 2019, unmaintained. Consider
-  `pdf-parse-new` or `pdfjs-dist`.
+- [x] **Replace `pdf-parse` with `pdf-parse-new`** — drop-in actively maintained fork.
+  Updated import in `fileParser.ts`, type declaration, and test mock. *(commit dd16aa3)*
 - [ ] **Plan Next.js 15 upgrade** — Next.js 15 is available. Evaluate breaking changes and plan
   migration when stable.
 
