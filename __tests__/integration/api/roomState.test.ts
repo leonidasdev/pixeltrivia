@@ -12,6 +12,11 @@ jest.mock('@/lib/logger', () => ({
   logger: { info: jest.fn(), error: jest.fn(), warn: jest.fn(), debug: jest.fn() },
 }))
 
+jest.mock('@/lib/rateLimit', () => ({
+  rateLimit: jest.fn(() => null),
+  RATE_LIMITS: { standard: { windowMs: 60000, maxRequests: 100 } },
+}))
+
 const mockSupabaseFrom = jest.fn()
 jest.mock('@/lib/supabase', () => ({
   getSupabaseClient: () => ({ from: mockSupabaseFrom }),

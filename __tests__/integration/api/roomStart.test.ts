@@ -13,6 +13,11 @@ jest.mock('@/lib/logger', () => ({
   logger: { info: jest.fn(), error: jest.fn(), warn: jest.fn(), debug: jest.fn() },
 }))
 
+jest.mock('@/lib/rateLimit', () => ({
+  rateLimit: jest.fn(() => null),
+  RATE_LIMITS: { strict: { windowMs: 60000, maxRequests: 10 } },
+}))
+
 jest.mock('@/lib/utils', () => ({
   shuffleArray: jest.fn((arr: unknown[]) => arr),
 }))

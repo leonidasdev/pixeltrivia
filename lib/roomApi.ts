@@ -7,18 +7,13 @@
  * @since 1.0.0
  */
 
-import { apiFetch } from './apiFetch'
+import { apiFetch, type ApiClientResponse } from './apiFetch'
 
-export interface CreateRoomResponse {
-  success: boolean
-  data?: {
-    roomCode: string
-    createdAt: string
-    status: string
-  }
-  error?: string
-  message: string
-}
+export type CreateRoomResponse = ApiClientResponse<{
+  roomCode: string
+  createdAt: string
+  status: string
+}>
 
 /**
  * Creates a new room by calling the API endpoint
@@ -27,5 +22,5 @@ export async function createRoom(): Promise<CreateRoomResponse> {
   return apiFetch<CreateRoomResponse['data']>('/api/room/create', {
     method: 'POST',
     errorContext: 'create room',
-  }) as Promise<CreateRoomResponse>
+  })
 }

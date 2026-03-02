@@ -7,7 +7,7 @@
  * @since 1.0.0
  */
 
-import { apiFetch } from './apiFetch'
+import { apiFetch, type ApiClientResponse } from './apiFetch'
 import { createBaseSession } from './session'
 import type { Question } from '@/types'
 import { STORAGE_KEYS, MULTIPLAYER_STORAGE_KEYS } from '@/constants/game'
@@ -99,22 +99,13 @@ export interface GameQuestion extends Question {
  *
  * @see {@link import('@/types/api').ApiResponse} for the canonical API envelope
  */
-export interface FetchQuestionsResponse {
-  success: boolean
-  data?: {
-    questions: GameQuestion[]
-    totalQuestions: number
-    selectedCategory: string
-    selectedDifficulty: string
-    timeLimit: number
-  }
-  error?: string
-  code?: string
-  message?: string
-  meta?: {
-    timestamp: string
-  }
-}
+export type FetchQuestionsResponse = ApiClientResponse<{
+  questions: GameQuestion[]
+  totalQuestions: number
+  selectedCategory: string
+  selectedDifficulty: string
+  timeLimit: number
+}>
 
 /**
  * Fetches questions for a quick game
@@ -132,7 +123,7 @@ export async function fetchQuestions(
 
   return apiFetch<FetchQuestionsResponse['data']>(`/api/game/questions?${params}`, {
     errorContext: 'fetch questions',
-  }) as Promise<FetchQuestionsResponse>
+  })
 }
 
 /**

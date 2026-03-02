@@ -13,6 +13,7 @@
 import { type NextRequest } from 'next/server'
 import { getSupabaseClient } from '@/lib/supabase'
 import { isValidRoomCode } from '@/lib/roomCode'
+import { rateLimit, RATE_LIMITS } from '@/lib/rateLimit'
 import { logger } from '@/lib/logger'
 import {
   successResponse,
@@ -31,6 +32,9 @@ interface RouteParams {
 
 export const POST = withErrorHandling<RouteParams>(
   async (request: NextRequest, { params }: RouteParams) => {
+    const rateLimited = rateLimit(request, RATE_LIMITS.strict)
+    if (rateLimited) return rateLimited
+
     const { code } = await params
     const roomCode = code.toUpperCase()
 

@@ -5,7 +5,7 @@
  * @since 1.0.0
  */
 
-import { apiFetch } from './apiFetch'
+import { apiFetch, type ApiClientResponse } from './apiFetch'
 import { createBaseSession } from './session'
 import { KNOWLEDGE_LEVELS } from '@/constants/difficulties'
 import type {
@@ -22,16 +22,7 @@ export type CustomQuizQuestion = _CustomQuizQuestion
  *
  * @see {@link import('@/types/quiz').CustomQuizResponse} for the canonical API contract
  */
-export interface CustomQuizResponse {
-  success: boolean
-  data?: CustomQuizQuestion[]
-  error?: string
-  code?: string
-  message?: string
-  meta?: {
-    timestamp: string
-  }
-}
+export type CustomQuizResponse = ApiClientResponse<CustomQuizQuestion[]>
 
 /**
  * Generate custom quiz questions using AI
@@ -43,7 +34,7 @@ export async function generateCustomQuiz(config: CustomQuizRequest): Promise<Cus
     method: 'POST',
     body: config,
     errorContext: 'generate custom quiz',
-  }) as Promise<CustomQuizResponse>
+  })
 }
 
 /**

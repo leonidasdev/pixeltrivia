@@ -5,7 +5,7 @@
  * @since 1.0.0
  */
 
-import { apiFetch } from './apiFetch'
+import { apiFetch, type ApiClientResponse } from './apiFetch'
 import { createBaseSession } from './session'
 import { calculateGameScore, getGrade } from './scoring'
 import { shuffleArray } from './utils'
@@ -19,16 +19,7 @@ export type QuickQuizQuestion = _QuickQuizQuestion
  *
  * @see {@link import('@/types/quiz').QuickQuizResponse} for the canonical API contract
  */
-export interface QuickQuizResponse {
-  success: boolean
-  data?: QuickQuizQuestion[]
-  error?: string
-  code?: string
-  message?: string
-  meta?: {
-    timestamp: string
-  }
-}
+export type QuickQuizResponse = ApiClientResponse<QuickQuizQuestion[]>
 
 /**
  * Fetches quick quiz questions for a specific category.
@@ -55,7 +46,7 @@ export async function fetchQuickQuiz(
     method: 'POST',
     body,
     errorContext: 'fetch quick quiz',
-  }) as Promise<QuickQuizResponse>
+  })
 }
 
 /**

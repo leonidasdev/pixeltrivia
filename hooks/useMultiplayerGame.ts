@@ -98,6 +98,10 @@ export function useMultiplayerGame({
   const revealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const questionStartRef = useRef<number>(0)
   const timeLimitRef = useRef<number>(30)
+  const hasAnsweredRef = useRef(hasAnswered)
+
+  // Keep ref in sync so callbacks always see latest value
+  hasAnsweredRef.current = hasAnswered
 
   // Clear timer
   const clearTimer = useCallback(() => {
@@ -219,7 +223,10 @@ export function useMultiplayerGame({
   // Submit answer action
   const handleSubmitAnswer = useCallback(
     async (answer: number): Promise<SubmitAnswerResult | null> => {
-      if (!playerId || hasAnswered) return null
+      if (!playerId || hasAnsweredRef.current) return null
+
+      // Mark immediately via ref to block concurrent calls
+      hasAnsweredRef.current = true
 
       const timeMs = Date.now() - questionStartRef.current
 
@@ -237,12 +244,14 @@ export function useMultiplayerGame({
         await onRefresh()
         return result.data
       } else {
+        // Revert ref so the player can retry
+        hasAnsweredRef.current = false
         setError(result.error ?? 'Failed to submit answer')
         setSelectedAnswer(null)
         return null
       }
     },
-    [playerId, hasAnswered, roomCode, onRefresh]
+    [playerId, roomCode, onRefresh]
   )
 
   // Next question action (host only)
