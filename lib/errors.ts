@@ -265,25 +265,6 @@ export function wrapError(
 }
 
 /**
- * Extracts a user-friendly error message
- */
-export function getUserMessage(error: unknown): string {
-  if (isAppError(error)) {
-    return error.message
-  }
-
-  if (error instanceof Error) {
-    return error.message
-  }
-
-  if (typeof error === 'string') {
-    return error
-  }
-
-  return 'An unexpected error occurred. Please try again.'
-}
-
-/**
  * Checks if an error is operational (expected) vs programming error
  */
 export function isOperationalError(error: unknown): boolean {

@@ -24,7 +24,7 @@ import {
   isDatabaseError,
   isExternalAPIError,
   wrapError,
-  getUserMessage,
+  getErrorMessage,
   isOperationalError,
   getStatusCode,
   formatErrorResponse,
@@ -307,23 +307,31 @@ describe('Error Utilities', () => {
     })
   })
 
-  describe('getUserMessage', () => {
+  describe('getErrorMessage', () => {
     it('should extract message from AppError', () => {
       const error = new ValidationError('Invalid input')
-      expect(getUserMessage(error)).toBe('Invalid input')
+      expect(getErrorMessage(error)).toBe('Invalid input')
     })
 
     it('should extract message from Error', () => {
       const error = new Error('Standard error')
-      expect(getUserMessage(error)).toBe('Standard error')
+      expect(getErrorMessage(error)).toBe('Standard error')
     })
 
     it('should return string as-is', () => {
-      expect(getUserMessage('Error string')).toBe('Error string')
+      expect(getErrorMessage('Error string')).toBe('Error string')
     })
 
-    it('should return default for unknown', () => {
-      expect(getUserMessage(null)).toBe('An unexpected error occurred. Please try again.')
+    it('should return fallback for unknown', () => {
+      expect(getErrorMessage(null)).toBe('Unknown error')
+    })
+
+    it('should use custom fallback', () => {
+      expect(getErrorMessage(null, 'Custom fallback')).toBe('Custom fallback')
+    })
+
+    it('should extract message from plain object with message property', () => {
+      expect(getErrorMessage({ message: 'Object error' })).toBe('Object error')
     })
   })
 

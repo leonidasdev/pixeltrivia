@@ -7,7 +7,7 @@
  * @since 1.0.0
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef } from 'react'
 import type {
   Question,
   QuizSession,
@@ -111,6 +111,10 @@ export function useQuizSession(): UseQuizSessionReturn {
   const [isShowingFeedback, setIsShowingFeedback] = useState(false)
   const [lastAnswerResult, setLastAnswerResult] = useState<QuizAnswer | null>(null)
 
+  // Keep a ref in sync so callbacks always read the latest session
+  const sessionRef = useRef(session)
+  sessionRef.current = session
+
   /**
    * Initialize a new quiz session
    */
@@ -146,59 +150,59 @@ export function useQuizSession(): UseQuizSessionReturn {
   /**
    * Submit an answer for the current question
    */
-  const submitAnswer = useCallback(
-    (selectedAnswer: number | null, timeSpent: number): boolean => {
-      if (!session || session.isComplete) return false
+  const submitAnswer = useCallback((selectedAnswer: number | null, timeSpent: number): boolean => {
+    const current = sessionRef.current
+    if (!current || current.isComplete) return false
 
-      const currentQuestion = session.questions[session.currentQuestionIndex]
-      if (!currentQuestion) return false
+    const currentQuestion = current.questions[current.currentQuestionIndex]
+    if (!currentQuestion) return false
 
-      const isCorrect = selectedAnswer === currentQuestion.correctAnswer
+    const isCorrect = selectedAnswer === currentQuestion.correctAnswer
 
-      const answer: QuizAnswer = {
-        questionId: currentQuestion.id,
-        selectedAnswer,
-        isCorrect,
-        timeSpent,
-        timestamp: new Date(),
+    const answer: QuizAnswer = {
+      questionId: currentQuestion.id,
+      selectedAnswer,
+      isCorrect,
+      timeSpent,
+      timestamp: new Date(),
+    }
+
+    setLastAnswerResult(answer)
+
+    if (current.settings.showFeedback) {
+      setIsShowingFeedback(true)
+    }
+
+    setSession(prev => {
+      if (!prev) return null
+      return {
+        ...prev,
+        answers: [...prev.answers, answer],
       }
+    })
 
-      setLastAnswerResult(answer)
-
-      if (session.settings.showFeedback) {
-        setIsShowingFeedback(true)
-      }
-
-      setSession(prev => {
-        if (!prev) return null
-        return {
-          ...prev,
-          answers: [...prev.answers, answer],
-        }
-      })
-
-      return isCorrect
-    },
-    [session]
-  )
+    return isCorrect
+  }, [])
 
   /**
    * Skip the current question
    */
   const skipQuestion = useCallback(() => {
-    if (!session || session.isComplete || !session.settings.allowSkip) return
+    const current = sessionRef.current
+    if (!current || current.isComplete || !current.settings.allowSkip) return
 
     // Submit null answer for skipped question
     submitAnswer(null, 0)
-  }, [session, submitAnswer])
+  }, [submitAnswer])
 
   /**
    * Get the current question
    */
   const getCurrentQuestion = useCallback((): Question | null => {
-    if (!session) return null
-    return session.questions[session.currentQuestionIndex] ?? null
-  }, [session])
+    const current = sessionRef.current
+    if (!current) return null
+    return current.questions[current.currentQuestionIndex] ?? null
+  }, [])
 
   /**
    * Move to the next question
@@ -225,37 +229,39 @@ export function useQuizSession(): UseQuizSessionReturn {
    * Check if there are more questions
    */
   const hasNextQuestion = useCallback((): boolean => {
-    if (!session) return false
-    return session.currentQuestionIndex < session.questions.length - 1
-  }, [session])
+    const current = sessionRef.current
+    if (!current) return false
+    return current.currentQuestionIndex < current.questions.length - 1
+  }, [])
 
   /**
    * Complete the quiz and get results
    */
   const completeQuiz = useCallback((): QuizResults | null => {
-    if (!session) return null
+    const current = sessionRef.current
+    if (!current) return null
 
-    const correctCount = session.answers.filter(a => a.isCorrect).length
-    const totalTime = session.answers.reduce((sum, a) => sum + a.timeSpent, 0)
+    const correctCount = current.answers.filter(a => a.isCorrect).length
+    const totalTime = current.answers.reduce((sum, a) => sum + a.timeSpent, 0)
     const accuracy =
-      session.questions.length > 0 ? (correctCount / session.questions.length) * 100 : 0
+      current.questions.length > 0 ? (correctCount / current.questions.length) * 100 : 0
 
     // Calculate score with time bonus
     const baseScore = correctCount * BASE_SCORE
-    const avgTimePerQuestion = session.answers.length > 0 ? totalTime / session.answers.length : 0
-    const timeBonus = Math.max(0, (session.settings.timeLimit * 1000 - avgTimePerQuestion) / 100)
+    const avgTimePerQuestion = current.answers.length > 0 ? totalTime / current.answers.length : 0
+    const timeBonus = Math.max(0, (current.settings.timeLimit * 1000 - avgTimePerQuestion) / 100)
     const finalScore = Math.round(baseScore + timeBonus * correctCount)
 
     const results: QuizResults = {
-      sessionId: session.sessionId,
-      quizType: session.quizType,
+      sessionId: current.sessionId,
+      quizType: current.quizType,
       correctCount,
-      totalQuestions: session.questions.length,
+      totalQuestions: current.questions.length,
       accuracy,
       totalTime,
       averageTime: avgTimePerQuestion,
       score: finalScore,
-      answers: session.answers,
+      answers: current.answers,
       completedAt: new Date(),
     }
 
@@ -263,7 +269,7 @@ export function useQuizSession(): UseQuizSessionReturn {
     setSession(prev => (prev ? { ...prev, isComplete: true } : null))
 
     return results
-  }, [session])
+  }, [])
 
   /**
    * Reset the session
