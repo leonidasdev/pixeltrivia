@@ -169,8 +169,9 @@ Ordered by priority: critical bugs and architecture first, then quality improvem
 - [x] **Align `eslint-config-next` version** — changed `14.0.0` to `^14.2.30`. *(commit 3df687e)*
 - [x] **Verify `ts-jest` compatibility** — `ts-jest@29.4.6` confirmed compatible with
   `jest@30.2.0` (all 1906 tests pass). *(commit 3df687e)*
-- [x] **Replace `pdf-parse` with `pdf-parse-new`** — drop-in actively maintained fork.
-  Updated import in `fileParser.ts`, type declaration, and test mock. *(commit dd16aa3)*
+- [x] **Replace `pdf-parse` with `unpdf`** — swapped unmaintained pdf-parse for unpdf
+  (pdfjs-dist wrapper with clean API). Updated `fileParser.ts` to use `extractText`/
+  `getDocumentProxy`, renamed type declaration, updated test mock. *(commit 0e83d11)*
 - [ ] **Plan Next.js 15 upgrade** — Next.js 15 is available. Evaluate breaking changes and plan
   migration when stable.
 
