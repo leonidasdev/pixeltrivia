@@ -136,11 +136,11 @@ async function parseText(buffer: Buffer): Promise<string> {
 }
 
 /**
- * Extract text from a PDF file using pdf-parse.
+ * Extract text from a PDF file using pdf-parse-new.
  * Loaded lazily to avoid pulling the library into memory until needed.
  */
 async function parsePdf(buffer: Buffer): Promise<string> {
-  const pdfParse = (await import('pdf-parse')).default as (
+  const pdfParse = (await import('pdf-parse-new')).default as (
     buffer: Buffer
   ) => Promise<{ text: string }>
   const result = await pdfParse(buffer)

@@ -6,7 +6,7 @@
  * Unit tests for lib/fileParser
  */
 
-jest.mock('pdf-parse', () => ({
+jest.mock('pdf-parse-new', () => ({
   __esModule: true,
   default: jest.fn((buffer: Buffer) =>
     Promise.resolve({ text: `PDF content from buffer of ${buffer.length} bytes` })
